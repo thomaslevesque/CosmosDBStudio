@@ -7,37 +7,46 @@
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:util="clr-namespace:CosmosDBStudio.Util"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <ToolBar Grid.Row="0">
-            <ToolBarPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <TextBlock Text="Collection: "/>
+            <TextBox IsReadOnly="True" Text="{Binding CurrentConnectionPath, Mode=OneWay}" />
+        </StackPanel>
+        <ToolBar Grid.Row="1">
+            <ToolBarPanel Orientation="Horizontal">
                 <Button Content="Execute" Command="{Binding ExecuteCommand}" />
             </ToolBarPanel>
         </ToolBar>
-        <avalonEdit:TextEditor Grid.Row="1" Name="editor" SyntaxHighlighting="TSQL">
+        <avalonEdit:TextEditor Grid.Row="2" Name="editor" SyntaxHighlighting="TSQL">
             <i:Interaction.Behaviors>
                 <bhv:AvalonTextEditorBindingBehavior
                     Text="{Binding Text}"
                     SelectedText="{Binding SelectedText}" />
             </i:Interaction.Behaviors>
+            <avalonEdit:TextEditor.InputBindings>
+                <KeyBinding Gesture="Ctrl+Enter" Command="{Binding ExecuteCommand}" />
+            </avalonEdit:TextEditor.InputBindings>
         </avalonEdit:TextEditor>
-        <GridSplitter Grid.Row="1" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />
-        <TabControl Grid.Row="2">
-            <TabItem Header="Results">
+        <GridSplitter Grid.Row="2" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />
+        <TabControl Grid.Row="3" DataContext="{Binding Result}">
+            <TabItem Header="Results" IsSelected="{Binding IsResultsTabSelected, Mode=OneWay}">
                 <avalonEdit:TextEditor Name="results" SyntaxHighlighting="JavaScript" IsReadOnly="True">
                     <i:Interaction.Behaviors>
-                        <bhv:AvalonTextEditorBindingBehavior Text="{Binding Result.Json, Mode=OneWay}" />
+                        <bhv:AvalonTextEditorBindingBehavior Text="{Binding Json, Mode=OneWay}" />
                     </i:Interaction.Behaviors>
                 </avalonEdit:TextEditor>
             </TabItem>
             <TabItem Header="Error" IsSelected="{Binding IsErrorTabSelected, Mode=TwoWay}">
-                <TextBox AcceptsReturn="True" IsReadOnly="True" Text="{Binding Result.Error, Mode=OneWay}" />
+                <TextBox AcceptsReturn="True" IsReadOnly="True" Text="{Binding Error, Mode=OneWay}" />
             </TabItem>
         </TabControl>
     </Grid>

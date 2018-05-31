@@ -29,7 +29,7 @@ namespace CosmosDBStudio.ViewModel
 
         public QuerySheetViewModel CreateQuerySheetViewModel(QuerySheet querySheet)
         {
-            return new QuerySheetViewModel(_queryExecutionService, this, querySheet);
+            return new QuerySheetViewModel(_queryExecutionService, this, _connectionDirectory, querySheet);
         }
 
         public QueryResultViewModel CreateQueryResultViewModel(QueryResult result)

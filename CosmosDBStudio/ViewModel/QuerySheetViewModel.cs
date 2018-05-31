@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CosmosDBStudio.Model;
@@ -14,12 +13,14 @@ namespace CosmosDBStudio.ViewModel
 
         private readonly IQueryExecutionService _queryExecutionService;
         private readonly IViewModelFactory _viewModelFactory;
+        private readonly IConnectionDirectory _connectionDirectory;
         private readonly QuerySheet _querySheet;
 
-        public QuerySheetViewModel(IQueryExecutionService queryExecutionService, IViewModelFactory viewModelFactory, QuerySheet querySheet)
+        public QuerySheetViewModel(IQueryExecutionService queryExecutionService, IViewModelFactory viewModelFactory, IConnectionDirectory connectionDirectory, QuerySheet querySheet)
         {
             _queryExecutionService = queryExecutionService;
             _viewModelFactory = viewModelFactory;
+            _connectionDirectory = connectionDirectory;
             _querySheet = querySheet;
             _title = string.IsNullOrEmpty(querySheet.Path)
                 ? $"Untitled {++_untitledCounter}"
@@ -71,6 +72,8 @@ namespace CosmosDBStudio.ViewModel
             get => _collectionId;
             set => Set(ref _collectionId, value);
         }
+
+        public string CurrentConnectionPath => $"{_connectionDirectory.GetById(ConnectionId)?.Name ?? "??"}/{DatabaseId}/{CollectionId}";
 
         private string _selectedText;
 

@@ -47,13 +47,13 @@ namespace CosmosDBStudio.Behaviors
         private void OnTextChanged()
         {
             if (AssociatedObject.Text != Text)
-                AssociatedObject.Text = Text;
+                AssociatedObject.Text = Text ?? string.Empty;
         }
 
         private void AssociatedObjectTextChanged(object sender, EventArgs e)
         {
             if (Text != AssociatedObject.Text)
-                Text = AssociatedObject.Text;
+                Text = AssociatedObject.Text ?? string.Empty;
         }
 
         public string SelectedText
@@ -83,13 +83,13 @@ namespace CosmosDBStudio.Behaviors
         private void OnSelectedTextChanged()
         {
             if (AssociatedObject.SelectedText != SelectedText)
-                AssociatedObject.SelectedText = SelectedText;
+                AssociatedObject.SelectedText = SelectedText ?? string.Empty;
         }
 
         private void AssociatedObjectSelectionChanged(object sender, EventArgs e)
         {
             if (SelectedText != AssociatedObject.SelectedText)
-                SelectedText = AssociatedObject.SelectedText;
+                SelectedText = AssociatedObject.SelectedText ?? string.Empty;
         }
 
     }
