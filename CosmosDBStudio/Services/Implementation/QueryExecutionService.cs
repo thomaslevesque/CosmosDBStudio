@@ -68,7 +68,7 @@ namespace CosmosDBStudio.Services.Implementation
                     }
                     result.Documents = documents.Select(DocumentToJObject).ToList();
                 }
-                catch (DocumentClientException ex)
+                catch (Exception ex)
                 {
                     result.Error = ex;
                 }

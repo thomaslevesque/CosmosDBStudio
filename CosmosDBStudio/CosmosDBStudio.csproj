@@ -153,7 +153,7 @@
       <Version>5.0.4</Version>
     </PackageReference>
     <PackageReference Include="EssentialMVVM">
-      <Version>1.0.0-alpha003</Version>
+      <Version>1.0.0-alpha004</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Azure.DocumentDB.Core">
       <Version>1.9.1</Version>
