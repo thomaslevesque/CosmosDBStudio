@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="CosmosDBStudio.View.ConnectionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CosmosDBStudio.View"
+             xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel"
+             xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ToolBar Grid.Row="0">
+            <ToolBarPanel Orientation="Horizontal">
+                <Button Content="Add" />
+                <Button Content="Edit" />
+                <Button Content="Delete" />
+            </ToolBarPanel>
+        </ToolBar>
+
+        <TreeView Grid.Row="1" ItemsSource="{Binding Connections}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type vm:ConnectionViewModel}" ItemsSource="{Binding Children}">
+                    <controls:TreeNodeControl Icon="/Images/cosmos-db.png" Content="{Binding Text}" />
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type vm:DatabaseViewModel}" ItemsSource="{Binding Children}">
+                    <controls:TreeNodeControl Icon="/Images/database.png" Content="{Binding Text}" />
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type vm:CollectionsNodeViewModel}" ItemsSource="{Binding Children}">
+                    <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type vm:CollectionViewModel}">
+                    <controls:TreeNodeControl Icon="/Images/collection.png" Content="{Binding Text}" />
+                </DataTemplate>
+            </TreeView.Resources>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu ItemsSource="{Binding MenuCommands}">
+                                <ContextMenu.ItemContainerStyle>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="Header" Value="{Binding Text}" />
+                                        <Setter Property="Command" Value="{Binding Command}"></Setter>
+                                    </Style>
+                                </ContextMenu.ItemContainerStyle>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+
+    </Grid>
+</UserControl>

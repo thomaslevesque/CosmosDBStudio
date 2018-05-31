@@ -1,0 +1,14 @@
+﻿using System.Collections.Generic;
+
+namespace CosmosDBStudio.Model
+{
+    public class Query
+    {
+        public string ConnectionId { get; set; }
+        public string DatabaseId { get; set; }
+        public string CollectionId { get; set; }
+        public string Sql { get; set; }
+        public IDictionary<string, object> Parameters { get; set; }
+        public QueryOptions Options { get; set; }
+    }
+}
