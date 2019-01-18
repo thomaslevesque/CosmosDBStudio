@@ -15,23 +15,18 @@
         </Grid.RowDefinitions>
 
         <ToolBar Grid.Row="0">
-            <ToolBarPanel Orientation="Horizontal">
-                <Button Content="Add" />
-                <Button Content="Edit" />
-                <Button Content="Delete" />
-            </ToolBarPanel>
+            <Button Content="Add" />
+            <Button Content="Edit" />
+            <Button Content="Delete" />
         </ToolBar>
 
         <TreeView Grid.Row="1" ItemsSource="{Binding Connections}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ConnectionViewModel}" ItemsSource="{Binding Children}">
-                    <controls:TreeNodeControl Icon="/Images/cosmos-db.png" Content="{Binding Text}" />
+                    <controls:TreeNodeControl Icon="/Images/account.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type vm:DatabaseViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/database.png" Content="{Binding Text}" />
-                </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vm:CollectionsNodeViewModel}" ItemsSource="{Binding Children}">
-                    <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:CollectionViewModel}">
                     <controls:TreeNodeControl Icon="/Images/collection.png" Content="{Binding Text}" />

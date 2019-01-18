@@ -36,6 +36,9 @@
   <PropertyGroup>
     <StartupObject>CosmosDBStudio.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Images\cosmosdb.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -167,10 +170,15 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\account.png" />
     <Resource Include="Images\collection.png" />
-    <Resource Include="Images\cosmos-db.png" />
     <Resource Include="Images\database.png" />
-    <Resource Include="Images\folder.png" />
+    <Resource Include="Images\stored-procedure.png" />
+    <Resource Include="Images\trigger.png" />
+    <Resource Include="Images\user-defined-function.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\cosmosdb.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

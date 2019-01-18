@@ -52,11 +52,6 @@ namespace CosmosDBStudio.ViewModel
             return new DatabaseViewModel(connection, id, _connectionBrowserService, this);
         }
 
-        public CollectionsNodeViewModel CreateCollectionsNodeViewModel(DatabaseViewModel database)
-        {
-            return new CollectionsNodeViewModel(database, _connectionBrowserService, this);
-        }
-
         public CollectionViewModel CreateCollectionViewModel(DatabaseViewModel database, string id)
         {
             return new CollectionViewModel(database, id, _messenger);

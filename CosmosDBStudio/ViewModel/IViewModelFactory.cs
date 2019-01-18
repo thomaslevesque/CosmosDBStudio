@@ -11,6 +11,5 @@ namespace CosmosDBStudio.ViewModel
         DatabaseViewModel CreateDatabaseViewModel(ConnectionViewModel connection, string id);
         CollectionViewModel CreateCollectionViewModel(DatabaseViewModel database, string id);
         ConnectionsViewModel CreateConnectionsViewModel();
-        CollectionsNodeViewModel CreateCollectionsNodeViewModel(DatabaseViewModel database);
     }
 }

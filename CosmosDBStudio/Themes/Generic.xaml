@@ -3,14 +3,18 @@
                     xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls">
     
     <Style TargetType="controls:TreeNodeControl">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Padding" Value="3,0,0,0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:TreeNodeControl">
                     <BulletDecorator>
                         <BulletDecorator.Bullet>
-                            <Image Grid.Column="0" Width="16" Height="16" Source="{TemplateBinding Icon}" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                            <Image Grid.Column="0" Width="16" Height="16"
+                                   Source="{TemplateBinding Icon}"
+                                   RenderOptions.BitmapScalingMode="HighQuality"/>
                         </BulletDecorator.Bullet>
-                        <ContentPresenter />
+                        <ContentPresenter Margin="{TemplateBinding Padding}" />
                     </BulletDecorator>
                 </ControlTemplate>
             </Setter.Value>

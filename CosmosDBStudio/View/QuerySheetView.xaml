@@ -16,14 +16,12 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <TextBlock Text="Collection: "/>
+        <DockPanel Grid.Row="0">
+            <Image Source="/Images/collection.png" Width="16" Height="16" DockPanel.Dock="Left" />
             <TextBox IsReadOnly="True" Text="{Binding CurrentConnectionPath, Mode=OneWay}" />
-        </StackPanel>
+        </DockPanel>
         <ToolBar Grid.Row="1">
-            <ToolBarPanel Orientation="Horizontal">
-                <Button Content="Execute" Command="{Binding ExecuteCommand}" />
-            </ToolBarPanel>
+            <Button Content="Execute" Command="{Binding ExecuteCommand}" />
         </ToolBar>
         <avalonEdit:TextEditor Grid.Row="2" Name="editor" SyntaxHighlighting="TSQL">
             <i:Interaction.Behaviors>

@@ -24,13 +24,10 @@ namespace CosmosDBStudio.ViewModel
 
         public override string Text => Id;
 
-        protected override Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
+        protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            return Task.FromResult<IEnumerable<TreeNodeViewModel>>(
-                new[]
-                {
-                    _viewModelFactory.CreateCollectionsNodeViewModel(this)
-                });
+            var collections = await _connectionBrowserService.GetCollectionsAsync(Connection.Id, Id);
+            return collections.Select(id => _viewModelFactory.CreateCollectionViewModel(this, id)).ToList();
         }
     }
 }
