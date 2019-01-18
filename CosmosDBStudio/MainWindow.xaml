@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:CosmosDBStudio"
         xmlns:v="clr-namespace:CosmosDBStudio.View"
         xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel"
+        xmlns:ctl="clr-namespace:CosmosDBStudio.View.Controls"
         mc:Ignorable="d"
         Title="Cosmos DB Studio" Height="450" Width="800">
     <Grid>
@@ -18,16 +19,11 @@
         
         <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" />
 
-        <TabControl Grid.Column="1"
+        <ctl:QuerySheetTabControl Grid.Column="1"
                     ItemsSource="{Binding QuerySheets}"
                     SelectedItem="{Binding CurrentQuerySheet}"
                     DisplayMemberPath="Title">
-            <TabControl.ContentTemplate>
-                <DataTemplate DataType="vm:QuerySheetViewModel">
-                    <v:QuerySheetView />
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-        </TabControl>
+        </ctl:QuerySheetTabControl>
 
     </Grid>
 </Window>

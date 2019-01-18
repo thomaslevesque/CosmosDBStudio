@@ -91,6 +91,7 @@
     <Compile Include="View\ConnectionsView.xaml.cs">
       <DependentUpon>ConnectionsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Controls\QuerySheetTabControl.cs" />
     <Compile Include="View\Controls\TreeNodeControl.cs" />
     <Compile Include="View\QuerySheetView.xaml.cs">
       <DependentUpon>QuerySheetView.xaml</DependentUpon>
