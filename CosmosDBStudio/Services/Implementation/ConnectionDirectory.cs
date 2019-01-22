@@ -55,23 +55,30 @@ namespace CosmosDBStudio.Services.Implementation
                 var json = File.ReadAllText(GetConnectionsFilePath());
                 var connections = JsonConvert.DeserializeObject<DatabaseConnection[]>(json);
                 _connections = connections.ToDictionary(c => c.Id);
+                return;
             }
             catch (FileNotFoundException)
             {
-                _connections = new Dictionary<string, DatabaseConnection>();
             }
+            catch (DirectoryNotFoundException)
+            {
+            }
+
+            _connections = new Dictionary<string, DatabaseConnection>();
         }
 
         public void Save()
         {
             var json = JsonConvert.SerializeObject(_connections.Values);
-            File.WriteAllText(GetConnectionsFilePath(), json);
+            File.WriteAllText(GetConnectionsFilePath(true), json);
         }
 
-        private static string GetConnectionsFilePath()
+        private static string GetConnectionsFilePath(bool createDirectory = false)
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var cosmosDbStudioData = Path.Combine(appData, "CosmosDBStudio");
+            if (createDirectory)
+                Directory.CreateDirectory(cosmosDbStudioData);
             var filePath = Path.Combine(cosmosDbStudioData, "connections.json");
             return filePath;
         }
