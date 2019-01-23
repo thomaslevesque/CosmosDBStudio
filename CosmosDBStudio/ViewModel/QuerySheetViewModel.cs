@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CosmosDBStudio.Model;
@@ -31,6 +32,7 @@ namespace CosmosDBStudio.ViewModel
             _collectionId = querySheet.CollectionId;
 
             _executeCommand = new AsyncDelegateCommand(ExecuteAsync, CanExecute);
+            _closeCommand = new DelegateCommand(Close);
         }
 
         private string _title;
@@ -110,5 +112,15 @@ namespace CosmosDBStudio.ViewModel
             var result = await _queryExecutionService.ExecuteAsync(query);
             Result = _viewModelFactory.CreateQueryResultViewModel(result);
         }
+
+        private readonly DelegateCommand _closeCommand;
+        public ICommand CloseCommand => _closeCommand;
+
+        private void Close()
+        {
+            CloseRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler CloseRequested;
     }
 }

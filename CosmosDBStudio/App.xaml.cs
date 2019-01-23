@@ -9,6 +9,7 @@ namespace CosmosDBStudio
 
         public App(IViewModelFactory viewModelFactory)
         {
+            InitializeComponent();
             _viewModelFactory = viewModelFactory;
         }
 

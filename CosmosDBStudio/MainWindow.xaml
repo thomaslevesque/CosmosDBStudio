@@ -21,8 +21,7 @@
 
         <ctl:QuerySheetTabControl Grid.Column="1"
                     ItemsSource="{Binding QuerySheets}"
-                    SelectedItem="{Binding CurrentQuerySheet}"
-                    DisplayMemberPath="Title">
+                    SelectedItem="{Binding CurrentQuerySheet}">
         </ctl:QuerySheetTabControl>
 
     </Grid>

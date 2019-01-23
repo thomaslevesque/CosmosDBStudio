@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
@@ -37,8 +38,16 @@ namespace CosmosDBStudio.ViewModel
             };
 
             var vm = _viewModelFactory.CreateQuerySheetViewModel(querySheet);
+            vm.CloseRequested += CloseHandler;
             QuerySheets.Add(vm);
             CurrentQuerySheet = vm;
+
+            void CloseHandler(object sender, EventArgs e)
+            {
+                var sheet = (QuerySheetViewModel)sender;
+                QuerySheets.Remove(sheet);
+                sheet.CloseRequested -= CloseHandler;
+            }
         }
 
         public ConnectionsViewModel Connections { get; }
