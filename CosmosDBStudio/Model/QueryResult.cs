@@ -10,5 +10,6 @@ namespace CosmosDBStudio.Model
         public Exception Error { get; set; }
         public TimeSpan TimeElapsed { get; set; }
         public double RequestCharge { get; set; }
+        public string ContinuationToken { get; set; }
     }
 }

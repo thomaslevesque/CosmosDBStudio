@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CosmosDBStudio.Model;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Linq;
-using Newtonsoft.Json;
+using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json.Linq;
 
 namespace CosmosDBStudio.Services.Implementation
@@ -45,84 +41,71 @@ namespace CosmosDBStudio.Services.Implementation
                 throw new InvalidOperationException("Connection not found");
             }
 
-            using (var client = CreateDocumentClient(connection))
+            using var client = CreateCosmosClient(connection);
+            var container = client.GetContainer(query.DatabaseId, query.CollectionId);
+            var queryDefinition = CreateQueryDefinition(query);
+            var requestOptions = CreateRequestOptions(query.Options);
+            var iterator = container.GetItemQueryIterator<JObject>(queryDefinition, query.ContinuationToken, requestOptions);
+            var result = new QueryResult();
+            var stopwatch = new Stopwatch();
+            try
             {
-                var collectionUri = UriFactory.CreateDocumentCollectionUri(query.DatabaseId, query.CollectionId);
-                var feedOptions = CreateFeedOptions(query.Options);
-                var querySpec = CreateQuerySpec(query);
-                var documentQuery = client.CreateDocumentQuery<Document>(collectionUri, querySpec, feedOptions)
-                    .AsDocumentQuery();
-
-                var result = new QueryResult();
-                var stopwatch = new Stopwatch();
-                try
-                {
-                    var documents = new List<Document>();
-                    while (documentQuery.HasMoreResults)
-                    {
-                        stopwatch.Start();
-                        var response = await documentQuery.ExecuteNextAsync<Document>();
-                        stopwatch.Stop();
-                        result.RequestCharge += response.RequestCharge;
-                        documents.AddRange(response);
-                    }
-                    result.Documents = documents.Select(DocumentToJObject).ToList();
-                }
-                catch (Exception ex)
-                {
-                    result.Error = ex;
-                }
-                finally
-                {
-                    stopwatch.Stop();
-                }
-
-                result.TimeElapsed = stopwatch.Elapsed;
-                return result;
+                stopwatch.Start();
+                var response = await iterator.ReadNextAsync();
+                stopwatch.Stop();
+                result.RequestCharge += response.RequestCharge;
+                result.ContinuationToken = response.ContinuationToken;
+                result.Documents = response.ToList();
             }
+            catch (Exception ex)
+            {
+                result.Error = ex;
+            }
+            finally
+            {
+                stopwatch.Stop();
+            }
+
+            result.TimeElapsed = stopwatch.Elapsed;
+            return result;
         }
 
-        private JObject DocumentToJObject(Document doc)
-        {
-            var bytes = doc.ToByteArray();
-            using (var ms = new MemoryStream(bytes))
-            using (var streamReader = new StreamReader(ms))
-            using (var jsonReader = new JsonTextReader(streamReader))
-            {
-                return JObject.Load(jsonReader);
-            }
-        }
-
-        private DocumentClient CreateDocumentClient(DatabaseConnection connection)
+        private CosmosClient CreateCosmosClient(DatabaseConnection connection)
         {
             // TODO: connection options
-            return new DocumentClient(
-                new Uri(connection.Endpoint),
+            return new CosmosClient(
+                connection.Endpoint,
                 connection.Key);
         }
 
-        private FeedOptions CreateFeedOptions(QueryOptions options)
+        private QueryDefinition CreateQueryDefinition(Query query)
         {
-            var feedOptions = new FeedOptions();
-            if (options?.PartitionKey == null)
+            var definition = new QueryDefinition(query.Sql);
+            if (query.Parameters != null)
             {
-                feedOptions.EnableCrossPartitionQuery = true;
-            }
-            else
-            {
-                feedOptions.PartitionKey = new PartitionKey(options.PartitionKey);
+                foreach (var (key, value) in query.Parameters)
+                {
+                    definition = definition.WithParameter(key, value);
+                }
             }
 
-            return feedOptions;
+            return definition;
         }
 
-        private SqlQuerySpec CreateQuerySpec(Query query)
+        private QueryRequestOptions CreateRequestOptions(QueryOptions options)
         {
-            var querySpec = new SqlQuerySpec(query.Sql);
-            if (query.Parameters != null && query.Parameters.Count > 0)
-                querySpec.Parameters = new SqlParameterCollection(
-                    query.Parameters.Select(kvp => new SqlParameter(kvp.Key, kvp.Value)));
-            return querySpec;
+            return new QueryRequestOptions
+            {
+                PartitionKey = options?.PartitionKey switch
+                {
+                    null => default(PartitionKey?),
+                    string s => new PartitionKey(s),
+                    double d => new PartitionKey(d),
+                    bool b => new PartitionKey(b),
+                    _ => throw new ArgumentException("Invalid partition key type")
+                },
+                MaxItemCount = options?.MaxItemCount ?? 100
+            };
         }
     }
 }

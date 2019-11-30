@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CosmosDBStudio.Model;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Linq;
+using Microsoft.Azure.Cosmos;
 
 namespace CosmosDBStudio.Services.Implementation
 {
@@ -24,18 +22,16 @@ namespace CosmosDBStudio.Services.Implementation
             if (connection == null)
                 throw new InvalidOperationException("Connection not found");
 
-            using (var client = CreateDocumentClient(connection))
+            using var client = CreateCosmosClient(connection);
+            var iterator = client.GetDatabaseQueryIterator<DatabaseProperties>();
+            var databases = new List<string>();
+            while (iterator.HasMoreResults)
             {
-                var query = client.CreateDatabaseQuery().AsDocumentQuery();
-                var databases = new List<string>();
-                while (query.HasMoreResults)
-                {
-                    var response = await query.ExecuteNextAsync<Database>();
-                    databases.AddRange(response.Select(d => d.Id));
-                }
-
-                return databases.ToArray();
+                var response = await iterator.ReadNextAsync();
+                databases.AddRange(response.Select(d => d.Id));
             }
+
+            return databases.ToArray();
         }
 
         public async Task<string[]> GetCollectionsAsync(string connectionId, string databaseId)
@@ -44,26 +40,24 @@ namespace CosmosDBStudio.Services.Implementation
             if (connection == null)
                 throw new InvalidOperationException("Connection not found");
 
-            using (var client = CreateDocumentClient(connection))
+            using var client = CreateCosmosClient(connection);
+            var database = client.GetDatabase(databaseId);
+            var iterator = database.GetContainerQueryIterator<ContainerProperties>();
+            var collections = new List<string>();
+            while (iterator.HasMoreResults)
             {
-                var dbUri = UriFactory.CreateDatabaseUri(databaseId);
-                var query = client.CreateDocumentCollectionQuery(dbUri).AsDocumentQuery();
-                var collections = new List<string>();
-                while (query.HasMoreResults)
-                {
-                    var response = await query.ExecuteNextAsync<DocumentCollection>();
-                    collections.AddRange(response.Select(d => d.Id));
-                }
-
-                return collections.ToArray();
+                var response = await iterator.ReadNextAsync();
+                collections.AddRange(response.Select(d => d.Id));
             }
+
+            return collections.ToArray();
         }
 
-        private DocumentClient CreateDocumentClient(DatabaseConnection connection)
+        private CosmosClient CreateCosmosClient(DatabaseConnection connection)
         {
             // TODO: connection options
-            return new DocumentClient(
-                new Uri(connection.Endpoint),
+            return new CosmosClient(
+                connection.Endpoint,
                 connection.Key);
         }
     }
