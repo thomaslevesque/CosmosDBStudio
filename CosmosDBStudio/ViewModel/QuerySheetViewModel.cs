@@ -48,7 +48,8 @@ namespace CosmosDBStudio.ViewModel
         public string Text
         {
             get => _text;
-            set => Set(ref _text, value);
+            set => Set(ref _text, value)
+                .AndExecute(_executeCommand.RaiseCanExecuteChanged);
         }
 
         private string _accountId;
@@ -78,11 +79,27 @@ namespace CosmosDBStudio.ViewModel
         public string ContainerPath => $"{_accountDirectory.GetById(AccountId)?.Name ?? "??"}/{DatabaseId}/{ContainerId}";
 
         private string _selectedText;
-
         public string SelectedText
         {
             get => _selectedText;
             set => Set(ref _selectedText, value)
+                .AndExecute(_executeCommand.RaiseCanExecuteChanged);
+        }
+
+        private (int start, int end) _selection;
+
+        public (int start, int end) Selection
+        {
+            get => _selection;
+            set => Set(ref _selection, value);
+        }
+
+        private int _cursorPosition;
+
+        public int CursorPosition
+        {
+            get => _cursorPosition;
+            set => Set(ref _cursorPosition, value)
                 .AndExecute(_executeCommand.RaiseCanExecuteChanged);
         }
 
@@ -97,20 +114,82 @@ namespace CosmosDBStudio.ViewModel
         private readonly AsyncDelegateCommand _executeCommand;
         public ICommand ExecuteCommand => _executeCommand;
 
-        private bool CanExecute() => !string.IsNullOrEmpty(SelectedText);
+        private bool CanExecute()
+        {
+            return !string.IsNullOrEmpty(SelectedText)
+                || !string.IsNullOrEmpty(ExtendSelectionAroundCursor(false));
+        }
 
         private async Task ExecuteAsync()
         {
+            var queryText = SelectedText;
+            if (string.IsNullOrEmpty(queryText))
+                queryText = ExtendSelectionAroundCursor(true);
+
+            if (string.IsNullOrEmpty(queryText))
+                return;
+
             // TODO: parameters, options
             var query = new Query
             {
                 AccountId = AccountId,
                 DatabaseId = DatabaseId,
                 ContainerId = ContainerId,
-                Sql = SelectedText
+                Sql = queryText
             };
             var result = await _queryExecutionService.ExecuteAsync(query);
             Result = _viewModelFactory.CreateQueryResultViewModel(result);
+        }
+
+        private static readonly string QuerySeparator = Environment.NewLine + Environment.NewLine;
+        private string ExtendSelectionAroundCursor(bool applySelectionChange)
+        {
+            if (string.IsNullOrEmpty(Text))
+                return string.Empty;
+
+            var position = CursorPosition;
+            if (position > Text.Length)
+                position = Text.Length;
+
+            var previousSeparator = Text.LastIndexOf(QuerySeparator, position, position);
+            if (previousSeparator < 0)
+                previousSeparator = 0;
+
+            var nextSeparator = Text.IndexOf(QuerySeparator, position);
+            if (nextSeparator < 0)
+                nextSeparator = Text.Length - 1;
+
+            int start = ForceIndexInRange(previousSeparator);
+            while (char.IsWhiteSpace(Text[start]) && start + 1 < Text.Length)
+                start++;
+
+            int end = ForceIndexInRange(nextSeparator);
+            while (char.IsWhiteSpace(Text[end]) && end - 1 >= 0)
+                end--;
+
+            string queryText = Text.Substring(start, end - start + 1);
+            //string queryText = Text.Substring(previousSeparator, nextSeparator - previousSeparator).Trim();
+            if (queryText.Contains(QuerySeparator))
+            {
+                // We have two queries; the cursor was probably in the middle of the separator
+                return string.Empty;
+            }
+
+            if (applySelectionChange)
+            {
+                Selection = (start, end - start + 1);
+            }
+
+            return queryText;
+
+            int ForceIndexInRange(int index)
+            {
+                if (index < 0)
+                    return 0;
+                if (index >= Text.Length)
+                    return Text.Length - 1;
+                return index;
+            }
         }
 
         private readonly DelegateCommand _closeCommand;

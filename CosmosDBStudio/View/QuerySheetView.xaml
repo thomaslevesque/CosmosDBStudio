@@ -34,7 +34,9 @@
             <i:Interaction.Behaviors>
                 <bhv:AvalonTextEditorBindingBehavior
                     Text="{Binding Text}"
-                    SelectedText="{Binding SelectedText}" />
+                    SelectedText="{Binding SelectedText}"
+                    CursorPosition="{Binding CursorPosition}"
+                    Selection="{Binding Selection}" />
             </i:Interaction.Behaviors>
             <avalonEdit:TextEditor.InputBindings>
                 <KeyBinding Gesture="Ctrl+Enter" Command="{Binding ExecuteCommand}" />
