@@ -10,11 +10,11 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class QueryExecutionService : IQueryExecutionService
     {
-        private readonly IAccountDirectory _accountDirectory;
+        private readonly IClientPool _clientPool;
 
-        public QueryExecutionService(IAccountDirectory accountDirectory)
+        public QueryExecutionService(IClientPool clientPool)
         {
-            _accountDirectory = accountDirectory;
+            _clientPool = clientPool;
         }
 
         public async Task<QueryResult> ExecuteAsync(Query query)
@@ -34,13 +34,7 @@ namespace CosmosDBStudio.Services.Implementation
                 throw new ArgumentException("No container specified");
             }
 
-            var account = _accountDirectory.GetById(query.AccountId);
-            if (account == null)
-            {
-                throw new InvalidOperationException("Account not found");
-            }
-
-            using var client = CreateCosmosClient(account);
+            var client = _clientPool.GetClientForAccount(query.AccountId);
             var container = client.GetContainer(query.DatabaseId, query.ContainerId);
             var queryDefinition = CreateQueryDefinition(query);
             var requestOptions = CreateRequestOptions(query.Options);
@@ -67,14 +61,6 @@ namespace CosmosDBStudio.Services.Implementation
 
             result.TimeElapsed = stopwatch.Elapsed;
             return result;
-        }
-
-        private CosmosClient CreateCosmosClient(CosmosAccount account)
-        {
-            // TODO: connection options
-            return new CosmosClient(
-                account.Endpoint,
-                account.Key);
         }
 
         private QueryDefinition CreateQueryDefinition(Query query)

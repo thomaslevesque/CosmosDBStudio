@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CosmosDBStudio.Model;
 using Microsoft.Azure.Cosmos;
 
 namespace CosmosDBStudio.Services.Implementation
@@ -10,19 +8,17 @@ namespace CosmosDBStudio.Services.Implementation
     public class AccountBrowserService : IAccountBrowserService
     {
         private readonly IAccountDirectory _accountDirectory;
+        private readonly IClientPool _clientPool;
 
-        public AccountBrowserService(IAccountDirectory _accountDirectory)
+        public AccountBrowserService(IAccountDirectory accountDirectory, IClientPool clientPool)
         {
-            this._accountDirectory = _accountDirectory;
+            _accountDirectory = accountDirectory;
+            _clientPool = clientPool;
         }
 
         public async Task<string[]> GetDatabasesAsync(string accountId)
         {
-            var account = _accountDirectory.GetById(accountId);
-            if (account == null)
-                throw new InvalidOperationException("Account not found");
-
-            using var client = CreateCosmosClient(account);
+            var client = _clientPool.GetClientForAccount(accountId);
             var iterator = client.GetDatabaseQueryIterator<DatabaseProperties>();
             var databases = new List<string>();
             while (iterator.HasMoreResults)
@@ -36,11 +32,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public async Task<string[]> GetContainersAsync(string accountId, string databaseId)
         {
-            var account = _accountDirectory.GetById(accountId);
-            if (account == null)
-                throw new InvalidOperationException("Account not found");
-
-            using var client = CreateCosmosClient(account);
+            var client = _clientPool.GetClientForAccount(accountId);
             var database = client.GetDatabase(databaseId);
             var iterator = database.GetContainerQueryIterator<ContainerProperties>();
             var containers = new List<string>();
@@ -51,14 +43,6 @@ namespace CosmosDBStudio.Services.Implementation
             }
 
             return containers.ToArray();
-        }
-
-        private CosmosClient CreateCosmosClient(CosmosAccount account)
-        {
-            // TODO: connection options
-            return new CosmosClient(
-                account.Endpoint,
-                account.Key);
         }
     }
 }
