@@ -7,18 +7,18 @@ namespace CosmosDBStudio.ViewModel
 {
     public class DatabaseViewModel : NonLeafTreeNodeViewModel
     {
-        private readonly IConnectionBrowserService _connectionBrowserService;
+        private readonly IAccountBrowserService _accountBrowserService;
         private readonly IViewModelFactory _viewModelFactory;
 
-        public DatabaseViewModel(ConnectionViewModel connection, string id, IConnectionBrowserService connectionBrowserService, IViewModelFactory viewModelFactory)
+        public DatabaseViewModel(AccountViewModel account, string id, IAccountBrowserService accountBrowserService, IViewModelFactory viewModelFactory)
         {
-            _connectionBrowserService = connectionBrowserService;
+            _accountBrowserService = accountBrowserService;
             _viewModelFactory = viewModelFactory;
-            Connection = connection;
+            Account = account;
             Id = id;
         }
 
-        public ConnectionViewModel Connection { get; }
+        public AccountViewModel Account { get; }
 
         public string Id { get; }
 
@@ -26,7 +26,7 @@ namespace CosmosDBStudio.ViewModel
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var containers = await _connectionBrowserService.GetContainersAsync(Connection.Id, Id);
+            var containers = await _accountBrowserService.GetContainersAsync(Account.Id, Id);
             return containers.Select(id => _viewModelFactory.CreateContainerViewModel(this, id)).ToList();
         }
     }

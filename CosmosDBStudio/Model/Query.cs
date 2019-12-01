@@ -4,7 +4,7 @@ namespace CosmosDBStudio.Model
 {
     public class Query
     {
-        public string ConnectionId { get; set; }
+        public string AccountId { get; set; }
         public string DatabaseId { get; set; }
         public string ContainerId { get; set; }
         public string Sql { get; set; }

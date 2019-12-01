@@ -6,24 +6,24 @@ using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class ConnectionViewModel : NonLeafTreeNodeViewModel
+    public class AccountViewModel : NonLeafTreeNodeViewModel
     {
-        private readonly DatabaseConnection _connection;
-        private readonly IConnectionBrowserService _connectionBrowserService;
+        private readonly CosmosAccount _account;
+        private readonly IAccountBrowserService _accountBrowserService;
         private readonly IViewModelFactory _viewModelFactory;
 
-        public ConnectionViewModel(
-            DatabaseConnection connection,
-            IConnectionBrowserService connectionBrowserService,
+        public AccountViewModel(
+            CosmosAccount account,
+            IAccountBrowserService accountBrowserService,
             IViewModelFactory viewModelFactory)
         {
-            _connection = connection;
-            _connectionBrowserService = connectionBrowserService;
+            _account = account;
+            _accountBrowserService = accountBrowserService;
             _viewModelFactory = viewModelFactory;
-            _name = connection.Name;
+            _name = account.Name;
         }
 
-        public string Id => _connection.Id;
+        public string Id => _account.Id;
 
         private string _name;
         public string Name
@@ -36,7 +36,7 @@ namespace CosmosDBStudio.ViewModel
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var databases = await _connectionBrowserService.GetDatabasesAsync(_connection.Id);
+            var databases = await _accountBrowserService.GetDatabasesAsync(_account.Id);
             return databases.Select(id => _viewModelFactory.CreateDatabaseViewModel(this, id)).ToList();
         }
     }

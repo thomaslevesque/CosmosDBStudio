@@ -7,22 +7,22 @@ using Microsoft.Azure.Cosmos;
 
 namespace CosmosDBStudio.Services.Implementation
 {
-    public class ConnectionBrowserService : IConnectionBrowserService
+    public class AccountBrowserService : IAccountBrowserService
     {
-        private readonly IConnectionDirectory _connectionDirectory;
+        private readonly IAccountDirectory _accountDirectory;
 
-        public ConnectionBrowserService(IConnectionDirectory connectionDirectory)
+        public AccountBrowserService(IAccountDirectory _accountDirectory)
         {
-            _connectionDirectory = connectionDirectory;
+            this._accountDirectory = _accountDirectory;
         }
 
-        public async Task<string[]> GetDatabasesAsync(string connectionId)
+        public async Task<string[]> GetDatabasesAsync(string accountId)
         {
-            var connection = _connectionDirectory.GetById(connectionId);
-            if (connection == null)
-                throw new InvalidOperationException("Connection not found");
+            var account = _accountDirectory.GetById(accountId);
+            if (account == null)
+                throw new InvalidOperationException("Account not found");
 
-            using var client = CreateCosmosClient(connection);
+            using var client = CreateCosmosClient(account);
             var iterator = client.GetDatabaseQueryIterator<DatabaseProperties>();
             var databases = new List<string>();
             while (iterator.HasMoreResults)
@@ -34,13 +34,13 @@ namespace CosmosDBStudio.Services.Implementation
             return databases.ToArray();
         }
 
-        public async Task<string[]> GetContainersAsync(string connectionId, string databaseId)
+        public async Task<string[]> GetContainersAsync(string accountId, string databaseId)
         {
-            var connection = _connectionDirectory.GetById(connectionId);
-            if (connection == null)
-                throw new InvalidOperationException("Connection not found");
+            var account = _accountDirectory.GetById(accountId);
+            if (account == null)
+                throw new InvalidOperationException("Account not found");
 
-            using var client = CreateCosmosClient(connection);
+            using var client = CreateCosmosClient(account);
             var database = client.GetDatabase(databaseId);
             var iterator = database.GetContainerQueryIterator<ContainerProperties>();
             var containers = new List<string>();
@@ -53,12 +53,12 @@ namespace CosmosDBStudio.Services.Implementation
             return containers.ToArray();
         }
 
-        private CosmosClient CreateCosmosClient(DatabaseConnection connection)
+        private CosmosClient CreateCosmosClient(CosmosAccount account)
         {
             // TODO: connection options
             return new CosmosClient(
-                connection.Endpoint,
-                connection.Key);
+                account.Endpoint,
+                account.Key);
         }
     }
 }

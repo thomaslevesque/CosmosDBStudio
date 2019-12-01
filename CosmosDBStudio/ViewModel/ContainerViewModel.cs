@@ -32,7 +32,7 @@ namespace CosmosDBStudio.ViewModel
         private void CreateNewQuerySheet()
         {
             _messenger.Publish(new NewQuerySheetMessage(
-                Database.Connection.Id,
+                Database.Account.Id,
                 Database.Id,
                 Id));
         }

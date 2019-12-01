@@ -25,8 +25,8 @@ namespace CosmosDBStudio
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IConnectionDirectory, ConnectionDirectory>();
-            services.AddSingleton<IConnectionBrowserService, ConnectionBrowserService>();
+            services.AddSingleton<IAccountDirectory, AccountDirectory>();
+            services.AddSingleton<IAccountBrowserService, AccountBrowserService>();
             services.AddSingleton<IQueryExecutionService, QueryExecutionService>();
             services.AddSingleton<IViewModelFactory, ViewModelFactory>();
             services.AddSingleton<IMessenger, Messenger>();

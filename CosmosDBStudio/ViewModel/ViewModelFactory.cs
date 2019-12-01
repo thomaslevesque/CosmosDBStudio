@@ -7,19 +7,19 @@ namespace CosmosDBStudio.ViewModel
     {
         private readonly IMessenger _messenger;
         private readonly IQueryExecutionService _queryExecutionService;
-        private readonly IConnectionDirectory _connectionDirectory;
-        private readonly IConnectionBrowserService _connectionBrowserService;
+        private readonly IAccountDirectory _accountDirectory;
+        private readonly IAccountBrowserService _accountBrowserService;
 
         public ViewModelFactory(
             IMessenger messenger,
             IQueryExecutionService queryExecutionService,
-            IConnectionDirectory connectionDirectory,
-            IConnectionBrowserService connectionBrowserService)
+            IAccountDirectory accountDirectory,
+            IAccountBrowserService accountBrowserService)
         {
             _messenger = messenger;
             _queryExecutionService = queryExecutionService;
-            _connectionDirectory = connectionDirectory;
-            _connectionBrowserService = connectionBrowserService;
+            _accountDirectory = accountDirectory;
+            _accountBrowserService = accountBrowserService;
         }
 
         public MainWindowViewModel CreateMainWindowViewModel()
@@ -29,7 +29,7 @@ namespace CosmosDBStudio.ViewModel
 
         public QuerySheetViewModel CreateQuerySheetViewModel(QuerySheet querySheet)
         {
-            return new QuerySheetViewModel(_queryExecutionService, this, _connectionDirectory, querySheet);
+            return new QuerySheetViewModel(_queryExecutionService, this, _accountDirectory, querySheet);
         }
 
         public QueryResultViewModel CreateQueryResultViewModel(QueryResult result)
@@ -37,19 +37,19 @@ namespace CosmosDBStudio.ViewModel
             return new QueryResultViewModel(result);
         }
 
-        public ConnectionsViewModel CreateConnectionsViewModel()
+        public AccountsViewModel CreateAccountsViewModel()
         {
-            return new ConnectionsViewModel(this, _connectionDirectory);
+            return new AccountsViewModel(this, _accountDirectory);
         }
 
-        public ConnectionViewModel CreateConnectionViewModel(DatabaseConnection connection)
+        public AccountViewModel CreateAccountViewModel(CosmosAccount account)
         {
-            return new ConnectionViewModel(connection, _connectionBrowserService, this);
+            return new AccountViewModel(account, _accountBrowserService, this);
         }
 
-        public DatabaseViewModel CreateDatabaseViewModel(ConnectionViewModel connection, string id)
+        public DatabaseViewModel CreateDatabaseViewModel(AccountViewModel account, string id)
         {
-            return new DatabaseViewModel(connection, id, _connectionBrowserService, this);
+            return new DatabaseViewModel(account, id, _accountBrowserService, this);
         }
 
         public ContainerViewModel CreateContainerViewModel(DatabaseViewModel database, string id)

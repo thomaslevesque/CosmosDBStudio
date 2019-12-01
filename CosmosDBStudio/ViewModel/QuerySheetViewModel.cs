@@ -14,20 +14,20 @@ namespace CosmosDBStudio.ViewModel
 
         private readonly IQueryExecutionService _queryExecutionService;
         private readonly IViewModelFactory _viewModelFactory;
-        private readonly IConnectionDirectory _connectionDirectory;
+        private readonly IAccountDirectory _accountDirectory;
         private readonly QuerySheet _querySheet;
 
-        public QuerySheetViewModel(IQueryExecutionService queryExecutionService, IViewModelFactory viewModelFactory, IConnectionDirectory connectionDirectory, QuerySheet querySheet)
+        public QuerySheetViewModel(IQueryExecutionService queryExecutionService, IViewModelFactory viewModelFactory, IAccountDirectory accountDirectory, QuerySheet querySheet)
         {
             _queryExecutionService = queryExecutionService;
             _viewModelFactory = viewModelFactory;
-            _connectionDirectory = connectionDirectory;
+            _accountDirectory = accountDirectory;
             _querySheet = querySheet;
             _title = string.IsNullOrEmpty(querySheet.Path)
                 ? $"Untitled {++_untitledCounter}"
                 : Path.GetFileNameWithoutExtension(querySheet.Path);
             _text = querySheet.Text;
-            _connectionId = querySheet.ConnectionId;
+            _accountId = querySheet.AccountId;
             _databaseId = querySheet.DatabaseId;
             _containerId = querySheet.ContainerId;
 
@@ -51,12 +51,12 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _text, value);
         }
 
-        private string _connectionId;
+        private string _accountId;
 
-        public string ConnectionId
+        public string AccountId
         {
-            get => _connectionId;
-            set => Set(ref _connectionId, value);
+            get => _accountId;
+            set => Set(ref _accountId, value);
         }
 
         private string _databaseId;
@@ -75,7 +75,7 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _containerId, value);
         }
 
-        public string CurrentConnectionPath => $"{_connectionDirectory.GetById(ConnectionId)?.Name ?? "??"}/{DatabaseId}/{ContainerId}";
+        public string ContainerPath => $"{_accountDirectory.GetById(AccountId)?.Name ?? "??"}/{DatabaseId}/{ContainerId}";
 
         private string _selectedText;
 
@@ -104,7 +104,7 @@ namespace CosmosDBStudio.ViewModel
             // TODO: parameters, options
             var query = new Query
             {
-                ConnectionId = ConnectionId,
+                AccountId = AccountId,
                 DatabaseId = DatabaseId,
                 ContainerId = ContainerId,
                 Sql = SelectedText

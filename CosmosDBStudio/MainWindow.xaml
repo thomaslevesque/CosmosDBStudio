@@ -15,7 +15,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <v:ConnectionsView Grid.Column="0" DataContext="{Binding Connections}" />
+        <v:AccountsView Grid.Column="0" DataContext="{Binding Accounts}" />
         
         <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" />
 

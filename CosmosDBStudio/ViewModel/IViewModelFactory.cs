@@ -7,9 +7,9 @@ namespace CosmosDBStudio.ViewModel
         MainWindowViewModel CreateMainWindowViewModel();
         QuerySheetViewModel CreateQuerySheetViewModel(QuerySheet querySheet);
         QueryResultViewModel CreateQueryResultViewModel(QueryResult result);
-        ConnectionViewModel CreateConnectionViewModel(DatabaseConnection connection);
-        DatabaseViewModel CreateDatabaseViewModel(ConnectionViewModel connection, string id);
+        AccountViewModel CreateAccountViewModel(CosmosAccount account);
+        DatabaseViewModel CreateDatabaseViewModel(AccountViewModel account, string id);
         ContainerViewModel CreateContainerViewModel(DatabaseViewModel database, string id);
-        ConnectionsViewModel CreateConnectionsViewModel();
+        AccountsViewModel CreateAccountsViewModel();
     }
 }

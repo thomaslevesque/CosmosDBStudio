@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,18 +10,18 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class QueryExecutionService : IQueryExecutionService
     {
-        private readonly IConnectionDirectory _connectionDirectory;
+        private readonly IAccountDirectory _accountDirectory;
 
-        public QueryExecutionService(IConnectionDirectory connectionDirectory)
+        public QueryExecutionService(IAccountDirectory accountDirectory)
         {
-            _connectionDirectory = connectionDirectory;
+            _accountDirectory = accountDirectory;
         }
 
         public async Task<QueryResult> ExecuteAsync(Query query)
         {
-            if (string.IsNullOrEmpty(query.ConnectionId))
+            if (string.IsNullOrEmpty(query.AccountId))
             {
-                throw new ArgumentException("No connection specified");
+                throw new ArgumentException("No account specified");
             }
 
             if (string.IsNullOrEmpty(query.DatabaseId))
@@ -35,13 +34,13 @@ namespace CosmosDBStudio.Services.Implementation
                 throw new ArgumentException("No container specified");
             }
 
-            var connection = _connectionDirectory.GetById(query.ConnectionId);
-            if (connection == null)
+            var account = _accountDirectory.GetById(query.AccountId);
+            if (account == null)
             {
-                throw new InvalidOperationException("Connection not found");
+                throw new InvalidOperationException("Account not found");
             }
 
-            using var client = CreateCosmosClient(connection);
+            using var client = CreateCosmosClient(account);
             var container = client.GetContainer(query.DatabaseId, query.ContainerId);
             var queryDefinition = CreateQueryDefinition(query);
             var requestOptions = CreateRequestOptions(query.Options);
@@ -70,12 +69,12 @@ namespace CosmosDBStudio.Services.Implementation
             return result;
         }
 
-        private CosmosClient CreateCosmosClient(DatabaseConnection connection)
+        private CosmosClient CreateCosmosClient(CosmosAccount account)
         {
             // TODO: connection options
             return new CosmosClient(
-                connection.Endpoint,
-                connection.Key);
+                account.Endpoint,
+                account.Key);
         }
 
         private QueryDefinition CreateQueryDefinition(Query query)

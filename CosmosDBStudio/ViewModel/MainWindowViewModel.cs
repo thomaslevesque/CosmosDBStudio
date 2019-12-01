@@ -17,7 +17,7 @@ namespace CosmosDBStudio.ViewModel
             _viewModelFactory = viewModelFactory;
             _messenger = messenger;
             QuerySheets = new ObservableCollection<QuerySheetViewModel>();
-            Connections = _viewModelFactory.CreateConnectionsViewModel();
+            Accounts = _viewModelFactory.CreateAccountsViewModel();
 
             _messenger.Subscribe(this).To<NewQuerySheetMessage>((vm, message) => vm.OnNewQuerySheetMessage(message));
 
@@ -28,7 +28,7 @@ namespace CosmosDBStudio.ViewModel
         {
             var querySheet = new QuerySheet
             {
-                ConnectionId = message.ConnectionId,
+                AccountId = message.AccountId,
                 DatabaseId = message.DatabaseId,
                 ContainerId = message.ContainerId,
                 DefaultOptions = new QueryOptions
@@ -50,7 +50,7 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
-        public ConnectionsViewModel Connections { get; }
+        public AccountsViewModel Accounts { get; }
 
         public ObservableCollection<QuerySheetViewModel> QuerySheets { get; }
 

@@ -6,7 +6,7 @@ namespace CosmosDBStudio.Model
     {
         [JsonIgnore]
         public string Path { get; set; }
-        public string ConnectionId { get; set; }
+        public string AccountId { get; set; }
         public string DatabaseId { get; set; }
         public string ContainerId { get; set; }
         public string Text { get; set; }

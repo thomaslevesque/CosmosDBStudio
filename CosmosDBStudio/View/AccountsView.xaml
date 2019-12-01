@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CosmosDBStudio.View.ConnectionsView"
+﻿<UserControl x:Class="CosmosDBStudio.View.AccountsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -20,9 +20,9 @@
             <Button Content="Delete" />
         </ToolBar>
 
-        <TreeView Grid.Row="1" ItemsSource="{Binding Connections}">
+        <TreeView Grid.Row="1" ItemsSource="{Binding Accounts}">
             <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type vm:ConnectionViewModel}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type vm:AccountViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/account.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type vm:DatabaseViewModel}" ItemsSource="{Binding Children}">
