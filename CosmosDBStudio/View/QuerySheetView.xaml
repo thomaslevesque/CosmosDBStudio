@@ -7,8 +7,12 @@
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:converters="clr-namespace:CosmosDBStudio.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <TabItem.Resources>
+        <converters:EnumToInt32Converter x:Key="enumConverter" />
+    </TabItem.Resources>
     <TabItem.Header>
         <DockPanel>
             <Button DockPanel.Dock="Right" Style="{StaticResource TabCloseButtonStyle}" Command="{Binding CloseCommand}" />
@@ -40,16 +44,33 @@
             </avalonEdit:TextEditor.InputBindings>
         </avalonEdit:TextEditor>
         <GridSplitter Grid.Row="2" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />
-        <TabControl Grid.Row="3" DataContext="{Binding Result}">
-            <TabItem Header="Results" IsSelected="{Binding IsResultsTabSelected, Mode=OneWay}">
+        <TabControl Grid.Row="3" DataContext="{Binding Result}" SelectedIndex="{Binding SelectedTab, Mode=TwoWay, Converter={StaticResource enumConverter}}">
+            <TabItem Header="Documents">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ListBox Grid.Column="0" Name="documents" ItemsSource="{Binding Documents}"
+                             DisplayMemberPath="Id" />
+                    <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch" />
+                    <avalonEdit:TextEditor Grid.Column="1" SyntaxHighlighting="JavaScript">
+                        <i:Interaction.Behaviors>
+                            <bhv:AvalonTextEditorBindingBehavior
+                                Text="{Binding SelectedItem.Json, ElementName=documents, Mode=TwoWay}" />
+                        </i:Interaction.Behaviors>
+                    </avalonEdit:TextEditor>
+                </Grid>
+            </TabItem>
+            <TabItem Header="JSON">
                 <avalonEdit:TextEditor Name="results" SyntaxHighlighting="JavaScript" IsReadOnly="True">
                     <i:Interaction.Behaviors>
                         <bhv:AvalonTextEditorBindingBehavior Text="{Binding Json, Mode=OneWay}" />
                     </i:Interaction.Behaviors>
                 </avalonEdit:TextEditor>
             </TabItem>
-            <TabItem Header="Error" IsSelected="{Binding IsErrorTabSelected, Mode=TwoWay}">
-                <TextBox AcceptsReturn="True" IsReadOnly="True" Text="{Binding Error, Mode=OneWay}" />
+            <TabItem Header="Error">
+                <TextBox AcceptsReturn="True" IsReadOnly="True" Text="{Binding Error, Mode=OneWay}" TextWrapping="Wrap" />
             </TabItem>
         </TabControl>
     </Grid>
