@@ -6,11 +6,14 @@ namespace CosmosDBStudio.ViewModel
 {
     public class DocumentViewModel : BindableBase
     {
-        public DocumentViewModel(JObject document)
+        public DocumentViewModel(JToken document)
         {
-            HasId = document.TryGetValue("id", out var token);
+            JToken idToken = null;
+            HasId = document is JObject obj && obj.TryGetValue("id", out idToken);
             if (HasId)
-                Id = token.Value<string>();
+                Id = idToken.Value<string>();
+            else if (document is JValue value)
+                Id = value.Value?.ToString() ?? "(null)";
             else
                 Id = "(no id)";
 

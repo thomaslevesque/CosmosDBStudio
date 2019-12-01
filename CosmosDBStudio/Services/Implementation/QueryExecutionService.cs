@@ -38,7 +38,7 @@ namespace CosmosDBStudio.Services.Implementation
             var container = client.GetContainer(query.DatabaseId, query.ContainerId);
             var queryDefinition = CreateQueryDefinition(query);
             var requestOptions = CreateRequestOptions(query.Options);
-            var iterator = container.GetItemQueryIterator<JObject>(queryDefinition, query.ContinuationToken, requestOptions);
+            var iterator = container.GetItemQueryIterator<JToken>(queryDefinition, query.ContinuationToken, requestOptions);
             var result = new QueryResult();
             var stopwatch = new Stopwatch();
             try

@@ -6,7 +6,7 @@ namespace CosmosDBStudio.Model
 {
     public class QueryResult
     {
-        public IReadOnlyList<JObject> Documents { get; set; }
+        public IReadOnlyList<JToken> Documents { get; set; }
         public Exception Error { get; set; }
         public TimeSpan TimeElapsed { get; set; }
         public double RequestCharge { get; set; }
