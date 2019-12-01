@@ -23,7 +23,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0">
-            <Image Source="/Images/collection.png" Width="16" Height="16" DockPanel.Dock="Left" />
+            <Image Source="/Images/container.png" Width="16" Height="16" DockPanel.Dock="Left" />
             <TextBox IsReadOnly="True" Text="{Binding CurrentConnectionPath, Mode=OneWay}" />
         </DockPanel>
         <ToolBar Grid.Row="1">

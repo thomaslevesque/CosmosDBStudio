@@ -5,25 +5,25 @@ using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class CollectionsNodeViewModel : NonLeafTreeNodeViewModel
+    public class ContainersNodeViewModel : NonLeafTreeNodeViewModel
     {
         private readonly IConnectionBrowserService _connectionBrowserService;
         private readonly IViewModelFactory _viewModelFactory;
         public DatabaseViewModel Database { get; }
 
-        public CollectionsNodeViewModel(DatabaseViewModel database, IConnectionBrowserService connectionBrowserService, IViewModelFactory viewModelFactory)
+        public ContainersNodeViewModel(DatabaseViewModel database, IConnectionBrowserService connectionBrowserService, IViewModelFactory viewModelFactory)
         {
             _connectionBrowserService = connectionBrowserService;
             _viewModelFactory = viewModelFactory;
             Database = database;
         }
 
-        public override string Text => "Collections";
+        public override string Text => "Containers";
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var collections = await _connectionBrowserService.GetCollectionsAsync(Database.Connection.Id, Database.Id);
-            return collections.Select(id => _viewModelFactory.CreateCollectionViewModel(Database, id)).ToList();
+            var containers = await _connectionBrowserService.GetContainersAsync(Database.Connection.Id, Database.Id);
+            return containers.Select(id => _viewModelFactory.CreateContainerViewModel(Database, id)).ToList();
         }
     }
 }

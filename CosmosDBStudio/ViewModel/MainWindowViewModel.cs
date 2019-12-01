@@ -30,7 +30,7 @@ namespace CosmosDBStudio.ViewModel
             {
                 ConnectionId = message.ConnectionId,
                 DatabaseId = message.DatabaseId,
-                CollectionId = message.CollectionId,
+                ContainerId = message.ContainerId,
                 DefaultOptions = new QueryOptions
                 {
                     PartitionKey = null

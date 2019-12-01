@@ -26,8 +26,8 @@ namespace CosmosDBStudio.ViewModel
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var collections = await _connectionBrowserService.GetCollectionsAsync(Connection.Id, Id);
-            return collections.Select(id => _viewModelFactory.CreateCollectionViewModel(this, id)).ToList();
+            var containers = await _connectionBrowserService.GetContainersAsync(Connection.Id, Id);
+            return containers.Select(id => _viewModelFactory.CreateContainerViewModel(this, id)).ToList();
         }
     }
 }

@@ -29,7 +29,7 @@ namespace CosmosDBStudio.ViewModel
             _text = querySheet.Text;
             _connectionId = querySheet.ConnectionId;
             _databaseId = querySheet.DatabaseId;
-            _collectionId = querySheet.CollectionId;
+            _containerId = querySheet.ContainerId;
 
             _executeCommand = new AsyncDelegateCommand(ExecuteAsync, CanExecute);
             _closeCommand = new DelegateCommand(Close);
@@ -67,15 +67,15 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _databaseId, value);
         }
 
-        private string _collectionId;
+        private string _containerId;
 
-        public string CollectionId
+        public string ContainerId
         {
-            get => _collectionId;
-            set => Set(ref _collectionId, value);
+            get => _containerId;
+            set => Set(ref _containerId, value);
         }
 
-        public string CurrentConnectionPath => $"{_connectionDirectory.GetById(ConnectionId)?.Name ?? "??"}/{DatabaseId}/{CollectionId}";
+        public string CurrentConnectionPath => $"{_connectionDirectory.GetById(ConnectionId)?.Name ?? "??"}/{DatabaseId}/{ContainerId}";
 
         private string _selectedText;
 
@@ -106,7 +106,7 @@ namespace CosmosDBStudio.ViewModel
             {
                 ConnectionId = ConnectionId,
                 DatabaseId = DatabaseId,
-                CollectionId = CollectionId,
+                ContainerId = ContainerId,
                 Sql = SelectedText
             };
             var result = await _queryExecutionService.ExecuteAsync(query);

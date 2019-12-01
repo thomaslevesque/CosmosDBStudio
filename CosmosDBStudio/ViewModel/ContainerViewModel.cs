@@ -5,14 +5,14 @@ using EssentialMVVM;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class CollectionViewModel : TreeNodeViewModel
+    public class ContainerViewModel : TreeNodeViewModel
     {
         private readonly IMessenger _messenger;
 
         public DatabaseViewModel Database { get; }
         public string Id { get; }
 
-        public CollectionViewModel(DatabaseViewModel database, string id, IMessenger messenger)
+        public ContainerViewModel(DatabaseViewModel database, string id, IMessenger messenger)
         {
             _messenger = messenger;
             Database = database;

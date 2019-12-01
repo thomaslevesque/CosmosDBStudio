@@ -30,9 +30,9 @@ namespace CosmosDBStudio.Services.Implementation
                 throw new ArgumentException("No database specified");
             }
 
-            if (string.IsNullOrEmpty(query.CollectionId))
+            if (string.IsNullOrEmpty(query.ContainerId))
             {
-                throw new ArgumentException("No collection specified");
+                throw new ArgumentException("No container specified");
             }
 
             var connection = _connectionDirectory.GetById(query.ConnectionId);
@@ -42,7 +42,7 @@ namespace CosmosDBStudio.Services.Implementation
             }
 
             using var client = CreateCosmosClient(connection);
-            var container = client.GetContainer(query.DatabaseId, query.CollectionId);
+            var container = client.GetContainer(query.DatabaseId, query.ContainerId);
             var queryDefinition = CreateQueryDefinition(query);
             var requestOptions = CreateRequestOptions(query.Options);
             var iterator = container.GetItemQueryIterator<JObject>(queryDefinition, query.ContinuationToken, requestOptions);

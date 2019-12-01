@@ -34,7 +34,7 @@ namespace CosmosDBStudio.Services.Implementation
             return databases.ToArray();
         }
 
-        public async Task<string[]> GetCollectionsAsync(string connectionId, string databaseId)
+        public async Task<string[]> GetContainersAsync(string connectionId, string databaseId)
         {
             var connection = _connectionDirectory.GetById(connectionId);
             if (connection == null)
@@ -43,14 +43,14 @@ namespace CosmosDBStudio.Services.Implementation
             using var client = CreateCosmosClient(connection);
             var database = client.GetDatabase(databaseId);
             var iterator = database.GetContainerQueryIterator<ContainerProperties>();
-            var collections = new List<string>();
+            var containers = new List<string>();
             while (iterator.HasMoreResults)
             {
                 var response = await iterator.ReadNextAsync();
-                collections.AddRange(response.Select(d => d.Id));
+                containers.AddRange(response.Select(d => d.Id));
             }
 
-            return collections.ToArray();
+            return containers.ToArray();
         }
 
         private CosmosClient CreateCosmosClient(DatabaseConnection connection)

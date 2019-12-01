@@ -9,7 +9,7 @@ namespace CosmosDBStudio.ViewModel
         QueryResultViewModel CreateQueryResultViewModel(QueryResult result);
         ConnectionViewModel CreateConnectionViewModel(DatabaseConnection connection);
         DatabaseViewModel CreateDatabaseViewModel(ConnectionViewModel connection, string id);
-        CollectionViewModel CreateCollectionViewModel(DatabaseViewModel database, string id);
+        ContainerViewModel CreateContainerViewModel(DatabaseViewModel database, string id);
         ConnectionsViewModel CreateConnectionsViewModel();
     }
 }

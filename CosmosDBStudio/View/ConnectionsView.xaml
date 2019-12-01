@@ -28,8 +28,8 @@
                 <HierarchicalDataTemplate DataType="{x:Type vm:DatabaseViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/database.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type vm:CollectionViewModel}">
-                    <controls:TreeNodeControl Icon="/Images/collection.png" Content="{Binding Text}" />
+                <DataTemplate DataType="{x:Type vm:ContainerViewModel}">
+                    <controls:TreeNodeControl Icon="/Images/container.png" Content="{Binding Text}" />
                 </DataTemplate>
             </TreeView.Resources>
             <TreeView.ItemContainerStyle>

@@ -2,15 +2,15 @@
 {
     public class NewQuerySheetMessage
     {
-        public NewQuerySheetMessage(string connectionId, string databaseId, string collectionId)
+        public NewQuerySheetMessage(string connectionId, string databaseId, string containerId)
         {
             ConnectionId = connectionId;
             DatabaseId = databaseId;
-            CollectionId = collectionId;
+            ContainerId = containerId;
         }
 
         public string ConnectionId { get; }
         public string DatabaseId { get; }
-        public string CollectionId { get; }
+        public string ContainerId { get; }
     }
 }
