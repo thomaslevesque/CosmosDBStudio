@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls">
+    <Style TargetType="controls:TreeNodeControl">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Padding" Value="3,0,0,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:TreeNodeControl">
+                    <BulletDecorator>
+                        <BulletDecorator.Bullet>
+                            <Image Grid.Column="0" Width="16" Height="16"
+                                   Source="{TemplateBinding Icon}"
+                                   RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </BulletDecorator.Bullet>
+                        <ContentPresenter Margin="{TemplateBinding Padding}" />
+                    </BulletDecorator>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -6,7 +6,7 @@ using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class AccountViewModel : NonLeafTreeNodeViewModel
+    public class AccountViewModel : NonLeafTreeNodeViewModel, ITreeNode
     {
         private readonly CosmosAccount _account;
         private readonly IAccountBrowserService _accountBrowserService;
@@ -33,6 +33,8 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public override string Text => _name;
+
+        public ITreeNode Parent => null;
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {

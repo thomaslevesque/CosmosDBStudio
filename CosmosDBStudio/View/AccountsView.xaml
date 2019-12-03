@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:CosmosDBStudio.View"
              xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel"
              xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="300">
     <Grid>
@@ -15,9 +17,9 @@
         </Grid.RowDefinitions>
 
         <ToolBar Grid.Row="0">
-            <Button Content="Add" />
-            <Button Content="Edit" />
-            <Button Content="Delete" />
+            <Button Content="Add" Command="{Binding AddCommand}" />
+            <Button Content="Edit" Command="{Binding EditCommand}" />
+            <Button Content="Delete" Command="{Binding DeleteCommand}" />
         </ToolBar>
 
         <TreeView Grid.Row="1" ItemsSource="{Binding Accounts}">
@@ -40,7 +42,7 @@
                                 <ContextMenu.ItemContainerStyle>
                                     <Style TargetType="MenuItem">
                                         <Setter Property="Header" Value="{Binding Text}" />
-                                        <Setter Property="Command" Value="{Binding Command}"></Setter>
+                                        <Setter Property="Command" Value="{Binding Command}" />
                                     </Style>
                                 </ContextMenu.ItemContainerStyle>
                             </ContextMenu>
@@ -48,6 +50,10 @@
                     </Setter>
                 </Style>
             </TreeView.ItemContainerStyle>
+            <i:Interaction.Behaviors>
+                <bhv:TreeViewSelectedItemBindingBehavior
+                    SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}" />
+            </i:Interaction.Behaviors>
         </TreeView>
 
     </Grid>

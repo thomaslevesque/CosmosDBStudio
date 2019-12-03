@@ -29,6 +29,8 @@ namespace CosmosDBStudio.ViewModel
 
         public override IEnumerable<MenuCommandViewModel> MenuCommands { get; }
 
+        public ITreeNode Parent => Database;
+
         private void CreateNewQuerySheet()
         {
             _messenger.Publish(new NewQuerySheetMessage(

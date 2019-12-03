@@ -18,9 +18,11 @@ namespace CosmosDBStudio.Services.Implementation
 
         public IEnumerable<CosmosAccount> Accounts => _accounts.Values.Select(c => c.Clone());
 
-        public CosmosAccount GetById(string id)
+        public CosmosAccount GetById(string id) => GetById(id, true);
+
+        private CosmosAccount GetById(string id, bool clone)
         {
-            return _accounts.TryGetValue(id, out var value) ? value.Clone() : null;
+            return _accounts.TryGetValue(id, out var value) ? (clone ? value.Clone() : value) : null;
         }
 
         public void Add(CosmosAccount account)
@@ -35,10 +37,10 @@ namespace CosmosDBStudio.Services.Implementation
 
         public void Update(CosmosAccount account)
         {
-            var existing = GetById(account.Id);
+            var existing = GetById(account.Id, false);
             if (existing == null)
             {
-                Add(account.Clone());
+                Add(account);
             }
             else
             {
