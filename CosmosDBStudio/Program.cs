@@ -31,6 +31,7 @@ namespace CosmosDBStudio
             services.AddSingleton<IQueryExecutionService, QueryExecutionService>();
             services.AddSingleton<IViewModelFactory, ViewModelFactory>();
             services.AddSingleton<IMessenger, Messenger>();
+            services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<App>();
         }
     }
