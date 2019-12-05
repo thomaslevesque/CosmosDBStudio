@@ -71,11 +71,10 @@ namespace CosmosDBStudio.ViewModel
             try
             {
                 Error = null;
-                _children = await LoadChildrenAsync();
+                _children = await Task.Run(LoadChildrenAsync);
             }
             catch (Exception ex)
             {
-                await Task.Yield();
                 Error = "Error " + ex.Message;
                 _children = new[] { new ErrorTreeNodeViewModel(this, ex) };
             }
