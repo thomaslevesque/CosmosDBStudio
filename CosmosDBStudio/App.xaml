@@ -4,6 +4,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources.xaml" />
                 <ResourceDictionary Source="Styles.xaml" />
                 <ResourceDictionary Source="DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>

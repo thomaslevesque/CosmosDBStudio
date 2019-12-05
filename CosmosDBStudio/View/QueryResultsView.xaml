@@ -23,7 +23,7 @@
                 <ListBox Grid.Column="0" Name="documents" ItemsSource="{Binding Documents}"
                              DisplayMemberPath="Id" />
                 <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch" />
-                <avalonEdit:TextEditor Grid.Column="1" SyntaxHighlighting="JavaScript">
+                <avalonEdit:TextEditor Grid.Column="1" SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
                     <i:Interaction.Behaviors>
                         <bhv:AvalonTextEditorBindingBehavior
                                 Text="{Binding SelectedItem.Json, ElementName=documents, Mode=TwoWay}" />
@@ -32,7 +32,7 @@
             </Grid>
         </TabItem>
         <TabItem Header="JSON">
-            <avalonEdit:TextEditor Name="results" SyntaxHighlighting="JavaScript" IsReadOnly="True">
+            <avalonEdit:TextEditor Name="results" SyntaxHighlighting="JavaScript" IsReadOnly="True" FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
                     <bhv:AvalonTextEditorBindingBehavior Text="{Binding Json, Mode=OneWay}" />
                 </i:Interaction.Behaviors>
