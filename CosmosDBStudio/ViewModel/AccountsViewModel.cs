@@ -102,7 +102,7 @@ namespace CosmosDBStudio.ViewModel
             {
                 account.Name = dialog.Name;
                 account.Endpoint = dialog.Endpoint;
-                account.Key = account.Key;
+                account.Key = dialog.Key;
                 _accountDirectory.Update(account);
                 _accountDirectory.Save();
 
