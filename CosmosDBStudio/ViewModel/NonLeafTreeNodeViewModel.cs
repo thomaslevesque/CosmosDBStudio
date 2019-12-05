@@ -12,6 +12,17 @@ namespace CosmosDBStudio.ViewModel
         public abstract string Text { get; }
 
         public virtual IEnumerable<MenuCommandViewModel> MenuCommands => Enumerable.Empty<MenuCommandViewModel>();
+
+        private bool _isExpanded;
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set => Set(ref _isExpanded, value).AndExecute(OnIsExpandedChanged);
+        }
+
+        protected virtual void OnIsExpandedChanged()
+        {
+        }
     }
 
     public abstract class NonLeafTreeNodeViewModel : TreeNodeViewModel
@@ -28,13 +39,20 @@ namespace CosmosDBStudio.ViewModel
         {
             get
             {
-                if (_children == null && _loadChildrenTask == null)
+                if (IsExpanded && _children == null && _loadChildrenTask == null)
                 {
                     _loadChildrenTask = InternalLoadChildrenAsync();
                 }
 
                 return _children ?? _placeholderChildren;
             }
+        }
+
+        protected override void OnIsExpandedChanged()
+        {
+            base.OnIsExpandedChanged();
+            if (IsExpanded)
+                OnPropertyChanged(nameof(Children));
         }
 
         private string _error;

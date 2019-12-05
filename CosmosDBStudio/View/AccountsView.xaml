@@ -58,6 +58,7 @@
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                 </Style>
             </TreeView.ItemContainerStyle>
             <i:Interaction.Behaviors>
