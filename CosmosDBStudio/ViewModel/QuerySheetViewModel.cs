@@ -167,6 +167,9 @@ namespace CosmosDBStudio.ViewModel
             while (char.IsWhiteSpace(Text[end]) && end - 1 >= 0)
                 end--;
 
+            if (start > end)
+                return string.Empty;
+
             string queryText = Text.Substring(start, end - start + 1);
             //string queryText = Text.Substring(previousSeparator, nextSeparator - previousSeparator).Trim();
             if (queryText.Contains(QuerySeparator))
