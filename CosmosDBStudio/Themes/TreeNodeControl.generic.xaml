@@ -18,5 +18,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding HasError, FallbackValue=False}" Value="True">
+                <Setter Property="Foreground" Value="Red" />
+                <Setter Property="ToolTip" Value="{Binding Error, FallbackValue={x:Null}}" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

@@ -33,6 +33,16 @@
                 <DataTemplate DataType="{x:Type vm:ContainerViewModel}">
                     <controls:TreeNodeControl Icon="/Images/container.png" Content="{Binding Text}" />
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:PlaceholderTreeNodeViewModel}">
+                    <TextBlock Text="{Binding Text}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:ErrorTreeNodeViewModel}">
+                    <TextBlock>
+                        <Run Text="{Binding Text, Mode=OneWay}" Foreground="Red" />
+                        <LineBreak />
+                        <Hyperlink Command="{Binding RetryCommand}">Retry</Hyperlink>
+                    </TextBlock>
+                </DataTemplate>
             </TreeView.Resources>
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem">
