@@ -23,7 +23,8 @@
                 <ListBox Grid.Column="0" Name="documents" ItemsSource="{Binding Documents}"
                          DisplayMemberPath="Id" SelectedItem="{Binding SelectedDocument, Mode=TwoWay}" />
                 <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch" />
-                <avalonEdit:TextEditor Grid.Column="1" SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
+                <avalonEdit:TextEditor Grid.Column="1" SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}"
+                                       IsReadOnly="{Binding SelectedDocument.IsReadOnly}">
                     <i:Interaction.Behaviors>
                         <bhv:AvalonTextEditorBindingBehavior
                                 Text="{Binding SelectedDocument.Json, Mode=TwoWay}" />

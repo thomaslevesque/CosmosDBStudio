@@ -11,5 +11,6 @@ namespace CosmosDBStudio.Model
         public TimeSpan TimeElapsed { get; set; }
         public double RequestCharge { get; set; }
         public string ContinuationToken { get; set; }
+        public IEnumerable<string> Warnings { get; set; }
     }
 }

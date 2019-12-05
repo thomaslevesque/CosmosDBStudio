@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,14 +42,25 @@ namespace CosmosDBStudio.Services.Implementation
             var iterator = container.GetItemQueryIterator<JToken>(queryDefinition, query.ContinuationToken, requestOptions);
             var result = new QueryResult();
             var stopwatch = new Stopwatch();
+            List<string> warnings = null;
             try
             {
                 stopwatch.Start();
                 var response = await iterator.ReadNextAsync();
                 stopwatch.Stop();
                 result.RequestCharge += response.RequestCharge;
-                result.ContinuationToken = response.ContinuationToken;
+                try
+                {
+                    result.ContinuationToken = response.ContinuationToken;
+                }
+                catch (Exception ex)
+                {
+                    warnings ??= new List<string>();
+                    warnings.Add(ex.Message);
+                }
+
                 result.Documents = response.ToList();
+                result.Warnings = warnings;
             }
             catch (Exception ex)
             {

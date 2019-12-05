@@ -17,6 +17,7 @@ namespace CosmosDBStudio.ViewModel
             else
                 Id = "(no id)";
 
+            IsReadOnly = !HasId;
             _json = document.ToString(Formatting.Indented);
         }
 
