@@ -18,7 +18,7 @@ namespace CosmosDBStudio.ViewModel
             {
                 Documents = result.Documents.Select(d => new DocumentViewModel(d)).ToList();
                 Json = new JArray(result.Documents).ToString(Formatting.Indented);
-                _selectedTab = ResultTab.Documents;
+                SelectedTab = ResultTab.Documents;
             }
             else
             {
@@ -37,11 +37,21 @@ namespace CosmosDBStudio.ViewModel
                 Documents = new[] { doc };
                 Json = doc.Id;
             }
+
+            SelectedDocument = Documents.FirstOrDefault();
         }
 
         public IReadOnlyList<DocumentViewModel> Documents { get; }
         public string Json { get; }
         public string Error => _result.Error?.Message;
+
+        private DocumentViewModel _selectedDocument;
+        public DocumentViewModel SelectedDocument
+        {
+            get => _selectedDocument;
+            set => Set(ref _selectedDocument, value);
+        }
+
 
         private ResultTab _selectedTab;
         public ResultTab SelectedTab
@@ -49,8 +59,8 @@ namespace CosmosDBStudio.ViewModel
             get => _selectedTab;
             set => Set(ref _selectedTab, value)
                 .AndNotifyPropertyChanged(nameof(IsDocumentsTabSelected))
-                .AndNotifyPropertyChanged(nameof(IsErrorTabSelected))
-                .AndNotifyPropertyChanged(nameof(IsDocumentsTabSelected));
+                .AndNotifyPropertyChanged(nameof(IsJsonTabSelected))
+                .AndNotifyPropertyChanged(nameof(IsErrorTabSelected));
         }
 
         public bool IsDocumentsTabSelected => SelectedTab == ResultTab.Documents;

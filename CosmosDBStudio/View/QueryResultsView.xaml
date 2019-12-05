@@ -21,12 +21,12 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <ListBox Grid.Column="0" Name="documents" ItemsSource="{Binding Documents}"
-                             DisplayMemberPath="Id" />
+                         DisplayMemberPath="Id" SelectedItem="{Binding SelectedDocument, Mode=TwoWay}" />
                 <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch" />
                 <avalonEdit:TextEditor Grid.Column="1" SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
                     <i:Interaction.Behaviors>
                         <bhv:AvalonTextEditorBindingBehavior
-                                Text="{Binding SelectedItem.Json, ElementName=documents, Mode=TwoWay}" />
+                                Text="{Binding SelectedDocument.Json, Mode=TwoWay}" />
                     </i:Interaction.Behaviors>
                 </avalonEdit:TextEditor>
             </Grid>
