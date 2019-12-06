@@ -33,6 +33,8 @@ namespace CosmosDBStudio.ViewModel
 
             _executeCommand = new AsyncDelegateCommand(ExecuteAsync, CanExecute);
             _closeCommand = new DelegateCommand(Close);
+
+            Result = new QueryResultViewModel();
         }
 
         private string _title;

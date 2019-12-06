@@ -11,6 +11,11 @@ namespace CosmosDBStudio.ViewModel
     {
         private readonly QueryResult _result;
 
+        public QueryResultViewModel()
+        {
+            SelectedTab = ResultTab.Documents;
+        }
+
         public QueryResultViewModel(QueryResult result)
         {
             _result = result;
@@ -43,7 +48,7 @@ namespace CosmosDBStudio.ViewModel
 
         public IReadOnlyList<DocumentViewModel> Documents { get; }
         public string Json { get; }
-        public string Error => _result.Error?.Message;
+        public string Error => _result?.Error?.Message;
 
         private DocumentViewModel _selectedDocument;
         public DocumentViewModel SelectedDocument
