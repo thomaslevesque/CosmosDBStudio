@@ -32,6 +32,7 @@
         </ToolBar>
         <avalonEdit:TextEditor Grid.Row="2" Name="editor" SyntaxHighlighting="TSQL" FontFamily="{StaticResource CodeFont}">
             <i:Interaction.Behaviors>
+                <bhv:AvalonTextEditorBehavior UseSearch="True" />
                 <bhv:AvalonTextEditorBindingBehavior
                     Text="{Binding Text}"
                     SelectedText="{Binding SelectedText}"

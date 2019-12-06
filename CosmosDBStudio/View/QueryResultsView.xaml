@@ -26,6 +26,7 @@
                 <avalonEdit:TextEditor Grid.Column="1" SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}"
                                        IsReadOnly="{Binding SelectedDocument.IsReadOnly}">
                     <i:Interaction.Behaviors>
+                        <bhv:AvalonTextEditorBehavior UseSearch="True" />
                         <bhv:AvalonTextEditorBindingBehavior
                                 Text="{Binding SelectedDocument.Json, Mode=TwoWay}" />
                     </i:Interaction.Behaviors>
@@ -35,6 +36,7 @@
         <TabItem Header="JSON">
             <avalonEdit:TextEditor Name="results" SyntaxHighlighting="JavaScript" IsReadOnly="True" FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
+                    <bhv:AvalonTextEditorBehavior UseSearch="True" />
                     <bhv:AvalonTextEditorBindingBehavior Text="{Binding Json, Mode=OneWay}" />
                 </i:Interaction.Behaviors>
             </avalonEdit:TextEditor>
