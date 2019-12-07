@@ -10,72 +10,77 @@ namespace CosmosDBStudio.ViewModel
     public class QueryResultViewModel : BindableBase
     {
         private readonly QueryResult _result;
+        private readonly IViewModelFactory _viewModelFactory;
 
-        public QueryResultViewModel()
+        public QueryResultViewModel(IViewModelFactory viewModelFactory)
         {
-            SelectedTab = ResultTab.Documents;
+            _viewModelFactory = viewModelFactory;
+            SelectedTab = ResultTab.Items;
         }
 
-        public QueryResultViewModel(QueryResult result)
+        public QueryResultViewModel(QueryResult result, IViewModelFactory viewModelFactory)
         {
             _result = result;
+            _viewModelFactory = viewModelFactory;
             if (result.Documents != null && result.Documents.Count > 0)
             {
-                Documents = result.Documents.Select(d => new DocumentViewModel(d)).ToList();
-                Json = new JArray(result.Documents).ToString(Formatting.Indented);
-                SelectedTab = ResultTab.Documents;
+                Items = result.Documents.Select(_viewModelFactory.CreateDocumentViewModel).ToList();
+                Text = new JArray(result.Documents).ToString(Formatting.Indented);
+                IsJson = true;
+                SelectedTab = ResultTab.Items;
             }
             else
             {
-                DocumentViewModel doc;
+                ResultItemViewModel item;
                 if (_result.Error != null)
                 {
-                    doc = DocumentViewModel.Error();
-                    _selectedTab = ResultTab.Error;
+                    item = _viewModelFactory.CreateErrorItemPlaceholder();
+                    SelectedTab = ResultTab.Error;
                 }
                 else
                 {
-                    doc = DocumentViewModel.NoResults();
-                    _selectedTab = ResultTab.Documents;
+                    item = _viewModelFactory.CreateEmptyResultPlaceholder();
+                    SelectedTab = ResultTab.Items;
                 }
 
-                Documents = new[] { doc };
-                Json = doc.Id;
+                Items = new[] { item };
+                Text = item.Text;
+                IsJson = false;
             }
 
-            SelectedDocument = Documents.FirstOrDefault();
+            SelectedItem = Items.FirstOrDefault();
         }
 
-        public IReadOnlyList<DocumentViewModel> Documents { get; }
-        public string Json { get; }
+        public IReadOnlyList<ResultItemViewModel> Items { get; }
+        public bool IsJson { get; }
+        public string Text { get; }
         public string Error => _result?.Error?.Message;
 
-        private DocumentViewModel _selectedDocument;
-        public DocumentViewModel SelectedDocument
+        private ResultItemViewModel _selectedItem;
+        public ResultItemViewModel SelectedItem
         {
-            get => _selectedDocument;
-            set => Set(ref _selectedDocument, value);
+            get => _selectedItem;
+            set => Set(ref _selectedItem, value);
         }
-
 
         private ResultTab _selectedTab;
         public ResultTab SelectedTab
         {
             get => _selectedTab;
             set => Set(ref _selectedTab, value)
-                .AndNotifyPropertyChanged(nameof(IsDocumentsTabSelected))
-                .AndNotifyPropertyChanged(nameof(IsJsonTabSelected))
+                .AndNotifyPropertyChanged(nameof(IsItemsTabSelected))
+                .AndNotifyPropertyChanged(nameof(IsRawTabSelected))
                 .AndNotifyPropertyChanged(nameof(IsErrorTabSelected));
         }
 
-        public bool IsDocumentsTabSelected => SelectedTab == ResultTab.Documents;
-        public bool IsJsonTabSelected => SelectedTab == ResultTab.Json;
+        public bool IsItemsTabSelected => SelectedTab == ResultTab.Items;
+        public bool IsRawTabSelected => SelectedTab == ResultTab.Raw;
         public bool IsErrorTabSelected => SelectedTab == ResultTab.Error;
 
         public enum ResultTab
         {
-            Documents = 0,
-            Json = 1,
+            Items = 0,
+            Raw = 1,
             Error = 2
         }
     }

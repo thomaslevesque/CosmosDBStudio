@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace CosmosDBStudio.Model
+﻿namespace CosmosDBStudio.Model
 {
     public class CosmosAccount
     {

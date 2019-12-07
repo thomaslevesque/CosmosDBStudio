@@ -14,35 +14,45 @@
         <converters:EnumToInt32Converter x:Key="enumConverter" />
     </UserControl.Resources>
     <TabControl SelectedIndex="{Binding SelectedTab, Mode=TwoWay, Converter={StaticResource enumConverter}}">
-        <TabItem Header="Documents">
+        <TabItem Header="Items">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <ListBox Grid.Column="0" Name="documents" ItemsSource="{Binding Documents}"
-                         DisplayMemberPath="Id" SelectedItem="{Binding SelectedDocument, Mode=TwoWay}" />
+                <ListBox Grid.Column="0" Name="items" ItemsSource="{Binding Items}"
+                         DisplayMemberPath="DisplayId" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" />
                 <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch" />
-                <avalonEdit:TextEditor Grid.Column="1" SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}"
-                                       IsReadOnly="{Binding SelectedDocument.IsReadOnly}">
+                <avalonEdit:TextEditor Grid.Column="1"
+                                       SyntaxHighlighting="JavaScript"
+                                       FontFamily="{StaticResource CodeFont}"
+                                       IsReadOnly="{Binding SelectedItem.IsReadOnly}">
                     <i:Interaction.Behaviors>
                         <bhv:AvalonTextEditorBehavior UseSearch="True" />
                         <bhv:AvalonTextEditorBindingBehavior
-                                Text="{Binding SelectedDocument.Json, Mode=TwoWay}" />
+                                Text="{Binding SelectedItem.Text, Mode=TwoWay}" />
                     </i:Interaction.Behaviors>
                 </avalonEdit:TextEditor>
             </Grid>
         </TabItem>
-        <TabItem Header="JSON">
-            <avalonEdit:TextEditor Name="results" SyntaxHighlighting="JavaScript" IsReadOnly="True" FontFamily="{StaticResource CodeFont}">
+        <TabItem Header="Raw">
+            <avalonEdit:TextEditor Name="results"
+                                   SyntaxHighlighting="JavaScript" IsReadOnly="True"
+                                   FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
                     <bhv:AvalonTextEditorBehavior UseSearch="True" />
-                    <bhv:AvalonTextEditorBindingBehavior Text="{Binding Json, Mode=OneWay}" />
+                    <bhv:AvalonTextEditorBindingBehavior Text="{Binding Text, Mode=OneWay}" />
                 </i:Interaction.Behaviors>
             </avalonEdit:TextEditor>
         </TabItem>
         <TabItem Header="Error">
-            <TextBox AcceptsReturn="True" IsReadOnly="True" Text="{Binding Error, Mode=OneWay}" TextWrapping="Wrap" />
+            <TextBox AcceptsReturn="True"
+                     IsReadOnly="True"
+                     IsReadOnlyCaretVisible="True"
+                     VerticalScrollBarVisibility="Auto"
+                     Text="{Binding Error, Mode=OneWay}"
+                     TextWrapping="Wrap"
+                     FontFamily="{StaticResource CodeFont}"/>
         </TabItem>
     </TabControl>
 </UserControl>

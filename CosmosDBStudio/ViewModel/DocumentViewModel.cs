@@ -4,43 +4,51 @@ using Newtonsoft.Json.Linq;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class DocumentViewModel : BindableBase
+
+    public class DocumentViewModel : ResultItemViewModel
     {
+        private readonly JToken _document;
+
         public DocumentViewModel(JToken document)
         {
+            _document = document;
             JToken idToken = null;
-            HasId = document is JObject obj && obj.TryGetValue("id", out idToken);
-            if (HasId)
+            bool hasId = document is JObject obj && obj.TryGetValue("id", out idToken);
+            if (hasId)
                 Id = idToken.Value<string>();
             else if (document is JValue value)
                 Id = value.Value?.ToString() ?? "(null)";
             else
                 Id = "(no id)";
 
-            IsReadOnly = !HasId;
-            _json = document.ToString(Formatting.Indented);
+            IsReadOnly = !IsRawDocument(document);
+            _text = document.ToString(Formatting.Indented);
         }
 
-        private DocumentViewModel(string idText, bool isError)
-        {
-            Id = idText;
-            IsError = isError;
-            IsReadOnly = true;
-        }
+        public override string DisplayId => Id;
+        public override string PartitionKey => throw new System.NotImplementedException();
+        public override bool IsReadOnly { get; }
+        public override bool IsJson => true;
 
-        public bool IsError { get; set; }
-        public bool IsReadOnly { get; set; }
-        public bool HasId { get; }
         public string Id { get; }
 
-        private string _json;
-        public string Json
+        private string _text;
+        public override string Text
         {
-            get => _json;
-            set => Set(ref _json, value);
+            get => _text;
+            set => Set(ref _text, value);
         }
 
-        public static DocumentViewModel Error() => new DocumentViewModel("(Error - see Error tab for details)", true);
-        public static DocumentViewModel NoResults() => new DocumentViewModel("(no results)", false);
+        private static bool IsRawDocument(JToken document)
+        {
+            // If the document has all system properties, it's probably
+            // a raw document, and can be edited
+            return document is JObject obj &&
+                obj.TryGetValue("id", out _) &&
+                obj.TryGetValue("_rid", out _) &&
+                obj.TryGetValue("_self", out _) &&
+                obj.TryGetValue("_etag", out _) &&
+                obj.TryGetValue("_ts", out _);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
+using Newtonsoft.Json.Linq;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -35,9 +36,14 @@ namespace CosmosDBStudio.ViewModel
             return new QuerySheetViewModel(_queryExecutionService, this, _accountDirectory, querySheet);
         }
 
+        public QueryResultViewModel CreateEmptyResultViewModel()
+        {
+            return new QueryResultViewModel(this);
+        }
+
         public QueryResultViewModel CreateQueryResultViewModel(QueryResult result)
         {
-            return new QueryResultViewModel(result);
+            return new QueryResultViewModel(result, this);
         }
 
         public AccountsViewModel CreateAccountsViewModel()
@@ -58,6 +64,21 @@ namespace CosmosDBStudio.ViewModel
         public ContainerViewModel CreateContainerViewModel(DatabaseViewModel database, string id)
         {
             return new ContainerViewModel(database, id, _messenger);
+        }
+
+        public ResultItemViewModel CreateDocumentViewModel(JToken document)
+        {
+            return new DocumentViewModel(document);
+        }
+
+        public ResultItemViewModel CreateErrorItemPlaceholder()
+        {
+            return new ErrorItemPlaceholderViewModel();
+        }
+
+        public ResultItemViewModel CreateEmptyResultPlaceholder()
+        {
+            return new EmptyResultItemPlaceholderViewModel();
         }
     }
 }
