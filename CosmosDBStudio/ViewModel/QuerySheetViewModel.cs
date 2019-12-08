@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CosmosDBStudio.Extensions;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
@@ -11,29 +12,22 @@ namespace CosmosDBStudio.ViewModel
     public class QuerySheetViewModel : BindableBase
     {
         private static int _untitledCounter;
-
-        private readonly IQueryExecutionService _queryExecutionService;
+        private readonly IContainerContext _containerContext;
         private readonly IViewModelFactory _viewModelFactory;
-        private readonly IAccountDirectory _accountDirectory;
         private readonly QuerySheet _querySheet;
 
-        public QuerySheetViewModel(IQueryExecutionService queryExecutionService, IViewModelFactory viewModelFactory, IAccountDirectory accountDirectory, QuerySheet querySheet)
+        public QuerySheetViewModel(
+            IContainerContext containerContext,
+            IViewModelFactory viewModelFactory,
+            QuerySheet querySheet)
         {
-            _queryExecutionService = queryExecutionService;
+            _containerContext = containerContext;
             _viewModelFactory = viewModelFactory;
-            _accountDirectory = accountDirectory;
             _querySheet = querySheet;
             _title = string.IsNullOrEmpty(querySheet.Path)
                 ? $"Untitled {++_untitledCounter}"
                 : Path.GetFileNameWithoutExtension(querySheet.Path);
             _text = querySheet.Text;
-            _accountId = querySheet.AccountId;
-            _databaseId = querySheet.DatabaseId;
-            _containerId = querySheet.ContainerId;
-
-            _executeCommand = new AsyncDelegateCommand(ExecuteAsync, CanExecute);
-            _closeCommand = new DelegateCommand(Close);
-
             _result = _viewModelFactory.CreateNotRunQueryResultViewModel();
         }
 
@@ -51,45 +45,17 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _text;
             set => Set(ref _text, value)
-                .AndExecute(_executeCommand.RaiseCanExecuteChanged);
+                .AndRefreshCanExecute(_executeCommand);
         }
 
-        private string _accountId;
-
-        public string AccountId
-        {
-            get => _accountId;
-            set => Set(ref _accountId, value);
-        }
-
-        private string _databaseId;
-
-        public string DatabaseId
-        {
-            get => _databaseId;
-            set => Set(ref _databaseId, value);
-        }
-
-        private string _containerId;
-
-        public string ContainerId
-        {
-            get => _containerId;
-            set => Set(ref _containerId, value);
-        }
-
-        public string GetContainerPath()
-        {
-            string accountName = _accountDirectory.TryGetById(AccountId, out var account) ? account.Name : "??";
-            return $"{accountName}/{DatabaseId}/{ContainerId}";
-        }
+        public string ContainerPath => $"{_containerContext.AccountName}/{_containerContext.DatabaseId}/{_containerContext.ContainerId}";
 
         private string _selectedText = string.Empty;
         public string SelectedText
         {
             get => _selectedText;
             set => Set(ref _selectedText, value)
-                .AndExecute(_executeCommand.RaiseCanExecuteChanged);
+                .AndRefreshCanExecute(_executeCommand);
         }
 
         private (int start, int end) _selection;
@@ -106,7 +72,7 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _cursorPosition;
             set => Set(ref _cursorPosition, value)
-                .AndExecute(_executeCommand.RaiseCanExecuteChanged);
+                .AndRefreshCanExecute(_executeCommand);
         }
 
         private QueryResultViewModelBase _result;
@@ -117,8 +83,8 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _result, value);
         }
 
-        private readonly AsyncDelegateCommand _executeCommand;
-        public ICommand ExecuteCommand => _executeCommand;
+        private AsyncDelegateCommand? _executeCommand;
+        public ICommand ExecuteCommand => _executeCommand ??= new AsyncDelegateCommand(ExecuteAsync, CanExecute);
 
         private bool CanExecute()
         {
@@ -136,8 +102,8 @@ namespace CosmosDBStudio.ViewModel
                 return;
 
             // TODO: parameters, options
-            var query = new Query(AccountId, DatabaseId, ContainerId, queryText);
-            var result = await _queryExecutionService.ExecuteAsync(query);
+            var query = new Query(queryText);
+            var result = await _containerContext.Query.ExecuteAsync(query, default);
             Result = _viewModelFactory.CreateQueryResultViewModel(result);
         }
 
@@ -195,8 +161,8 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
-        private readonly DelegateCommand _closeCommand;
-        public ICommand CloseCommand => _closeCommand;
+        private DelegateCommand? _closeCommand;
+        public ICommand CloseCommand => _closeCommand ??= new DelegateCommand(Close);
 
         private void Close()
         {

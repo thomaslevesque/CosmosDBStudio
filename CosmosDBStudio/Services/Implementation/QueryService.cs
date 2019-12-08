@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CosmosDBStudio.Model;
 using Microsoft.Azure.Cosmos;
@@ -9,37 +10,20 @@ using Newtonsoft.Json.Linq;
 
 namespace CosmosDBStudio.Services.Implementation
 {
-    public class QueryExecutionService : IQueryExecutionService
+    public class QueryService : IQueryService
     {
-        private readonly IClientPool _clientPool;
+        private readonly Container _container;
 
-        public QueryExecutionService(IClientPool clientPool)
+        public QueryService(Container container)
         {
-            _clientPool = clientPool;
+            _container = container;
         }
 
-        public async Task<QueryResult> ExecuteAsync(Query query)
+        public async Task<QueryResult> ExecuteAsync(Query query, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(query.AccountId))
-            {
-                throw new ArgumentException("No account specified");
-            }
-
-            if (string.IsNullOrEmpty(query.DatabaseId))
-            {
-                throw new ArgumentException("No database specified");
-            }
-
-            if (string.IsNullOrEmpty(query.ContainerId))
-            {
-                throw new ArgumentException("No container specified");
-            }
-
-            var client = _clientPool.GetClientForAccount(query.AccountId);
-            var container = client.GetContainer(query.DatabaseId, query.ContainerId);
             var queryDefinition = CreateQueryDefinition(query);
             var requestOptions = CreateRequestOptions(query.Options);
-            var iterator = container.GetItemQueryIterator<JToken>(queryDefinition, query.ContinuationToken, requestOptions);
+            var iterator = _container.GetItemQueryIterator<JToken>(queryDefinition, query.ContinuationToken, requestOptions);
             var result = new QueryResult();
             var stopwatch = new Stopwatch();
             List<string>? warnings = null;
@@ -76,7 +60,7 @@ namespace CosmosDBStudio.Services.Implementation
             return result;
         }
 
-        private QueryDefinition CreateQueryDefinition(Query query)
+        private static QueryDefinition CreateQueryDefinition(Query query)
         {
             var definition = new QueryDefinition(query.Sql);
             if (query.Parameters != null)
@@ -90,20 +74,12 @@ namespace CosmosDBStudio.Services.Implementation
             return definition;
         }
 
-        private QueryRequestOptions CreateRequestOptions(QueryOptions options)
+        private static QueryRequestOptions CreateRequestOptions(QueryOptions options)
         {
-            return new QueryRequestOptions
-            {
-                PartitionKey = options?.PartitionKey switch
-                {
-                    null => default(PartitionKey?),
-                    string s => new PartitionKey(s),
-                    double d => new PartitionKey(d),
-                    bool b => new PartitionKey(b),
-                    _ => throw new ArgumentException("Invalid partition key type")
-                },
-                MaxItemCount = options?.MaxItemCount ?? 100
-            };
+            return new QueryRequestOptionsBuilder()
+                .WithPartitionKey(options.PartitionKey)
+                .WithMaxItemCount(options.MaxItemCount ?? 100)
+                .Build();
         }
     }
 }

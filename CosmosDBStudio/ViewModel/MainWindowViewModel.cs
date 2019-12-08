@@ -10,11 +10,16 @@ namespace CosmosDBStudio.ViewModel
     public class MainWindowViewModel : BindableBase
     {
         private readonly IViewModelFactory _viewModelFactory;
+        private readonly IContainerContextFactory _containerContextFactory;
         private readonly IMessenger _messenger;
 
-        public MainWindowViewModel(IViewModelFactory viewModelFactory, IMessenger messenger)
+        public MainWindowViewModel(
+            IViewModelFactory viewModelFactory,
+            IContainerContextFactory containerContextFactory,
+            IMessenger messenger)
         {
             _viewModelFactory = viewModelFactory;
+            _containerContextFactory = containerContextFactory;
             _messenger = messenger;
             QuerySheets = new ObservableCollection<QuerySheetViewModel>();
             Accounts = _viewModelFactory.CreateAccountsViewModel();
@@ -24,23 +29,35 @@ namespace CosmosDBStudio.ViewModel
             //AddDummyQuerySheet();
         }
 
-        private void OnNewQuerySheetMessage(NewQuerySheetMessage message)
+        private async void OnNewQuerySheetMessage(NewQuerySheetMessage message)
         {
-            var querySheet = new QuerySheet
+            try
             {
-                AccountId = message.AccountId,
-                DatabaseId = message.DatabaseId,
-                ContainerId = message.ContainerId,
-                DefaultOptions = new QueryOptions
+                var querySheet = new QuerySheet
                 {
-                    PartitionKey = null
-                }
-            };
+                    AccountId = message.AccountId,
+                    DatabaseId = message.DatabaseId,
+                    ContainerId = message.ContainerId,
+                    DefaultOptions = new QueryOptions
+                    {
+                        PartitionKey = null
+                    }
+                };
 
-            var vm = _viewModelFactory.CreateQuerySheetViewModel(querySheet);
-            vm.CloseRequested += CloseHandler;
-            QuerySheets.Add(vm);
-            CurrentQuerySheet = vm;
+                var context = await _containerContextFactory.CreateAsync(
+                    message.AccountId,
+                    message.DatabaseId,
+                    message.ContainerId,
+                    default);
+                var vm = _viewModelFactory.CreateQuerySheetViewModel(context, querySheet);
+                vm.CloseRequested += CloseHandler;
+                QuerySheets.Add(vm);
+                CurrentQuerySheet = vm;
+            }
+            catch
+            {
+                // TODO show error
+            }
 
             void CloseHandler(object? sender, EventArgs e)
             {

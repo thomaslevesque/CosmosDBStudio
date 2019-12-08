@@ -7,33 +7,33 @@ namespace CosmosDBStudio.ViewModel
     public class ViewModelFactory : IViewModelFactory
     {
         private readonly IMessenger _messenger;
-        private readonly IQueryExecutionService _queryExecutionService;
         private readonly IAccountDirectory _accountDirectory;
+        private readonly IContainerContextFactory _containerContextFactory;
         private readonly IAccountBrowserService _accountBrowserService;
         private readonly IDialogService _dialogService;
 
         public ViewModelFactory(
             IMessenger messenger,
-            IQueryExecutionService queryExecutionService,
             IAccountDirectory accountDirectory,
+            IContainerContextFactory containerContextFactory,
             IAccountBrowserService accountBrowserService,
             IDialogService dialogService)
         {
             _messenger = messenger;
-            _queryExecutionService = queryExecutionService;
             _accountDirectory = accountDirectory;
+            _containerContextFactory = containerContextFactory;
             _accountBrowserService = accountBrowserService;
             _dialogService = dialogService;
         }
 
         public MainWindowViewModel CreateMainWindowViewModel()
         {
-            return new MainWindowViewModel(this, _messenger);
+            return new MainWindowViewModel(this, _containerContextFactory, _messenger);
         }
 
-        public QuerySheetViewModel CreateQuerySheetViewModel(QuerySheet querySheet)
+        public QuerySheetViewModel CreateQuerySheetViewModel(IContainerContext containerContext, QuerySheet querySheet)
         {
-            return new QuerySheetViewModel(_queryExecutionService, this, _accountDirectory, querySheet);
+            return new QuerySheetViewModel(containerContext, this, querySheet);
         }
 
         public NotRunQueryResultViewModel CreateNotRunQueryResultViewModel()

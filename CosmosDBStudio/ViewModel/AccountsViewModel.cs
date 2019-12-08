@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CosmosDBStudio.Extensions;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
@@ -40,8 +41,8 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _selectedItem;
             set => Set(ref _selectedItem, value)
-                .AndExecute(() => _editCommand?.RaiseCanExecuteChanged())
-                .AndExecute(() => _deleteCommand?.RaiseCanExecuteChanged());
+                .AndRefreshCanExecute(_editCommand)
+                .AndRefreshCanExecute(_deleteCommand);
         }
 
         private DelegateCommand? _addCommand;

@@ -1,11 +1,12 @@
 ﻿using CosmosDBStudio.Model;
+using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.ViewModel
 {
     public interface IViewModelFactory
     {
         MainWindowViewModel CreateMainWindowViewModel();
-        QuerySheetViewModel CreateQuerySheetViewModel(QuerySheet querySheet);
+        QuerySheetViewModel CreateQuerySheetViewModel(IContainerContext containerContext, QuerySheet querySheet);
         QueryResultViewModel CreateQueryResultViewModel(QueryResult result);
         AccountViewModel CreateAccountViewModel(CosmosAccount account);
         DatabaseViewModel CreateDatabaseViewModel(AccountViewModel account, string id);
