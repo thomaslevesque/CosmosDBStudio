@@ -8,6 +8,8 @@ namespace CosmosDBStudio.ViewModel
     {
         public abstract string Text { get; }
 
+        public abstract NonLeafTreeNodeViewModel? Parent { get; }
+
         public virtual IEnumerable<MenuCommandViewModel> MenuCommands => Enumerable.Empty<MenuCommandViewModel>();
 
         private bool _isExpanded;

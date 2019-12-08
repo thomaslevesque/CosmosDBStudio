@@ -29,7 +29,7 @@ namespace CosmosDBStudio.ViewModel
 
         public override IEnumerable<MenuCommandViewModel> MenuCommands { get; }
 
-        public ITreeNode Parent => Database;
+        public override NonLeafTreeNodeViewModel? Parent => Database;
 
         private void CreateNewQuerySheet()
         {

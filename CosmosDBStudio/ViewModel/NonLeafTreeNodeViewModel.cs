@@ -10,7 +10,7 @@ namespace CosmosDBStudio.ViewModel
     {
         protected NonLeafTreeNodeViewModel()
         {
-            _placeholderChildren = new[] { new PlaceholderTreeNodeViewModel() };
+            _placeholderChildren = new[] { new PlaceholderTreeNodeViewModel(this) };
         }
 
         private readonly IEnumerable<TreeNodeViewModel> _placeholderChildren;
@@ -75,28 +75,32 @@ namespace CosmosDBStudio.ViewModel
 
     sealed class PlaceholderTreeNodeViewModel : TreeNodeViewModel
     {
+        public PlaceholderTreeNodeViewModel(NonLeafTreeNodeViewModel parent)
+        {
+            Parent = parent;
+        }
+
         public override string Text => "Loading...";
+        public override NonLeafTreeNodeViewModel? Parent { get; }
     }
 
     sealed class ErrorTreeNodeViewModel : TreeNodeViewModel
     {
-        private readonly NonLeafTreeNodeViewModel _parent;
-        private readonly Exception _exception;
-
         public ErrorTreeNodeViewModel(NonLeafTreeNodeViewModel parent, Exception exception)
         {
-            _parent = parent;
-            _exception = exception;
+            Parent = parent;
+            Text = "Error: " + exception.Message;
         }
 
-        public override string Text => "Error: " + _exception.Message;
+        public override string Text { get; }
+        public override NonLeafTreeNodeViewModel? Parent { get; }
 
         private DelegateCommand? _retryCommand;
         public ICommand RetryCommand => _retryCommand ??= new DelegateCommand(Retry);
 
         private void Retry()
         {
-            _parent.RetryLoadChildren();
+            Parent?.RetryLoadChildren();
         }
     }
 }
