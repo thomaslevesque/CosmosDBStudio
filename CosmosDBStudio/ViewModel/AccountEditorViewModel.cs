@@ -5,7 +5,7 @@ namespace CosmosDBStudio.ViewModel
 {
     public class AccountEditorViewModel : DialogViewModelBase
     {
-        public AccountEditorViewModel(CosmosAccount account = null)
+        public AccountEditorViewModel(CosmosAccount? account = null)
         {
             _name = account?.Name ?? string.Empty;
             _endpoint = account?.Endpoint ?? string.Empty;

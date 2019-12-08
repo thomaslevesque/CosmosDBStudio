@@ -39,7 +39,7 @@ namespace CosmosDBStudio.Behaviors
             }
         }
 
-        private SearchPanel _searchPanel;
+        private SearchPanel? _searchPanel;
         private void OnUseSearchChanged()
         {
             if (AssociatedObject is null)
@@ -51,7 +51,7 @@ namespace CosmosDBStudio.Behaviors
             }
             else if (_searchPanel != null)
             {
-                _searchPanel?.Uninstall();
+                _searchPanel.Uninstall();
                 _searchPanel = null;
             }
         }

@@ -14,7 +14,7 @@ namespace CosmosDBStudio.ViewModel
         }
 
         private readonly IEnumerable<TreeNodeViewModel> _placeholderChildren;
-        private IEnumerable<TreeNodeViewModel> _children;
+        private IEnumerable<TreeNodeViewModel>? _children;
 
         public IEnumerable<TreeNodeViewModel> Children
         {
@@ -36,8 +36,8 @@ namespace CosmosDBStudio.ViewModel
                 OnPropertyChanged(nameof(Children));
         }
 
-        private string _error;
-        public string Error
+        private string? _error;
+        public string? Error
         {
             get => _error;
             set => Set(ref _error, value).AndNotifyPropertyChanged(nameof(HasError));
@@ -45,7 +45,7 @@ namespace CosmosDBStudio.ViewModel
 
         public bool HasError => !string.IsNullOrEmpty(Error);
 
-        private Task _loadChildrenTask;
+        private Task? _loadChildrenTask;
 
         private async Task InternalLoadChildrenAsync()
         {
@@ -91,7 +91,7 @@ namespace CosmosDBStudio.ViewModel
 
         public override string Text => "Error: " + _exception.Message;
 
-        private DelegateCommand _retryCommand;
+        private DelegateCommand? _retryCommand;
         public ICommand RetryCommand => _retryCommand ??= new DelegateCommand(Retry);
 
         private void Retry()

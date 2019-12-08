@@ -35,8 +35,8 @@ namespace CosmosDBStudio.ViewModel
 
         public ObservableCollection<AccountViewModel> Accounts { get; }
 
-        private object _selectedItem;
-        public object SelectedItem
+        private object? _selectedItem;
+        public object? SelectedItem
         {
             get => _selectedItem;
             set => Set(ref _selectedItem, value)
@@ -44,7 +44,7 @@ namespace CosmosDBStudio.ViewModel
                 .AndExecute(() => _deleteCommand?.RaiseCanExecuteChanged());
         }
 
-        private DelegateCommand _addCommand;
+        private DelegateCommand? _addCommand;
         public ICommand AddCommand => _addCommand ??= new DelegateCommand(AddAccount);
 
         private void AddAccount()
@@ -66,7 +66,7 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
-        private DelegateCommand _deleteCommand;
+        private DelegateCommand? _deleteCommand;
         public ICommand DeleteCommand => _deleteCommand ??= new DelegateCommand(DeleteAccount, CanDeleteAccount);
 
         private void DeleteAccount()
@@ -85,7 +85,7 @@ namespace CosmosDBStudio.ViewModel
 
         private bool CanDeleteAccount() => SelectedItem is AccountViewModel;
 
-        private DelegateCommand _editCommand;
+        private DelegateCommand? _editCommand;
         public ICommand EditCommand => _editCommand ??= new DelegateCommand(EditAccount, CanEditAccount);
 
         private void EditAccount()
@@ -93,8 +93,7 @@ namespace CosmosDBStudio.ViewModel
             if (!(SelectedItem is AccountViewModel accountVm))
                 return;
 
-            var account = _accountDirectory.GetById(accountVm.Id);
-            if (account is null)
+            if (!_accountDirectory.TryGetById(accountVm.Id, out var account))
                 return;
 
             var dialog = new AccountEditorViewModel(account);

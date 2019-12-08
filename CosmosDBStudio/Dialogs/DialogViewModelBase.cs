@@ -9,7 +9,7 @@ namespace CosmosDBStudio.Dialogs
     {
         private readonly ObservableCollection<DialogButton> _buttons = new ObservableCollection<DialogButton>();
 
-        private string _title;
+        private string _title = string.Empty;
         public string Title
         {
             get => _title;
@@ -18,7 +18,7 @@ namespace CosmosDBStudio.Dialogs
 
         public IEnumerable<DialogButton> Buttons => _buttons;
 
-        public event EventHandler<bool?> CloseRequested;
+        public event EventHandler<bool?>? CloseRequested;
 
         protected void AddButton(DialogButton button)
         {
@@ -30,7 +30,7 @@ namespace CosmosDBStudio.Dialogs
             _buttons.Remove(button);
         }
 
-        protected void AddOkButton(Action<DialogButton> customize = null)
+        protected void AddOkButton(Action<DialogButton>? customize = null)
         {
             var button = new DialogButton
             {
@@ -43,7 +43,7 @@ namespace CosmosDBStudio.Dialogs
             AddButton(button);
         }
 
-        protected void AddCancelButton(Action<DialogButton> customize = null)
+        protected void AddCancelButton(Action<DialogButton>? customize = null)
         {
             var button = new DialogButton
             {

@@ -11,7 +11,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public void Publish<TMessage>(TMessage message)
         {
-            List<LinkedListNode<IWeakHandler>> deadNodes = null;
+            List<LinkedListNode<IWeakHandler>>? deadNodes = null;
 
             var nodes = GetNodes();
 
@@ -22,7 +22,7 @@ namespace CosmosDBStudio.Services.Implementation
                 {
                     AddDeadNode(node);
                 }
-                else if (weakHandler.CanHandle(typeof(TMessage)) && !weakHandler.TryInvoke(message))
+                else if (weakHandler.CanHandle(typeof(TMessage)) && !weakHandler.TryInvoke(message!))
                 {
                     AddDeadNode(node);
                 }
@@ -40,14 +40,13 @@ namespace CosmosDBStudio.Services.Implementation
 
             void AddDeadNode(LinkedListNode<IWeakHandler> node)
             {
-                if (deadNodes == null)
-                    deadNodes = new List<LinkedListNode<IWeakHandler>>();
+                deadNodes ??= new List<LinkedListNode<IWeakHandler>>();
                 deadNodes.Add(node);
             }
 
             void PruneDeadNodes()
             {
-                if (deadNodes == null)
+                if (deadNodes is null)
                     return;
 
                 lock (_weakHandlers)
@@ -126,7 +125,7 @@ namespace CosmosDBStudio.Services.Implementation
 
             public void Dispose()
             {
-                _subscriber.SetTarget(null);
+                _subscriber.SetTarget(null!);
             }
         }
 

@@ -2,6 +2,6 @@
 {
     public interface ITreeNode
     {
-        ITreeNode Parent { get; }
+        ITreeNode? Parent { get; }
     }
 }

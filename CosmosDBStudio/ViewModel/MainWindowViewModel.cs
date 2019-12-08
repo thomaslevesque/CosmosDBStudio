@@ -42,9 +42,9 @@ namespace CosmosDBStudio.ViewModel
             QuerySheets.Add(vm);
             CurrentQuerySheet = vm;
 
-            void CloseHandler(object sender, EventArgs e)
+            void CloseHandler(object? sender, EventArgs e)
             {
-                var sheet = (QuerySheetViewModel)sender;
+                var sheet = (QuerySheetViewModel)sender!;
                 QuerySheets.Remove(sheet);
                 sheet.CloseRequested -= CloseHandler;
             }
@@ -54,9 +54,9 @@ namespace CosmosDBStudio.ViewModel
 
         public ObservableCollection<QuerySheetViewModel> QuerySheets { get; }
 
-        private QuerySheetViewModel _currentQuerySheet;
+        private QuerySheetViewModel? _currentQuerySheet;
 
-        public QuerySheetViewModel CurrentQuerySheet
+        public QuerySheetViewModel? CurrentQuerySheet
         {
             get => _currentQuerySheet;
             set => Set(ref _currentQuerySheet, value);

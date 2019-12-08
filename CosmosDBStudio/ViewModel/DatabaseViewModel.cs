@@ -24,7 +24,7 @@ namespace CosmosDBStudio.ViewModel
 
         public override string Text => Id;
 
-        public ITreeNode Parent => Account;
+        public ITreeNode? Parent => Account;
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {

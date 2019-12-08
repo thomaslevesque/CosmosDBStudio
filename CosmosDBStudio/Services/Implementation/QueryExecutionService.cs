@@ -42,7 +42,7 @@ namespace CosmosDBStudio.Services.Implementation
             var iterator = container.GetItemQueryIterator<JToken>(queryDefinition, query.ContinuationToken, requestOptions);
             var result = new QueryResult();
             var stopwatch = new Stopwatch();
-            List<string> warnings = null;
+            List<string>? warnings = null;
             try
             {
                 stopwatch.Start();
@@ -59,8 +59,9 @@ namespace CosmosDBStudio.Services.Implementation
                     warnings.Add(ex.Message);
                 }
 
-                result.Documents = response.ToList();
-                result.Warnings = warnings;
+                result.Items = response.ToList();
+                if (warnings != null)
+                    result.Warnings = warnings;
             }
             catch (Exception ex)
             {

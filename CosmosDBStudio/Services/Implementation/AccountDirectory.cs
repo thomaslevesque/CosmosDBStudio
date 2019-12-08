@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using CosmosDBStudio.Model;
@@ -9,7 +10,7 @@ namespace CosmosDBStudio.Services.Implementation
 {
     class AccountDirectory : IAccountDirectory
     {
-        private Dictionary<string, CosmosAccount> _accounts;
+        private Dictionary<string, CosmosAccount> _accounts = new Dictionary<string, CosmosAccount>();
 
         public AccountDirectory()
         {
@@ -18,11 +19,21 @@ namespace CosmosDBStudio.Services.Implementation
 
         public IEnumerable<CosmosAccount> Accounts => _accounts.Values.Select(c => c.Clone());
 
-        public CosmosAccount GetById(string id) => GetById(id, true);
-
-        private CosmosAccount GetById(string id, bool clone)
+        public bool TryGetById(string id, [NotNullWhen(true)] out CosmosAccount? account)
         {
-            return _accounts.TryGetValue(id, out var value) ? (clone ? value.Clone() : value) : null;
+            return TryGetById(id, out account, true);
+        }
+
+        public bool TryGetById(string id, [NotNullWhen(true)] out CosmosAccount? account, bool clone)
+        {
+            if (_accounts.TryGetValue(id, out var value))
+            {
+                account = clone ? value.Clone() : value;
+                return true;
+            }
+
+            account = null;
+            return false;
         }
 
         public void Add(CosmosAccount account)
@@ -37,8 +48,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public void Update(CosmosAccount account)
         {
-            var existing = GetById(account.Id, false);
-            if (existing == null)
+            if (!TryGetById(account.Id, out var existing, false))
             {
                 Add(account);
             }

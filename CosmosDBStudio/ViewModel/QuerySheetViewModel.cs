@@ -34,7 +34,7 @@ namespace CosmosDBStudio.ViewModel
             _executeCommand = new AsyncDelegateCommand(ExecuteAsync, CanExecute);
             _closeCommand = new DelegateCommand(Close);
 
-            Result = _viewModelFactory.CreateEmptyResultViewModel();
+            _result = _viewModelFactory.CreateNotRunQueryResultViewModel();
         }
 
         private string _title;
@@ -78,9 +78,13 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _containerId, value);
         }
 
-        public string ContainerPath => $"{_accountDirectory.GetById(AccountId)?.Name ?? "??"}/{DatabaseId}/{ContainerId}";
+        public string GetContainerPath()
+        {
+            string accountName = _accountDirectory.TryGetById(AccountId, out var account) ? account.Name : "??";
+            return $"{accountName}/{DatabaseId}/{ContainerId}";
+        }
 
-        private string _selectedText;
+        private string _selectedText = string.Empty;
         public string SelectedText
         {
             get => _selectedText;
@@ -105,9 +109,9 @@ namespace CosmosDBStudio.ViewModel
                 .AndExecute(_executeCommand.RaiseCanExecuteChanged);
         }
 
-        private QueryResultViewModel _result;
+        private QueryResultViewModelBase _result;
 
-        public QueryResultViewModel Result
+        public QueryResultViewModelBase Result
         {
             get => _result;
             set => Set(ref _result, value);
@@ -132,13 +136,7 @@ namespace CosmosDBStudio.ViewModel
                 return;
 
             // TODO: parameters, options
-            var query = new Query
-            {
-                AccountId = AccountId,
-                DatabaseId = DatabaseId,
-                ContainerId = ContainerId,
-                Sql = queryText
-            };
+            var query = new Query(AccountId, DatabaseId, ContainerId, queryText);
             var result = await _queryExecutionService.ExecuteAsync(query);
             Result = _viewModelFactory.CreateQueryResultViewModel(result);
         }
@@ -205,6 +203,6 @@ namespace CosmosDBStudio.ViewModel
             CloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        public event EventHandler CloseRequested;
+        public event EventHandler? CloseRequested;
     }
 }

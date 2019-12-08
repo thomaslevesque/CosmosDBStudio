@@ -26,7 +26,7 @@ namespace CosmosDBStudio.Services.Implementation
                 dialog.CloseRequested -= OnCloseRequested;
             }
 
-            void OnCloseRequested(object sender, bool? dialogResult)
+            void OnCloseRequested(object? sender, bool? dialogResult)
             {
                 if (dialogResult is bool value)
                     window.DialogResult = value;

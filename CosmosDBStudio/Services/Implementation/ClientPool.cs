@@ -33,7 +33,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         private CosmosClient CreateClient(string accountId)
         {
-            if (_accountDirectory.GetById(accountId) is CosmosAccount account)
+            if (_accountDirectory.TryGetById(accountId, out var account))
             {
                 return new CosmosClient(
                     account.Endpoint,

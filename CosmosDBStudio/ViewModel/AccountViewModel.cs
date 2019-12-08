@@ -34,7 +34,7 @@ namespace CosmosDBStudio.ViewModel
 
         public override string Text => _name;
 
-        public ITreeNode Parent => null;
+        public ITreeNode? Parent => null;
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {

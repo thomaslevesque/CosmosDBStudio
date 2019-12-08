@@ -4,7 +4,7 @@
     {
         public override string DisplayId => "(error)";
 
-        public override string PartitionKey => null;
+        public override string? PartitionKey => null;
 
         public override string Text
         {

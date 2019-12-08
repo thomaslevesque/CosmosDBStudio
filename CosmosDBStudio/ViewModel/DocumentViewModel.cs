@@ -12,7 +12,7 @@ namespace CosmosDBStudio.ViewModel
         public DocumentViewModel(JToken document)
         {
             _document = document;
-            JToken idToken = null;
+            JToken? idToken = null;
             bool hasId = document is JObject obj && obj.TryGetValue("id", out idToken);
             if (hasId)
                 Id = idToken.Value<string>();
@@ -26,7 +26,7 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public override string DisplayId => Id;
-        public override string PartitionKey => throw new System.NotImplementedException();
+        public override string? PartitionKey => throw new System.NotImplementedException();
         public override bool IsReadOnly { get; }
         public override bool IsJson => true;
 

@@ -53,7 +53,7 @@ namespace CosmosDBStudio.Behaviors
                 AssociatedObject.Text = Text ?? string.Empty;
         }
 
-        private void AssociatedObjectTextChanged(object sender, EventArgs e)
+        private void AssociatedObjectTextChanged(object? sender, EventArgs e)
         {
             if (Text != AssociatedObject.Text)
                 Text = AssociatedObject.Text ?? string.Empty;
@@ -124,7 +124,7 @@ namespace CosmosDBStudio.Behaviors
             }
         }
 
-        private void AssociatedObjectSelectionChanged(object sender, EventArgs e)
+        private void AssociatedObjectSelectionChanged(object? sender, EventArgs e)
         {
             if (SelectedText != AssociatedObject.SelectedText)
                 SelectedText = AssociatedObject.SelectedText ?? string.Empty;
@@ -163,7 +163,7 @@ namespace CosmosDBStudio.Behaviors
                 AssociatedObject.CaretOffset = CursorPosition;
         }
 
-        private void AssociatedObjectCaretPositionChanged(object sender, EventArgs e)
+        private void AssociatedObjectCaretPositionChanged(object? sender, EventArgs e)
         {
             if (CursorPosition != AssociatedObject.CaretOffset)
                 CursorPosition = AssociatedObject.CaretOffset;

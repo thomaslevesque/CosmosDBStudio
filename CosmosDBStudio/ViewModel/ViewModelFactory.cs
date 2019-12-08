@@ -36,9 +36,9 @@ namespace CosmosDBStudio.ViewModel
             return new QuerySheetViewModel(_queryExecutionService, this, _accountDirectory, querySheet);
         }
 
-        public QueryResultViewModel CreateEmptyResultViewModel()
+        public NotRunQueryResultViewModel CreateNotRunQueryResultViewModel()
         {
-            return new QueryResultViewModel(this);
+            return new NotRunQueryResultViewModel();
         }
 
         public QueryResultViewModel CreateQueryResultViewModel(QueryResult result)
