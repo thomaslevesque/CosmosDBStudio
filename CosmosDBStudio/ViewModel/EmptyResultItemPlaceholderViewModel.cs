@@ -4,7 +4,7 @@
     {
         public override string DisplayId => "(no results)";
 
-        public override string? PartitionKey => null;
+        public override object? PartitionKey => null;
 
         public override string Text
         {

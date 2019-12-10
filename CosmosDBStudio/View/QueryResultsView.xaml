@@ -8,20 +8,32 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
              xmlns:converters="clr-namespace:CosmosDBStudio.Converters"
+             xmlns:markup="clr-namespace:CosmosDBStudio.Markup"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:EnumToInt32Converter x:Key="enumConverter" />
+        <converters:SuppressAccessKeyConverter x:Key="noAccessKey" />
+        <markup:BindingProxy x:Key="proxy" Data="{Binding}" />
     </UserControl.Resources>
     <TabControl SelectedIndex="{Binding SelectedTab, Mode=TwoWay, Converter={StaticResource enumConverter}}">
         <TabItem Header="Items">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <ListBox Grid.Column="0" Name="items" ItemsSource="{Binding Items}"
-                         DisplayMemberPath="DisplayId" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" />
+                <ListView Grid.Column="0" Name="items" ItemsSource="{Binding Items}"
+                          DisplayMemberPath="DisplayId" SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                          SelectionMode="Single">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="id" DisplayMemberBinding="{Binding Id}"  />
+                            <GridViewColumn Header="{Binding Data.PartitionKeyPath, Source={StaticResource proxy}, Converter={StaticResource noAccessKey}}"
+                                            DisplayMemberBinding="{Binding PartitionKey}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
                 <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch" />
                 <avalonEdit:TextEditor Grid.Column="1"
                                        SyntaxHighlighting="JavaScript"

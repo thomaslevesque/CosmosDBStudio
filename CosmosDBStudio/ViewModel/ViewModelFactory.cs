@@ -41,9 +41,9 @@ namespace CosmosDBStudio.ViewModel
             return new NotRunQueryResultViewModel();
         }
 
-        public QueryResultViewModel CreateQueryResultViewModel(QueryResult result)
+        public QueryResultViewModel CreateQueryResultViewModel(QueryResult result, IContainerContext containerContext)
         {
-            return new QueryResultViewModel(result, this);
+            return new QueryResultViewModel(result, containerContext, this);
         }
 
         public AccountsViewModel CreateAccountsViewModel()
@@ -66,9 +66,9 @@ namespace CosmosDBStudio.ViewModel
             return new ContainerViewModel(database, id, _messenger);
         }
 
-        public ResultItemViewModel CreateDocumentViewModel(JToken document)
+        public ResultItemViewModel CreateDocumentViewModel(JToken document, IContainerContext containerContext)
         {
-            return new DocumentViewModel(document);
+            return new DocumentViewModel(document, containerContext);
         }
 
         public ResultItemViewModel CreateErrorItemPlaceholder()

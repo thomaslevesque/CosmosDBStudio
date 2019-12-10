@@ -1,4 +1,4 @@
-- [ ] View partition key in results
+- [x] View partition key in results
 - [ ] Items CRUD
 - [ ] Partition key setting
 	- [ ] MRU

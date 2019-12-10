@@ -104,7 +104,7 @@ namespace CosmosDBStudio.ViewModel
             // TODO: parameters, options
             var query = new Query(queryText);
             var result = await _containerContext.Query.ExecuteAsync(query, default);
-            Result = _viewModelFactory.CreateQueryResultViewModel(result);
+            Result = _viewModelFactory.CreateQueryResultViewModel(result, _containerContext);
         }
 
         private static readonly string QuerySeparator = Environment.NewLine + Environment.NewLine;

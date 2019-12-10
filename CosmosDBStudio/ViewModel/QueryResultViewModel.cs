@@ -1,4 +1,5 @@
 ﻿using CosmosDBStudio.Model;
+using CosmosDBStudio.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -9,15 +10,22 @@ namespace CosmosDBStudio.ViewModel
     public class QueryResultViewModel : QueryResultViewModelBase
     {
         private readonly QueryResult _result;
+        private readonly IContainerContext _containerContext;
         private readonly IViewModelFactory _viewModelFactory;
 
-        public QueryResultViewModel(QueryResult result, IViewModelFactory viewModelFactory)
+        public QueryResultViewModel(
+            QueryResult result,
+            IContainerContext containerContext,
+            IViewModelFactory viewModelFactory)
         {
             _result = result;
+            _containerContext = containerContext;
             _viewModelFactory = viewModelFactory;
             if (result.Items != null && result.Items.Count > 0)
             {
-                Items = result.Items.Select(_viewModelFactory.CreateDocumentViewModel).ToList();
+                Items = result.Items
+                    .Select(item => _viewModelFactory.CreateDocumentViewModel(item, _containerContext))
+                    .ToList();
                 Text = new JArray(result.Items).ToString(Formatting.Indented);
                 IsJson = true;
                 SelectedTab = ResultTab.Items;
@@ -55,5 +63,7 @@ namespace CosmosDBStudio.ViewModel
             get => _selectedItem;
             set => Set(ref _selectedItem, value);
         }
+
+        public string PartitionKeyPath => _containerContext.PartitionKeyPath ?? string.Empty;
     }
 }

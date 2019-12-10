@@ -22,5 +22,14 @@ namespace CosmosDBStudio.ViewModel
         protected virtual void OnIsExpandedChanged()
         {
         }
+
+        private string? _error;
+        public string? Error
+        {
+            get => _error;
+            set => Set(ref _error, value).AndNotifyPropertyChanged(nameof(HasError));
+        }
+
+        public bool HasError => !string.IsNullOrEmpty(Error);
     }
 }

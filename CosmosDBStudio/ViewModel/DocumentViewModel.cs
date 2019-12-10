@@ -1,4 +1,4 @@
-﻿using EssentialMVVM;
+﻿using CosmosDBStudio.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -8,10 +8,12 @@ namespace CosmosDBStudio.ViewModel
     public class DocumentViewModel : ResultItemViewModel
     {
         private readonly JToken _document;
+        private readonly IContainerContext _containerContext;
 
-        public DocumentViewModel(JToken document)
+        public DocumentViewModel(JToken document, IContainerContext containerContext)
         {
             _document = document;
+            _containerContext = containerContext;
             JToken? idToken = null;
             bool hasId = document is JObject obj && obj.TryGetValue("id", out idToken);
             if (hasId)
@@ -21,12 +23,21 @@ namespace CosmosDBStudio.ViewModel
             else
                 Id = "(no id)";
 
+            if (hasId && !string.IsNullOrEmpty(containerContext.PartitionKeyJsonPath))
+                PartitionKey = ExtractValue(document, containerContext.PartitionKeyJsonPath);
+
             IsReadOnly = !IsRawDocument(document);
             _text = document.ToString(Formatting.Indented);
         }
 
+        private object? ExtractValue(JToken document, string jsonPath)
+        {
+            var token = document.SelectToken(jsonPath);
+            return (token as JValue)?.Value;
+        }
+
         public override string DisplayId => Id;
-        public override string? PartitionKey => throw new System.NotImplementedException();
+        public override object? PartitionKey { get; }
         public override bool IsReadOnly { get; }
         public override bool IsJson => true;
 

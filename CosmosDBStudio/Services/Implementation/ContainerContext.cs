@@ -19,6 +19,9 @@ namespace CosmosDBStudio.Services.Implementation
             _database = database;
             _container = container;
             PartitionKeyPath = partitionKeyPath;
+            PartitionKeyJsonPath = string.IsNullOrEmpty(partitionKeyPath)
+                ? null
+                : "$" + partitionKeyPath.Replace('/', '.');
             Documents = new DocumentService(container);
             Query = new QueryService(container);
         }
@@ -31,7 +34,8 @@ namespace CosmosDBStudio.Services.Implementation
 
         public string ContainerId => _container.Id;
 
-        public string PartitionKeyPath { get; }
+        public string? PartitionKeyPath { get; }
+        public string? PartitionKeyJsonPath { get; }
 
         public IDocumentService Documents { get; }
 

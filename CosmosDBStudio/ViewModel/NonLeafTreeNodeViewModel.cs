@@ -36,15 +36,6 @@ namespace CosmosDBStudio.ViewModel
                 OnPropertyChanged(nameof(Children));
         }
 
-        private string? _error;
-        public string? Error
-        {
-            get => _error;
-            set => Set(ref _error, value).AndNotifyPropertyChanged(nameof(HasError));
-        }
-
-        public bool HasError => !string.IsNullOrEmpty(Error);
-
         private Task? _loadChildrenTask;
 
         private async Task InternalLoadChildrenAsync()
