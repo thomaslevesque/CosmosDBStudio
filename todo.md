@@ -1,0 +1,23 @@
+- [ ] View partition key in results
+- [ ] Items CRUD
+- [ ] Partition key setting
+	- [ ] MRU
+	- [ ] Suggest existing partition keys
+- [ ] Query parameters
+	- [ ] Keep last used values
+- [ ] Database management
+	- [ ] Create/Delete
+	- [ ] Scaling
+- [ ] Container management
+	- [ ] Create/Delete
+	- [ ] Scaling, options
+- [ ] Stored procedures
+	- [ ] Run
+	- [ ] CRUD
+- [ ] Triggers
+	- [ ] Run pre/post
+	- [ ] CRUD
+- [ ] User-defined functions (CRUD)
+- [ ] JSON syntax validation
+- [ ] Better error messages
+	- [ ] Highlight error location
