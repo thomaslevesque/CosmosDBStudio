@@ -41,8 +41,8 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _selectedItem;
             set => Set(ref _selectedItem, value)
-                .AndRefreshCanExecute(_editCommand)
-                .AndRefreshCanExecute(_deleteCommand);
+                .AndRaiseCanExecuteChanged(_editCommand)
+                .AndRaiseCanExecuteChanged(_deleteCommand);
         }
 
         private DelegateCommand? _addCommand;

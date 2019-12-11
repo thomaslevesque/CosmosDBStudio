@@ -45,7 +45,7 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _text;
             set => Set(ref _text, value)
-                .AndRefreshCanExecute(_executeCommand);
+                .AndRaiseCanExecuteChanged(_executeCommand);
         }
 
         public string ContainerPath => $"{_containerContext.AccountName}/{_containerContext.DatabaseId}/{_containerContext.ContainerId}";
@@ -55,7 +55,7 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _selectedText;
             set => Set(ref _selectedText, value)
-                .AndRefreshCanExecute(_executeCommand);
+                .AndRaiseCanExecuteChanged(_executeCommand);
         }
 
         private (int start, int end) _selection;
@@ -72,7 +72,7 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _cursorPosition;
             set => Set(ref _cursorPosition, value)
-                .AndRefreshCanExecute(_executeCommand);
+                .AndRaiseCanExecuteChanged(_executeCommand);
         }
 
         private QueryResultViewModelBase _result;
