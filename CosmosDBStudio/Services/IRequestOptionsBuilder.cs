@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿using Hamlet;
+using Microsoft.Azure.Cosmos;
 
 namespace CosmosDBStudio.Services
 {
@@ -11,7 +12,7 @@ namespace CosmosDBStudio.Services
 
     public interface IQueryRequestOptionsBuilder : IRequestOptionsBuilder<IQueryRequestOptionsBuilder, QueryRequestOptions>
     {
-        IQueryRequestOptionsBuilder WithPartitionKey(object? partitionKey);
+        IQueryRequestOptionsBuilder WithPartitionKey(Option<object?> partitionKey);
         IQueryRequestOptionsBuilder WithMaxItemCount(int? maxItemCount);
     }
 

@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using CosmosDBStudio.Extensions;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
+using Hamlet;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -128,7 +128,7 @@ namespace CosmosDBStudio.ViewModel
                 return;
 
             // TODO: parameters, options
-            if (TryParsePartitionKeyValue(PartitionKey, out object? partitionKey) &&
+            if (TryParsePartitionKeyValue(PartitionKey, out Option<object?> partitionKey) &&
                 !string.IsNullOrEmpty(PartitionKey))
             {
                 PushMRU(PartitionKeyMRU, PartitionKey!);
@@ -227,37 +227,31 @@ namespace CosmosDBStudio.ViewModel
 
         public event EventHandler? CloseRequested;
 
-        private bool TryParsePartitionKeyValue(string? rawValue, out object? value)
+        private bool TryParsePartitionKeyValue(string? rawValue, out Option<object?> value)
         {
             if (string.IsNullOrEmpty(rawValue))
             {
-                value = null;
+                value = Option.None();
                 return true;
             }
 
-            switch (PartitionKeyType)
+            try
             {
-                case ScalarValueType.String:
-                    value = rawValue;
-                    return true;
-                case ScalarValueType.Number:
-                    if (double.TryParse(PartitionKey, out double d))
-                    {
-                        value = d;
-                        return true;
-                    }
-                    break;
-                case ScalarValueType.Boolean:
-                    if (bool.TryParse(PartitionKey, out bool b))
-                    {
-                        value = b;
-                        return true;
-                    }
-                    break;
-            }
+                using var tReader = new StringReader(rawValue);
+                using var jReader = new JsonTextReader(tReader)
+                {
+                    DateParseHandling = DateParseHandling.None
+                };
 
-            value = null;
-            return false;
+                var token = JValue.ReadFrom(jReader);
+                value = Option.Some(token.ToObject<object?>());
+                return true;
+            }
+            catch
+            {
+                value = Option.None();
+                return false;
+            }
         }
     }
 }

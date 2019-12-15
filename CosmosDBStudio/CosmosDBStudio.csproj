@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hamlet" Version="1.0.0" />
     <PackageReference Include="AvalonEdit" Version="6.0.0" />
     <PackageReference Include="EssentialMVVM" Version="1.0.2" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.5.0" />

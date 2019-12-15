@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Hamlet;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json.Linq;
 
@@ -15,7 +16,7 @@ namespace CosmosDBStudio.Services.Implementation
             _container = container;
         }
 
-        public async Task<JObject?> GetAsync(string id, object? partitionKey, CancellationToken cancellationToken)
+        public async Task<JObject?> GetAsync(string id, Option<object?> partitionKey, CancellationToken cancellationToken)
         {
             try
             {
@@ -33,7 +34,7 @@ namespace CosmosDBStudio.Services.Implementation
             }
         }
 
-        public async Task<JObject> CreateAsync(JObject document, object? partitionKey, CancellationToken cancellationToken)
+        public async Task<JObject> CreateAsync(JObject document, Option<object?> partitionKey, CancellationToken cancellationToken)
         {
             var response = await _container.CreateItemAsync(
                 document,
@@ -44,7 +45,7 @@ namespace CosmosDBStudio.Services.Implementation
             return response.Resource;
         }
 
-        public async Task<JObject> ReplaceAsync(string id, JObject document, object? partitionKey, string? eTag, CancellationToken cancellationToken)
+        public async Task<JObject> ReplaceAsync(string id, JObject document, Option<object?> partitionKey, string? eTag, CancellationToken cancellationToken)
         {
             var options = new ItemRequestOptionsBuilder()
                 .IfMatch(eTag)
@@ -60,7 +61,7 @@ namespace CosmosDBStudio.Services.Implementation
             return response.Resource;
         }
 
-        public async Task DeleteAsync(string id, object? partitionKey, string? eTag, CancellationToken cancellationToken)
+        public async Task DeleteAsync(string id, Option<object?> partitionKey, string? eTag, CancellationToken cancellationToken)
         {
             var options = new ItemRequestOptionsBuilder()
                 .IfMatch(eTag)

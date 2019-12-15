@@ -1,20 +1,27 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿using Hamlet;
+using Microsoft.Azure.Cosmos;
 using System;
 
 namespace CosmosDBStudio.Services.Implementation
 {
     public static class PartitionKeyHelper
     {
-        public static PartitionKey? Create(object? value)
+        public static PartitionKey? Create(Option<object?> partitionKey)
         {
-            return value switch
+            if (partitionKey.TryGetValue(out object? value))
             {
-                null => default(PartitionKey?),
-                string s => new PartitionKey(s),
-                double d => new PartitionKey(d),
-                bool b => new PartitionKey(b),
-                _ => throw new ArgumentException("Invalid partition key type")
-            };
+                return value switch
+                {
+                    null => PartitionKey.Null,
+                    string s => new PartitionKey(s),
+                    double d => new PartitionKey(d),
+                    bool b => new PartitionKey(b),
+                    _ => throw new ArgumentException("Invalid partition key type")
+                };
+
+            }
+
+            return null;
         }
     }
 }
