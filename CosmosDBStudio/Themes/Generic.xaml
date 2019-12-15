@@ -3,6 +3,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Themes/TreeNodeControl.generic.xaml" />
+        <ResourceDictionary Source="/Themes/RadioChoice.generic.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

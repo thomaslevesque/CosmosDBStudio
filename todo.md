@@ -1,8 +1,10 @@
 - [x] View partition key in results
-- [ ] Items CRUD
-- [ ] Partition key setting
-	- [ ] MRU
+- [x] Partition key setting
+	- [x] MRU
+		- [ ] Persist MRU
 	- [ ] Suggest existing partition keys
+- [ ] Save query sheet
+- [ ] Items CRUD
 - [ ] Query parameters
 	- [ ] Keep last used values
 - [ ] Database management

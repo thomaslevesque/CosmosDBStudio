@@ -7,7 +7,9 @@
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
-             xmlns:converters="clr-namespace:CosmosDBStudio.Converters"
+             xmlns:mk="clr-namespace:CosmosDBStudio.Markup"
+             xmlns:m="clr-namespace:CosmosDBStudio.Model"
+             xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <TabItem.Header>
@@ -20,17 +22,37 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0">
-            <Image Source="/Images/container.png" Width="16" Height="16" DockPanel.Dock="Left" />
-            <TextBox IsReadOnly="True" Text="{Binding ContainerPath, Mode=OneWay}" />
-        </DockPanel>
-        <ToolBar Grid.Row="1">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Source="/Images/container.png" Width="16" Height="16" />
+            <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding ContainerPath, Mode=OneWay}" />
+        </Grid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label VerticalAlignment="Center">Partition key</Label>
+            <ComboBox Width="150" Margin="0,0,3,0" VerticalAlignment="Center"
+                      IsEditable="True"
+                      ItemsSource="{Binding PartitionKeyMRU}"
+                      Text="{Binding PartitionKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Behaviors>
+                    <bhv:ErrorBehavior Error="{Binding Errors[PartitionKey]}" />
+                </i:Interaction.Behaviors>
+            </ComboBox>
+            <controls:RadioChoice SelectedItem="{Binding PartitionKeyType, Mode=TwoWay}"
+                                  Orientation="Horizontal"
+                                  VerticalAlignment="Center"
+                                  ItemsSource="{mk:EnumValues m:ScalarValueType}" />
+        </StackPanel>
+        <ToolBar Grid.Row="2">
             <Button Content="Execute" Command="{Binding ExecuteCommand}" />
         </ToolBar>
-        <avalonEdit:TextEditor Grid.Row="2" Name="editor" SyntaxHighlighting="TSQL" FontFamily="{StaticResource CodeFont}">
+        <avalonEdit:TextEditor Grid.Row="3" Name="editor" SyntaxHighlighting="TSQL" FontFamily="{StaticResource CodeFont}">
             <i:Interaction.Behaviors>
                 <bhv:AvalonTextEditorBehavior UseSearch="True" />
                 <bhv:AvalonTextEditorBindingBehavior
@@ -43,7 +65,7 @@
                 <KeyBinding Gesture="Ctrl+Enter" Command="{Binding ExecuteCommand}" />
             </avalonEdit:TextEditor.InputBindings>
         </avalonEdit:TextEditor>
-        <GridSplitter Grid.Row="2" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />
-        <local:QueryResultsView Grid.Row="3" DataContext="{Binding Result}" />
+        <GridSplitter Grid.Row="3" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />
+        <local:QueryResultsView Grid.Row="4" DataContext="{Binding Result}" />
     </Grid>
 </TabItem>

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -24,15 +27,25 @@ namespace CosmosDBStudio.ViewModel
             _containerContext = containerContext;
             _viewModelFactory = viewModelFactory;
             _querySheet = querySheet;
+            PartitionKeyMRU = new ObservableCollection<string>();
+
             _title = string.IsNullOrEmpty(querySheet.Path)
                 ? $"Untitled {++_untitledCounter}"
                 : Path.GetFileNameWithoutExtension(querySheet.Path);
             _text = querySheet.Text;
             _result = _viewModelFactory.CreateNotRunQueryResultViewModel();
+            
+            Errors = new ViewModelValidator<QuerySheetViewModel>(this);
+            Errors.AddValidator(
+                vm => vm.PartitionKey,
+                value => TryParsePartitionKeyValue(value, out _)
+                    ? null
+                    : "Invalid partition key value");
         }
 
-        private string _title;
+        public ViewModelValidator<QuerySheetViewModel> Errors { get; }
 
+        private string _title;
         public string Title
         {
             get => _title;
@@ -40,7 +53,6 @@ namespace CosmosDBStudio.ViewModel
         }
 
         private string _text;
-
         public string Text
         {
             get => _text;
@@ -59,7 +71,6 @@ namespace CosmosDBStudio.ViewModel
         }
 
         private (int start, int end) _selection;
-
         public (int start, int end) Selection
         {
             get => _selection;
@@ -67,7 +78,6 @@ namespace CosmosDBStudio.ViewModel
         }
 
         private int _cursorPosition;
-
         public int CursorPosition
         {
             get => _cursorPosition;
@@ -75,8 +85,23 @@ namespace CosmosDBStudio.ViewModel
                 .AndRaiseCanExecuteChanged(_executeCommand);
         }
 
-        private QueryResultViewModelBase _result;
+        public ObservableCollection<string> PartitionKeyMRU { get; }
 
+        private string? _partitionKey;
+        public string? PartitionKey
+        {
+            get => _partitionKey;
+            set => Set(ref _partitionKey, value).AndExecute(() => Errors.Refresh());
+        }
+
+        private ScalarValueType _partitionKeyType;
+        public ScalarValueType PartitionKeyType
+        {
+            get => _partitionKeyType;
+            set => Set(ref _partitionKeyType, value).AndExecute(() => Errors.Refresh());
+        }
+
+        private QueryResultViewModelBase _result;
         public QueryResultViewModelBase Result
         {
             get => _result;
@@ -88,8 +113,9 @@ namespace CosmosDBStudio.ViewModel
 
         private bool CanExecute()
         {
-            return !string.IsNullOrEmpty(SelectedText)
-                || !string.IsNullOrEmpty(ExtendSelectionAroundCursor(false));
+            return !Errors.HasError &&
+                (!string.IsNullOrEmpty(SelectedText) ||
+                 !string.IsNullOrEmpty(ExtendSelectionAroundCursor(false)));
         }
 
         private async Task ExecuteAsync()
@@ -102,9 +128,39 @@ namespace CosmosDBStudio.ViewModel
                 return;
 
             // TODO: parameters, options
-            var query = new Query(queryText);
+            if (TryParsePartitionKeyValue(PartitionKey, out object? partitionKey) &&
+                !string.IsNullOrEmpty(PartitionKey))
+            {
+                PushMRU(PartitionKeyMRU, PartitionKey!);
+            }
+
+            var query = new Query(queryText)
+            {
+                Options =
+                {
+                    PartitionKey = partitionKey
+                }
+            };
             var result = await _containerContext.Query.ExecuteAsync(query, default);
             Result = _viewModelFactory.CreateQueryResultViewModel(result, _containerContext);
+        }
+
+        private void PushMRU(ObservableCollection<string> mruList, string value)
+        {
+            int index = mruList.IndexOf(value);
+            if (index >= 0)
+            {
+                mruList.Move(index, 0);
+            }
+            else
+            {
+                mruList.Insert(0, value);
+            }
+            
+            while (mruList.Count > 10)
+            {
+                mruList.RemoveAt(mruList.Count - 1);
+            }
         }
 
         private static readonly string QuerySeparator = Environment.NewLine + Environment.NewLine;
@@ -170,5 +226,38 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public event EventHandler? CloseRequested;
+
+        private bool TryParsePartitionKeyValue(string? rawValue, out object? value)
+        {
+            if (string.IsNullOrEmpty(rawValue))
+            {
+                value = null;
+                return true;
+            }
+
+            switch (PartitionKeyType)
+            {
+                case ScalarValueType.String:
+                    value = rawValue;
+                    return true;
+                case ScalarValueType.Number:
+                    if (double.TryParse(PartitionKey, out double d))
+                    {
+                        value = d;
+                        return true;
+                    }
+                    break;
+                case ScalarValueType.Boolean:
+                    if (bool.TryParse(PartitionKey, out bool b))
+                    {
+                        value = b;
+                        return true;
+                    }
+                    break;
+            }
+
+            value = null;
+            return false;
+        }
     }
 }

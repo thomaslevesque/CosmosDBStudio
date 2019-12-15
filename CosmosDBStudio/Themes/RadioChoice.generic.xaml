@@ -1,0 +1,30 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls">
+
+    <Style TargetType="controls:RadioChoice">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:RadioChoice">
+                    <StackPanel Orientation="{TemplateBinding Orientation}" IsItemsHost="true">
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="controls:RadioChoiceItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:RadioChoiceItem">
+                    <RadioButton IsChecked="{Binding IsSelected, RelativeSource={x:Static RelativeSource.TemplatedParent}, Mode=TwoWay}"
+                                 GroupName="{TemplateBinding GroupName}"
+                                 Content="{TemplateBinding Content}"
+                                 Margin="0,0,3,3"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+</ResourceDictionary>
