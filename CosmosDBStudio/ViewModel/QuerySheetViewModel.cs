@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CosmosDBStudio.Model;
@@ -34,6 +36,8 @@ namespace CosmosDBStudio.ViewModel
                 : Path.GetFileNameWithoutExtension(querySheet.Path);
             _text = querySheet.Text;
             _result = _viewModelFactory.CreateNotRunQueryResultViewModel();
+            Parameters = new ObservableCollection<ParameterViewModel>();
+            AddParameterPlaceholder();
             
             Errors = new ViewModelValidator<QuerySheetViewModel>(this);
             Errors.AddValidator(
@@ -94,12 +98,7 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _partitionKey, value).AndExecute(() => Errors.Refresh());
         }
 
-        private ScalarValueType _partitionKeyType;
-        public ScalarValueType PartitionKeyType
-        {
-            get => _partitionKeyType;
-            set => Set(ref _partitionKeyType, value).AndExecute(() => Errors.Refresh());
-        }
+        public ObservableCollection<ParameterViewModel> Parameters { get; }
 
         private QueryResultViewModelBase _result;
         public QueryResultViewModelBase Result
@@ -110,6 +109,13 @@ namespace CosmosDBStudio.ViewModel
 
         private AsyncDelegateCommand? _executeCommand;
         public ICommand ExecuteCommand => _executeCommand ??= new AsyncDelegateCommand(ExecuteAsync, CanExecute);
+
+        private bool _showParameters;
+        public bool ShowParameters
+        {
+            get => _showParameters;
+            set => Set(ref _showParameters, value);
+        }
 
         private bool CanExecute()
         {
@@ -134,13 +140,31 @@ namespace CosmosDBStudio.ViewModel
                 PushMRU(PartitionKeyMRU, PartitionKey!);
             }
 
-            var query = new Query(queryText)
+            var query = new Query(queryText);
+            query.Options.PartitionKey = partitionKey;
+            foreach (var p in Parameters)
             {
-                Options =
+                if (p.IsPlaceholder || p.Errors.HasError)
+                    continue;
+
+                string name = p.Name!;
+                string nakedName;
+                if (name.StartsWith('@'))
                 {
-                    PartitionKey = partitionKey
+                    nakedName = name.Substring(1);
                 }
-            };
+                else
+                {
+                    nakedName = name;
+                    name = "@" + name;
+                }
+
+                if (!Regex.IsMatch(queryText, $@"@\b{nakedName}\b", RegexOptions.Multiline))
+                    continue;
+
+                p.TryParseParameterValue(p.RawValue, out object? value);
+                query.Parameters[name] = value;
+            }
             var result = await _containerContext.Query.ExecuteAsync(query, default);
             Result = _viewModelFactory.CreateQueryResultViewModel(result, _containerContext);
         }
@@ -251,6 +275,31 @@ namespace CosmosDBStudio.ViewModel
             {
                 value = Option.None();
                 return false;
+            }
+        }
+
+        private void AddParameterPlaceholder()
+        {
+            var placeholder = new ParameterViewModel { IsPlaceholder = true };
+            placeholder.Created += OnParameterCreated;
+            Parameters.Add(placeholder);
+        }
+
+        private void OnParameterCreated(object? sender, EventArgs _)
+        {
+            if (sender is ParameterViewModel placeholder)
+            {
+                placeholder.Created -= OnParameterCreated;
+                placeholder.DeleteRequested += OnParameterDeleteRequested;
+                AddParameterPlaceholder();
+            }
+        }
+
+        private void OnParameterDeleteRequested(object? sender, EventArgs e)
+        {
+            if (sender is ParameterViewModel parameter)
+            {
+                Parameters.Remove(parameter);
             }
         }
     }

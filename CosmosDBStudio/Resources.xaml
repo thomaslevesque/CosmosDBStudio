@@ -1,9 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <BooleanToVisibilityConverter x:Key="boolToVisibility" />
+
     <FontFamily x:Key="CodeFont">Cascadia Code, Consolas, Courier New</FontFamily>
     <FontFamily x:Key="FontAwesome">pack://application:,,,/Resources/#Font Awesome 5 Free Solid</FontFamily>
 
-    <sys:String x:Key="fa-play">&#xf04b;</sys:String>
+    <sys:String x:Key="fa-play">&#xF04B;</sys:String>
+    <sys:String x:Key="fa-at">&#xF1FA;</sys:String>
+    <sys:String x:Key="fa-trash-alt">&#xF2ED;</sys:String>
     
 </ResourceDictionary>

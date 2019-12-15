@@ -8,6 +8,15 @@ namespace CosmosDBStudio.Behaviors
 {
     public class ErrorBehavior : Behavior<FrameworkElement>
     {
+        protected override void OnAttached()
+        {
+            base.OnAttached();
+            if (Error is string)
+            {
+                AddErrorAdorner();
+            }
+        }
+
         protected override void OnDetaching()
         {
             RemoveErrorAdorner();
@@ -35,6 +44,9 @@ namespace CosmosDBStudio.Behaviors
 
         private void OnErrorChanged(string? error)
         {
+            if (AssociatedObject is null)
+                return;
+
             if (string.IsNullOrEmpty(error))
             {
                 RemoveErrorAdorner();
@@ -49,6 +61,9 @@ namespace CosmosDBStudio.Behaviors
 
         private void AddErrorAdorner()
         {
+            if (AssociatedObject is null)
+                return;
+
             var adornerLayer = AdornerLayer.GetAdornerLayer(AssociatedObject);
             var adorner = adornerLayer.GetAdorners(AssociatedObject)
                     ?.OfType<ErrorAdorner>()
@@ -63,6 +78,9 @@ namespace CosmosDBStudio.Behaviors
 
         private void RemoveErrorAdorner()
         {
+            if (AssociatedObject is null)
+                return;
+
             var adornerLayer = AdornerLayer.GetAdornerLayer(AssociatedObject);
             var adorner = adornerLayer.GetAdorners(AssociatedObject)
                     ?.OfType<ErrorAdorner>()

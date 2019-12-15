@@ -12,7 +12,7 @@ namespace CosmosDBStudio.Model
         }
 
         public string Sql { get; set; }
-        public IDictionary<string, object> Parameters { get; set; }
+        public IDictionary<string, object?> Parameters { get; set; }
         public QueryOptions Options { get; set; }
         public string? ContinuationToken { get; set; }
     }

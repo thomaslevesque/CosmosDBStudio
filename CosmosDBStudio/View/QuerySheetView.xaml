@@ -47,20 +47,41 @@
                     ToolTip="Execute"
                     Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding ExecuteCommand}" />
+
+            <Separator />
+
+            <ToggleButton Content="{StaticResource fa-at}"
+                    ToolTip="Parameters"
+                    Style="{StaticResource FontAwesomeButton}"
+                    IsChecked="{Binding ShowParameters, Mode=TwoWay}" />
         </ToolBar>
-        <avalonEdit:TextEditor Grid.Row="3" Name="editor" SyntaxHighlighting="TSQL" FontFamily="{StaticResource CodeFont}">
-            <i:Interaction.Behaviors>
-                <bhv:AvalonTextEditorBehavior UseSearch="True" />
-                <bhv:AvalonTextEditorBindingBehavior
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="editorColumn" Width="*" />
+                <ColumnDefinition x:Name="parametersColumn" Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <avalonEdit:TextEditor Grid.Column="0" SyntaxHighlighting="TSQL" FontFamily="{StaticResource CodeFont}">
+                <i:Interaction.Behaviors>
+                    <bhv:AvalonTextEditorBehavior UseSearch="True" />
+                    <bhv:AvalonTextEditorBindingBehavior
                     Text="{Binding Text}"
                     SelectedText="{Binding SelectedText}"
                     CursorPosition="{Binding CursorPosition}"
                     Selection="{Binding Selection}" />
-            </i:Interaction.Behaviors>
-            <avalonEdit:TextEditor.InputBindings>
-                <KeyBinding Gesture="Ctrl+Enter" Command="{Binding ExecuteCommand}" />
-            </avalonEdit:TextEditor.InputBindings>
-        </avalonEdit:TextEditor>
+                </i:Interaction.Behaviors>
+                <avalonEdit:TextEditor.InputBindings>
+                    <KeyBinding Gesture="Ctrl+Enter" Command="{Binding ExecuteCommand}" />
+                </avalonEdit:TextEditor.InputBindings>
+            </avalonEdit:TextEditor>
+            <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch"
+                          Visibility="{Binding ShowParameters, Converter={StaticResource boolToVisibility}}" />
+            <local:ParametersView Grid.Column="1"
+                                  MinWidth="250"
+                                  IsVisibleChanged="ParametersViewVisibleChanged"
+                                  Visibility="{Binding ShowParameters, Converter={StaticResource boolToVisibility}}">
+                
+            </local:ParametersView>
+        </Grid>
         <GridSplitter Grid.Row="3" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />
         <local:QueryResultsView Grid.Row="4" DataContext="{Binding Result}" />
     </Grid>
