@@ -30,5 +30,9 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
+    <Style x:Key="FontAwesomeButton" TargetType="Button">
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+    </Style>
+
 </ResourceDictionary>

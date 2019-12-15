@@ -50,7 +50,10 @@
                                   ItemsSource="{mk:EnumValues m:ScalarValueType}" />
         </StackPanel>
         <ToolBar Grid.Row="2">
-            <Button Content="Execute" Command="{Binding ExecuteCommand}" />
+            <Button Content="{StaticResource fa-play}"
+                    ToolTip="Execute"
+                    Style="{StaticResource FontAwesomeButton}"
+                    Command="{Binding ExecuteCommand}" />
         </ToolBar>
         <avalonEdit:TextEditor Grid.Row="3" Name="editor" SyntaxHighlighting="TSQL" FontFamily="{StaticResource CodeFont}">
             <i:Interaction.Behaviors>

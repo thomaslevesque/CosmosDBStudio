@@ -25,4 +25,8 @@
     <Resource Include="Images\*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="Resources\fa-solid-900.ttf" />
+  </ItemGroup>
+
 </Project>
