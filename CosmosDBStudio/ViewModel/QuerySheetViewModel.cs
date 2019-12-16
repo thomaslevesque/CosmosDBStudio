@@ -133,7 +133,8 @@ namespace CosmosDBStudio.ViewModel
             if (string.IsNullOrEmpty(queryText))
                 return;
 
-            // TODO: parameters, options
+            // TODO: options
+
             if (TryParsePartitionKeyValue(PartitionKey, out Option<object?> partitionKey) &&
                 !string.IsNullOrEmpty(PartitionKey))
             {
@@ -164,12 +165,13 @@ namespace CosmosDBStudio.ViewModel
 
                 p.TryParseParameterValue(p.RawValue, out object? value);
                 query.Parameters[name] = value;
+                p.PushMRU(p.RawValue!);
             }
             var result = await _containerContext.Query.ExecuteAsync(query, default);
             Result = _viewModelFactory.CreateQueryResultViewModel(result, _containerContext);
         }
 
-        private void PushMRU(ObservableCollection<string> mruList, string value)
+        private static void PushMRU(ObservableCollection<string> mruList, string value)
         {
             int index = mruList.IndexOf(value);
             if (index >= 0)

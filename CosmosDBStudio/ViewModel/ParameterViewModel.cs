@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -12,6 +13,7 @@ namespace CosmosDBStudio.ViewModel
     {
         public ParameterViewModel()
         {
+            MRU = new ObservableCollection<string>();
             Errors = new ViewModelValidator<ParameterViewModel>(this);
             Errors.AddValidator(
                 vm => vm.Name,
@@ -63,6 +65,8 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _rawValue, value)
                 .AndExecute(() => NameOrValueChanged());
         }
+
+        public ObservableCollection<string> MRU { get; }
 
         private bool _isPlaceholder;
         public bool IsPlaceholder
@@ -120,6 +124,24 @@ namespace CosmosDBStudio.ViewModel
             {
                 value = null;
                 return false;
+            }
+        }
+
+        public void PushMRU(string value)
+        {
+            int index = MRU.IndexOf(value);
+            if (index >= 0)
+            {
+                MRU.Move(index, 0);
+            }
+            else
+            {
+                MRU.Insert(0, value);
+            }
+
+            while (MRU.Count > 10)
+            {
+                MRU.RemoveAt(MRU.Count - 1);
             }
         }
     }

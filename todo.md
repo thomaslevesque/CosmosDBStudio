@@ -3,10 +3,11 @@
 	- [x] MRU
 		- [ ] Persist MRU
 	- [ ] Suggest existing partition keys
+- [x] Query parameters
+	- [x] MRU values
+		- [ ] Persist MRU
 - [ ] Save query sheet
 - [ ] Items CRUD
-- [ ] Query parameters
-	- [ ] Keep last used values
 - [ ] Database management
 	- [ ] Create/Delete
 	- [ ] Scaling
