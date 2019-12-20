@@ -32,7 +32,7 @@ namespace CosmosDBStudio.ViewModel
             _viewModelFactory = viewModelFactory;
 
             _filePath = path;
-            _untitledCounter = string.IsNullOrEmpty(path)
+            _untitledNumber = string.IsNullOrEmpty(path)
                 ? ++_untitledCounter
                 : 0;
             _text = querySheet.Text;
@@ -42,11 +42,9 @@ namespace CosmosDBStudio.ViewModel
             PartitionKeyMRU = new ObservableCollection<string>();
 
             Parameters = new ObservableCollection<ParameterViewModel>();
-            foreach (var (name, value) in querySheet.Parameters)
+            foreach (var p in querySheet.Parameters)
             {
-                var p = new ParameterViewModel { Name = name, RawValue = value };
-                p.DeleteRequested += OnParameterDeleteRequested;
-                Parameters.Add(p);
+                CreateParameter(p);
             }
             AddParameterPlaceholder();
             
@@ -61,7 +59,7 @@ namespace CosmosDBStudio.ViewModel
         public ViewModelValidator<QuerySheetViewModel> Errors { get; }
 
         public string Title => string.IsNullOrEmpty(FilePath)
-                ? $"Untitled {++_untitledCounter}"
+                ? $"Untitled {_untitledNumber}"
                 : Path.GetFileNameWithoutExtension(FilePath);
 
         private string? _filePath;
@@ -147,7 +145,12 @@ namespace CosmosDBStudio.ViewModel
             {
                 if (p.Name is string name)
                 {
-                    querySheet.Parameters[name] = p.RawValue;
+                    querySheet.Parameters.Add(new QuerySheetParameter
+                    {
+                        Name = name,
+                        RawValue = p.RawValue,
+                        MRU = p.MRU.ToList()
+                    });
                 }
             }
 
@@ -315,6 +318,21 @@ namespace CosmosDBStudio.ViewModel
                 value = Option.None();
                 return false;
             }
+        }
+
+        private void CreateParameter(QuerySheetParameter p)
+        {
+            var pvm = new ParameterViewModel
+            {
+                Name = p.Name,
+                RawValue = p.RawValue,
+            };
+            foreach (var mru in p.MRU)
+            {
+                pvm.MRU.Add(mru);
+            }
+            pvm.DeleteRequested += OnParameterDeleteRequested;
+            Parameters.Add(pvm);
         }
 
         private void AddParameterPlaceholder()

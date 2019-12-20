@@ -9,6 +9,14 @@ namespace CosmosDBStudio.Model
         public string ContainerId { get; set; } = string.Empty;
         public string Text { get; set; } = string.Empty;
         public string? PartitionKey { get; set; }
-        public IDictionary<string, string?> Parameters { get; set; } = new Dictionary<string, string?>();
+        public IList<string> PartitionKeyMRU { get; set; } = new List<string>();
+        public IList<QuerySheetParameter> Parameters { get; set; } = new List<QuerySheetParameter>();
+    }
+
+    public class QuerySheetParameter
+    {
+        public string Name { get; set; } = string.Empty;
+        public string? RawValue { get; set; }
+        public IList<string> MRU { get; set; } = new List<string>();
     }
 }
