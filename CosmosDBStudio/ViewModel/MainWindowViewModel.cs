@@ -55,7 +55,7 @@ namespace CosmosDBStudio.ViewModel
                     message.ContainerId,
                     default);
                 var vm = _viewModelFactory.CreateQuerySheetViewModel(context, querySheet, null);
-                vm.CloseRequested += CloseHandler;
+                vm.CloseRequested += OnQuerySheetCloseRequested;
                 QuerySheets.Add(vm);
                 CurrentQuerySheet = vm;
             }
@@ -63,13 +63,13 @@ namespace CosmosDBStudio.ViewModel
             {
                 // TODO show error
             }
+        }
 
-            void CloseHandler(object? sender, EventArgs e)
-            {
-                var sheet = (QuerySheetViewModel)sender!;
-                QuerySheets.Remove(sheet);
-                sheet.CloseRequested -= CloseHandler;
-            }
+        private void OnQuerySheetCloseRequested(object? sender, EventArgs e)
+        {
+            var sheet = (QuerySheetViewModel)sender!;
+            QuerySheets.Remove(sheet);
+            sheet.CloseRequested -= OnQuerySheetCloseRequested;
         }
 
         public AccountsViewModel Accounts { get; }
@@ -169,6 +169,7 @@ namespace CosmosDBStudio.ViewModel
                 querySheet,
                 path);
 
+            vm.CloseRequested += OnQuerySheetCloseRequested;
             QuerySheets.Add(vm);
             CurrentQuerySheet = vm;
         }
