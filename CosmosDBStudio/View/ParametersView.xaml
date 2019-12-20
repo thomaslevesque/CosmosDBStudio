@@ -26,7 +26,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0" MinWidth="60"
                                  Margin="3,3,0,0"
-                                 Text="{Binding Name}">
+                                 Text="{Binding Name, UpdateSourceTrigger=LostFocus}">
                             <i:Interaction.Behaviors>
                                 <bhv:ErrorBehavior Error="{Binding Errors[Name]}" />
                             </i:Interaction.Behaviors>
@@ -35,7 +35,7 @@
                                   Margin="3,3,0,0"
                                   IsEditable="True"
                                   ItemsSource="{Binding MRU}"
-                                  Text="{Binding RawValue}">
+                                  Text="{Binding RawValue, UpdateSourceTrigger=LostFocus}">
                             <i:Interaction.Behaviors>
                                 <bhv:ErrorBehavior Error="{Binding Errors[RawValue]}" />
                             </i:Interaction.Behaviors>

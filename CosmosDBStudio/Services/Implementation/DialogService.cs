@@ -1,5 +1,7 @@
 ﻿using CosmosDBStudio.Dialogs;
 using CosmosDBStudio.View;
+using Hamlet;
+using Microsoft.Win32;
 using System.Windows;
 using System.Windows.Data;
 
@@ -11,6 +13,24 @@ namespace CosmosDBStudio.Services.Implementation
         {
             var result = MessageBox.Show(text, "Confirm", MessageBoxButton.YesNo);
             return result == MessageBoxResult.Yes;
+        }
+
+        public Option<string> PickFileToSave(
+            Option<string> filter = default,
+            Option<int> filterIndex = default,
+            Option<string> fileName = default,
+            Option<string> initialDirectory = default)
+        {
+            return PickFile<SaveFileDialog>(filter, filterIndex, fileName, initialDirectory);
+        }
+
+        public Option<string> PickFileToOpen(
+            Option<string> filter = default,
+            Option<int> filterIndex = default,
+            Option<string> fileName = default,
+            Option<string> initialDirectory = default)
+        {
+            return PickFile<OpenFileDialog>(filter, filterIndex, fileName, initialDirectory);
         }
 
         public bool? ShowDialog(IDialogViewModel dialog)
@@ -79,6 +99,27 @@ namespace CosmosDBStudio.Services.Implementation
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.DataContext = dialog;
             return window;
+        }
+
+        private static Option<string> PickFile<TDialog>(
+            Option<string> filter,
+            Option<int> filterIndex,
+            Option<string> fileName,
+            Option<string> initialDirectory)
+            where TDialog : FileDialog, new()
+        {
+            var picker = new TDialog();
+            filter.Do(value => picker.Filter = value);
+            filterIndex.Do(value => picker.FilterIndex = value);
+            fileName.Do(value => picker.FileName = value);
+            initialDirectory.Do(value => picker.InitialDirectory = value);
+
+            if (picker.ShowDialog() is true)
+            {
+                return picker.FileName;
+            }
+
+            return Option.None();
         }
     }
 }

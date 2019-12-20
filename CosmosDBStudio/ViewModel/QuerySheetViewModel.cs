@@ -17,26 +17,37 @@ namespace CosmosDBStudio.ViewModel
     public class QuerySheetViewModel : BindableBase
     {
         private static int _untitledCounter;
+
+        private readonly int _untitledNumber;
         private readonly IContainerContext _containerContext;
         private readonly IViewModelFactory _viewModelFactory;
-        private readonly QuerySheet _querySheet;
 
         public QuerySheetViewModel(
             IContainerContext containerContext,
             IViewModelFactory viewModelFactory,
-            QuerySheet querySheet)
+            QuerySheet querySheet,
+            string? path)
         {
             _containerContext = containerContext;
             _viewModelFactory = viewModelFactory;
-            _querySheet = querySheet;
-            PartitionKeyMRU = new ObservableCollection<string>();
 
-            _title = string.IsNullOrEmpty(querySheet.Path)
-                ? $"Untitled {++_untitledCounter}"
-                : Path.GetFileNameWithoutExtension(querySheet.Path);
+            _filePath = path;
+            _untitledCounter = string.IsNullOrEmpty(path)
+                ? ++_untitledCounter
+                : 0;
             _text = querySheet.Text;
             _result = _viewModelFactory.CreateNotRunQueryResultViewModel();
+
+            PartitionKey = querySheet.PartitionKey;
+            PartitionKeyMRU = new ObservableCollection<string>();
+
             Parameters = new ObservableCollection<ParameterViewModel>();
+            foreach (var (name, value) in querySheet.Parameters)
+            {
+                var p = new ParameterViewModel { Name = name, RawValue = value };
+                p.DeleteRequested += OnParameterDeleteRequested;
+                Parameters.Add(p);
+            }
             AddParameterPlaceholder();
             
             Errors = new ViewModelValidator<QuerySheetViewModel>(this);
@@ -49,11 +60,15 @@ namespace CosmosDBStudio.ViewModel
 
         public ViewModelValidator<QuerySheetViewModel> Errors { get; }
 
-        private string _title;
-        public string Title
+        public string Title => string.IsNullOrEmpty(FilePath)
+                ? $"Untitled {++_untitledCounter}"
+                : Path.GetFileNameWithoutExtension(FilePath);
+
+        private string? _filePath;
+        public string? FilePath
         {
-            get => _title;
-            set => Set(ref _title, value);
+            get => _filePath;
+            set => Set(ref _filePath, value).AndNotifyPropertyChanged(nameof(Title));
         }
 
         private string _text;
@@ -95,7 +110,7 @@ namespace CosmosDBStudio.ViewModel
         public string? PartitionKey
         {
             get => _partitionKey;
-            set => Set(ref _partitionKey, value).AndExecute(() => Errors.Refresh());
+            set => Set(ref _partitionKey, value).AndExecute(() => Errors?.Refresh());
         }
 
         public ObservableCollection<ParameterViewModel> Parameters { get; }
@@ -115,6 +130,28 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _showParameters;
             set => Set(ref _showParameters, value);
+        }
+
+        public QuerySheet GetQuerySheet()
+        {
+            var querySheet =  new QuerySheet
+            {
+                AccountId = _containerContext.AccountId,
+                DatabaseId = _containerContext.DatabaseId,
+                ContainerId = _containerContext.ContainerId,
+                Text = Text,
+                PartitionKey = PartitionKey
+            };
+
+            foreach (var p in Parameters)
+            {
+                if (p.Name is string name)
+                {
+                    querySheet.Parameters[name] = p.RawValue;
+                }
+            }
+
+            return querySheet;
         }
 
         private bool CanExecute()
@@ -142,7 +179,7 @@ namespace CosmosDBStudio.ViewModel
             }
 
             var query = new Query(queryText);
-            query.Options.PartitionKey = partitionKey;
+            query.PartitionKey = partitionKey;
             foreach (var p in Parameters)
             {
                 if (p.IsPlaceholder || p.Errors.HasError)

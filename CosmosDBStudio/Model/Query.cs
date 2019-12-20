@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Hamlet;
+using System.Collections.Generic;
 
 namespace CosmosDBStudio.Model
 {
@@ -7,13 +8,12 @@ namespace CosmosDBStudio.Model
         public Query(string sql)
         {
             Sql = sql;
-            Parameters = new Dictionary<string, object>();
-            Options = new QueryOptions();
+            Parameters = new Dictionary<string, object?>();
         }
 
         public string Sql { get; set; }
+        public Option<object?> PartitionKey { get; set; }
         public IDictionary<string, object?> Parameters { get; set; }
-        public QueryOptions Options { get; set; }
         public string? ContinuationToken { get; set; }
     }
 }

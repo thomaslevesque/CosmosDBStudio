@@ -26,14 +26,9 @@ namespace CosmosDBStudio.ViewModel
             _dialogService = dialogService;
         }
 
-        public MainWindowViewModel CreateMainWindowViewModel()
+        public QuerySheetViewModel CreateQuerySheetViewModel(IContainerContext containerContext, QuerySheet querySheet, string? path)
         {
-            return new MainWindowViewModel(this, _containerContextFactory, _messenger);
-        }
-
-        public QuerySheetViewModel CreateQuerySheetViewModel(IContainerContext containerContext, QuerySheet querySheet)
-        {
-            return new QuerySheetViewModel(containerContext, this, querySheet);
+            return new QuerySheetViewModel(containerContext, this, querySheet, path);
         }
 
         public NotRunQueryResultViewModel CreateNotRunQueryResultViewModel()

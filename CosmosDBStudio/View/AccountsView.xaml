@@ -17,9 +17,15 @@
         </Grid.RowDefinitions>
 
         <ToolBar Grid.Row="0">
-            <Button Content="Add" Command="{Binding AddCommand}" />
-            <Button Content="Edit" Command="{Binding EditCommand}" />
-            <Button Content="Delete" Command="{Binding DeleteCommand}" />
+            <Button Content="{StaticResource fa-plus}" ToolTip="Add account"
+                    FontFamily="{StaticResource FontAwesome}"
+                    Command="{Binding AddCommand}" />
+            <Button Content="{StaticResource fa-edit}" ToolTip="Edit account"
+                    FontFamily="{StaticResource FontAwesome}"
+                    Command="{Binding EditCommand}" />
+            <Button Content="{StaticResource fa-trash-alt}" ToolTip="Delete account"
+                    FontFamily="{StaticResource FontAwesome}"
+                    Command="{Binding DeleteCommand}" />
         </ToolBar>
 
         <TreeView Grid.Row="1" ItemsSource="{Binding Accounts}">

@@ -1,4 +1,5 @@
 ﻿using CosmosDBStudio.Dialogs;
+using Hamlet;
 
 namespace CosmosDBStudio.Services
 {
@@ -6,5 +7,17 @@ namespace CosmosDBStudio.Services
     {
         bool? ShowDialog(IDialogViewModel dialog);
         bool Confirm(string text);
+
+        Option<string> PickFileToSave(
+            Option<string> filter = default,
+            Option<int> filterIndex = default,
+            Option<string> fileName = default,
+            Option<string> initialDirectory = default);
+
+        Option<string> PickFileToOpen(
+            Option<string> filter = default,
+            Option<int> filterIndex = default,
+            Option<string> fileName = default,
+            Option<string> initialDirectory = default);
     }
 }

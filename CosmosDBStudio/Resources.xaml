@@ -10,5 +10,7 @@
     <sys:String x:Key="fa-play">&#xF04B;</sys:String>
     <sys:String x:Key="fa-at">&#xF1FA;</sys:String>
     <sys:String x:Key="fa-trash-alt">&#xF2ED;</sys:String>
-    
+    <sys:String x:Key="fa-plus">&#xF067;</sys:String>
+    <sys:String x:Key="fa-edit">&#xF044;</sys:String>
+
 </ResourceDictionary>

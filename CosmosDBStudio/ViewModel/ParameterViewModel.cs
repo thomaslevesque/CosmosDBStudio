@@ -83,7 +83,7 @@ namespace CosmosDBStudio.ViewModel
                 Created?.Invoke(this, EventArgs.Empty);
             }
 
-            Errors.Refresh();
+            Errors?.Refresh();
             _deleteCommand?.RaiseCanExecuteChanged();
         }
 

@@ -22,7 +22,7 @@ namespace CosmosDBStudio.Services.Implementation
         public async Task<QueryResult> ExecuteAsync(Query query, CancellationToken cancellationToken)
         {
             var queryDefinition = CreateQueryDefinition(query);
-            var requestOptions = CreateRequestOptions(query.Options);
+            var requestOptions = CreateRequestOptions(query);
             var iterator = _container.GetItemQueryIterator<JToken>(queryDefinition, query.ContinuationToken, requestOptions);
             var result = new QueryResult();
             var stopwatch = new Stopwatch();
@@ -74,11 +74,11 @@ namespace CosmosDBStudio.Services.Implementation
             return definition;
         }
 
-        private static QueryRequestOptions CreateRequestOptions(QueryOptions options)
+        private static QueryRequestOptions CreateRequestOptions(Query query)
         {
             return new QueryRequestOptionsBuilder()
-                .WithPartitionKey(options.PartitionKey)
-                .WithMaxItemCount(options.MaxItemCount ?? 100)
+                .WithPartitionKey(query.PartitionKey)
+                .WithMaxItemCount(100)
                 .Build();
         }
     }

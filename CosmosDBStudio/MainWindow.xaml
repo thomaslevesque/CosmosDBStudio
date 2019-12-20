@@ -10,16 +10,29 @@
         mc:Ignorable="d"
         Title="Cosmos DB Studio" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <v:AccountsView Grid.Column="0" DataContext="{Binding Accounts}" />
-        
-        <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" />
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <MenuItem Header="File">
+                <MenuItem Header="Open query sheet" Command="{Binding OpenQuerySheetCommand}" />
+                <MenuItem Header="Save query sheet" Command="{Binding SaveQuerySheetCommand}" />
+                <MenuItem Header="Save query sheet as&#x2026;" Command="{Binding SaveQuerySheetAsCommand}" />
+                <MenuItem Header="Quit" Command="{Binding QuitCommand}" />
+            </MenuItem>
+        </Menu>
 
-        <ctl:QuerySheetTabControl Grid.Column="1"
+        <v:AccountsView Grid.Row="1" Grid.Column="0" DataContext="{Binding Accounts}" />
+
+        <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="5" />
+
+        <ctl:QuerySheetTabControl Grid.Row="1" Grid.Column="1"
                     ItemsSource="{Binding QuerySheets}"
                     SelectedItem="{Binding CurrentQuerySheet}">
         </ctl:QuerySheetTabControl>

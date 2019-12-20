@@ -29,9 +29,14 @@ namespace CosmosDBStudio
             services.AddSingleton<IClientPool, ClientPool>();
             services.AddSingleton<IAccountBrowserService, AccountBrowserService>();
             services.AddSingleton<IContainerContextFactory, ContainerContextFactory>();
+            services.AddSingleton<IQueryPersistenceService, QueryPersistenceService>();
+            
             services.AddSingleton<IViewModelFactory, ViewModelFactory>();
             services.AddSingleton<IMessenger, Messenger>();
             services.AddSingleton<IDialogService, DialogService>();
+
+            services.AddSingleton<MainWindowViewModel>();
+
             services.AddSingleton<App>();
         }
     }

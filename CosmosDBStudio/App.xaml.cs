@@ -5,20 +5,19 @@ namespace CosmosDBStudio
 {
     public partial class App
     {
-        private readonly IViewModelFactory _viewModelFactory;
+        private readonly MainWindowViewModel _mainWindowViewModel;
 
-        public App(IViewModelFactory viewModelFactory)
+        public App(MainWindowViewModel mainWindowViewModel)
         {
             InitializeComponent();
-            _viewModelFactory = viewModelFactory;
+            _mainWindowViewModel = mainWindowViewModel;
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            var vm = _viewModelFactory.CreateMainWindowViewModel();
             MainWindow = new MainWindow();
-            MainWindow.DataContext = vm;
+            MainWindow.DataContext = _mainWindowViewModel;
             MainWindow.Show();
         }
     }

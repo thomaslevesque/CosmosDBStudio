@@ -7,6 +7,7 @@
 	- [x] MRU values
 		- [ ] Persist MRU
 - [ ] Save query sheet
+- [ ] Load next result pages
 - [ ] Items CRUD
 - [ ] Database management
 	- [ ] Create/Delete
