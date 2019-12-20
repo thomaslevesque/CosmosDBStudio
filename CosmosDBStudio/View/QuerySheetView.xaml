@@ -42,7 +42,8 @@
                 </i:Interaction.Behaviors>
             </ComboBox>
         </StackPanel>
-        <ToolBar Grid.Row="2">
+        <ToolBar Grid.Row="2" KeyboardNavigation.TabNavigation="Continue"
+                 FocusManager.IsFocusScope="False">
             <Button Content="{StaticResource fa-play}"
                     ToolTip="Execute"
                     Style="{StaticResource FontAwesomeButton}"

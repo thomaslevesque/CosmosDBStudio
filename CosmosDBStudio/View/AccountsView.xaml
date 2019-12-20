@@ -16,7 +16,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <ToolBar Grid.Row="0">
+        <ToolBar Grid.Row="0" KeyboardNavigation.TabNavigation="Continue">
             <Button Content="{StaticResource fa-plus}" ToolTip="Add account"
                     FontFamily="{StaticResource FontAwesome}"
                     Command="{Binding AddCommand}" />
