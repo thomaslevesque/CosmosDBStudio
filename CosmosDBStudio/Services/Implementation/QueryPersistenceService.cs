@@ -15,7 +15,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public async Task SaveAsync(QuerySheet querySheet, string path)
         {
-            var json = JsonConvert.SerializeObject(querySheet);
+            var json = JsonConvert.SerializeObject(querySheet, Formatting.Indented);
             await File.WriteAllTextAsync(path, json);
         }
     }

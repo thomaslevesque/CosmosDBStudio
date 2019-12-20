@@ -81,7 +81,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public void Save()
         {
-            var json = JsonConvert.SerializeObject(_accounts.Values);
+            var json = JsonConvert.SerializeObject(_accounts.Values, Formatting.Indented);
             File.WriteAllText(GetAccountsFilePath(true), json);
         }
 

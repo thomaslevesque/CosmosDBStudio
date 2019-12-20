@@ -5,7 +5,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel

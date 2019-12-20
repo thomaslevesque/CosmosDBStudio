@@ -3,12 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CosmosDBStudio"
         xmlns:v="clr-namespace:CosmosDBStudio.View"
-        xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel"
         xmlns:ctl="clr-namespace:CosmosDBStudio.View.Controls"
         mc:Ignorable="d"
         Title="Cosmos DB Studio" Height="450" Width="800">
+    <Window.InputBindings>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenQuerySheetCommand}" />
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveQuerySheetCommand}" />
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,11 +22,11 @@
         </Grid.ColumnDefinitions>
 
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-            <MenuItem Header="File">
-                <MenuItem Header="Open query sheet" Command="{Binding OpenQuerySheetCommand}" />
-                <MenuItem Header="Save query sheet" Command="{Binding SaveQuerySheetCommand}" />
-                <MenuItem Header="Save query sheet as&#x2026;" Command="{Binding SaveQuerySheetAsCommand}" />
-                <MenuItem Header="Quit" Command="{Binding QuitCommand}" />
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open query sheet" Command="{Binding OpenQuerySheetCommand}" />
+                <MenuItem Header="_Save query sheet" Command="{Binding SaveQuerySheetCommand}" />
+                <MenuItem Header="Save query sheet _as&#x2026;" Command="{Binding SaveQuerySheetAsCommand}" />
+                <MenuItem Header="_Quit" Command="{Binding QuitCommand}" />
             </MenuItem>
         </Menu>
 
