@@ -1,11 +1,11 @@
 - [x] View partition key in results
 - [x] Partition key setting
 	- [x] MRU
-		- [ ] Persist MRU
+		- [x] Persist MRU
 	- [ ] Suggest existing partition keys
 - [x] Query parameters
 	- [x] MRU values
-		- [ ] Persist MRU
+		- [x] Persist MRU
 - [ ] Save query sheet
 - [ ] Load next result pages
 - [ ] Items CRUD

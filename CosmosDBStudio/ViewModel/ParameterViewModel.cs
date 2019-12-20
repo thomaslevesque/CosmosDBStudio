@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
@@ -124,24 +125,6 @@ namespace CosmosDBStudio.ViewModel
             {
                 value = null;
                 return false;
-            }
-        }
-
-        public void PushMRU(string value)
-        {
-            int index = MRU.IndexOf(value);
-            if (index >= 0)
-            {
-                MRU.Move(index, 0);
-            }
-            else
-            {
-                MRU.Insert(0, value);
-            }
-
-            while (MRU.Count > 10)
-            {
-                MRU.RemoveAt(MRU.Count - 1);
             }
         }
     }

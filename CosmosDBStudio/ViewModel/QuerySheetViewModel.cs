@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CosmosDBStudio.Extensions;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
@@ -138,7 +139,8 @@ namespace CosmosDBStudio.ViewModel
                 DatabaseId = _containerContext.DatabaseId,
                 ContainerId = _containerContext.ContainerId,
                 Text = Text,
-                PartitionKey = PartitionKey
+                PartitionKey = PartitionKey,
+                PartitionKeyMRU = PartitionKeyMRU.ToList()
             };
 
             foreach (var p in Parameters)
@@ -178,7 +180,7 @@ namespace CosmosDBStudio.ViewModel
             if (TryParsePartitionKeyValue(PartitionKey, out Option<object?> partitionKey) &&
                 !string.IsNullOrEmpty(PartitionKey))
             {
-                PushMRU(PartitionKeyMRU, PartitionKey!);
+                PartitionKeyMRU.PushMRU(PartitionKey!, 10);
             }
 
             var query = new Query(queryText);
@@ -205,28 +207,10 @@ namespace CosmosDBStudio.ViewModel
 
                 p.TryParseParameterValue(p.RawValue, out object? value);
                 query.Parameters[name] = value;
-                p.PushMRU(p.RawValue!);
+                p.MRU.PushMRU(p.RawValue!, 10);
             }
             var result = await _containerContext.Query.ExecuteAsync(query, default);
             Result = _viewModelFactory.CreateQueryResultViewModel(result, _containerContext);
-        }
-
-        private static void PushMRU(ObservableCollection<string> mruList, string value)
-        {
-            int index = mruList.IndexOf(value);
-            if (index >= 0)
-            {
-                mruList.Move(index, 0);
-            }
-            else
-            {
-                mruList.Insert(0, value);
-            }
-            
-            while (mruList.Count > 10)
-            {
-                mruList.RemoveAt(mruList.Count - 1);
-            }
         }
 
         private static readonly string QuerySeparator = Environment.NewLine + Environment.NewLine;
