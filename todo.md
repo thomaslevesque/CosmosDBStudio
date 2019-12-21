@@ -6,9 +6,9 @@
 - [x] Query parameters
 	- [x] MRU values
 		- [x] Persist MRU
-- [ ] Save query sheet
+- [x] Save/load query sheet
 - [ ] Load next result pages
-- [ ] Items CRUD
+- [x] Items CRUD
 - [ ] Database management
 	- [ ] Create/Delete
 	- [ ] Scaling
@@ -22,6 +22,6 @@
 	- [ ] Run pre/post
 	- [ ] CRUD
 - [ ] User-defined functions (CRUD)
-- [ ] JSON syntax validation
+- [.] JSON syntax validation
 - [ ] Better error messages
 	- [ ] Highlight error location

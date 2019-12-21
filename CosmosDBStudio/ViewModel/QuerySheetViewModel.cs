@@ -22,16 +22,18 @@ namespace CosmosDBStudio.ViewModel
         private readonly int _untitledNumber;
         private readonly IContainerContext _containerContext;
         private readonly IViewModelFactory _viewModelFactory;
+        private readonly IDialogService _dialogService;
 
         public QuerySheetViewModel(
             IContainerContext containerContext,
             IViewModelFactory viewModelFactory,
+            IDialogService dialogService,
             QuerySheet querySheet,
             string? path)
         {
             _containerContext = containerContext;
             _viewModelFactory = viewModelFactory;
-
+            _dialogService = dialogService;
             _filePath = path;
             _untitledNumber = string.IsNullOrEmpty(path)
                 ? ++_untitledCounter
@@ -265,6 +267,15 @@ namespace CosmosDBStudio.ViewModel
                     return Text.Length - 1;
                 return index;
             }
+        }
+
+        private DelegateCommand? _newDocumentCommand;
+        public ICommand NewDocumentCommand => _newDocumentCommand ??= new DelegateCommand(NewDocument);
+
+        private void NewDocument()
+        {
+            var vm = _viewModelFactory.CreateDocumentEditorViewModel(_containerContext, null);
+            _dialogService.ShowDialog(vm);
         }
 
         private DelegateCommand? _closeCommand;

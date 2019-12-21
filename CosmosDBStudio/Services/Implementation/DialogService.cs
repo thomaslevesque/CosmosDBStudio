@@ -15,6 +15,11 @@ namespace CosmosDBStudio.Services.Implementation
             return result == MessageBoxResult.Yes;
         }
 
+        public void ShowError(string message)
+        {
+            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
         public Option<string> PickFileToSave(
             Option<string> filter = default,
             Option<int> filterIndex = default,

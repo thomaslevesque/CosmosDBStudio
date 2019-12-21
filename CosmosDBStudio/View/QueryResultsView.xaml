@@ -35,21 +35,30 @@
                     </ListView.View>
                 </ListView>
                 <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch" />
-                <avalonEdit:TextEditor Grid.Column="1"
+                <DockPanel Grid.Column="1">
+                    <ToolBar DockPanel.Dock="Top">
+                        <Button FontFamily="{StaticResource FontAwesome}"
+                                Content="{StaticResource fa-edit}"
+                                Command="{Binding EditCommand}" />
+                        <Button FontFamily="{StaticResource FontAwesome}"
+                                Content="{StaticResource fa-trash-alt}"
+                                Command="{Binding DeleteCommand}" />
+                    </ToolBar>
+                    <avalonEdit:TextEditor
                                        SyntaxHighlighting="JavaScript"
                                        FontFamily="{StaticResource CodeFont}"
-                                       IsReadOnly="{Binding SelectedItem.IsReadOnly}">
-                    <i:Interaction.Behaviors>
-                        <bhv:AvalonTextEditorBehavior UseSearch="True" />
-                        <bhv:AvalonTextEditorBindingBehavior
-                                Text="{Binding SelectedItem.Text, Mode=TwoWay}" />
-                    </i:Interaction.Behaviors>
-                </avalonEdit:TextEditor>
+                                       IsReadOnly="True">
+                        <i:Interaction.Behaviors>
+                            <bhv:AvalonTextEditorBehavior UseSearch="True" />
+                            <bhv:AvalonTextEditorBindingBehavior
+                                Text="{Binding SelectedItem.Text, Mode=OneWay}" />
+                        </i:Interaction.Behaviors>
+                    </avalonEdit:TextEditor>
+                </DockPanel>
             </Grid>
         </TabItem>
         <TabItem Header="Raw">
-            <avalonEdit:TextEditor Name="results"
-                                   SyntaxHighlighting="JavaScript" IsReadOnly="True"
+            <avalonEdit:TextEditor SyntaxHighlighting="JavaScript" IsReadOnly="True"
                                    FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
                     <bhv:AvalonTextEditorBehavior UseSearch="True" />

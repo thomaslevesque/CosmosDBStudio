@@ -28,7 +28,7 @@ namespace CosmosDBStudio.ViewModel
 
         public QuerySheetViewModel CreateQuerySheetViewModel(IContainerContext containerContext, QuerySheet querySheet, string? path)
         {
-            return new QuerySheetViewModel(containerContext, this, querySheet, path);
+            return new QuerySheetViewModel(containerContext, this, _dialogService, querySheet, path);
         }
 
         public NotRunQueryResultViewModel CreateNotRunQueryResultViewModel()
@@ -38,7 +38,7 @@ namespace CosmosDBStudio.ViewModel
 
         public QueryResultViewModel CreateQueryResultViewModel(QueryResult result, IContainerContext containerContext)
         {
-            return new QueryResultViewModel(result, containerContext, this);
+            return new QueryResultViewModel(result, containerContext, this, _dialogService);
         }
 
         public AccountsViewModel CreateAccountsViewModel()
@@ -74,6 +74,11 @@ namespace CosmosDBStudio.ViewModel
         public ResultItemViewModel CreateEmptyResultPlaceholder()
         {
             return new EmptyResultItemPlaceholderViewModel();
+        }
+
+        public DocumentEditorViewModel CreateDocumentEditorViewModel(IContainerContext containerContext, JObject? document)
+        {
+            return new DocumentEditorViewModel(containerContext, document);
         }
     }
 }

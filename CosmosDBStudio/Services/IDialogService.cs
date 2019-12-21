@@ -7,6 +7,7 @@ namespace CosmosDBStudio.Services
     {
         bool? ShowDialog(IDialogViewModel dialog);
         bool Confirm(string text);
+        void ShowError(string message);
 
         Option<string> PickFileToSave(
             Option<string> filter = default,

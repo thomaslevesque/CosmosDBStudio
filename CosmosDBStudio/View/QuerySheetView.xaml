@@ -49,12 +49,16 @@
                     Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding ExecuteCommand}" />
 
-            <Separator />
-
             <ToggleButton Content="{StaticResource fa-at}"
                     ToolTip="Parameters"
                     Style="{StaticResource FontAwesomeButton}"
                     IsChecked="{Binding ShowParameters, Mode=TwoWay}" />
+
+            <Button Content="{StaticResource fa-plus}"
+                    ToolTip="New document"
+                    Style="{StaticResource FontAwesomeButton}"
+                    Command="{Binding NewDocumentCommand}" />
+
         </ToolBar>
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
@@ -65,10 +69,10 @@
                 <i:Interaction.Behaviors>
                     <bhv:AvalonTextEditorBehavior UseSearch="True" />
                     <bhv:AvalonTextEditorBindingBehavior
-                    Text="{Binding Text}"
-                    SelectedText="{Binding SelectedText}"
-                    CursorPosition="{Binding CursorPosition}"
-                    Selection="{Binding Selection}" />
+                        Text="{Binding Text}"
+                        SelectedText="{Binding SelectedText}"
+                        CursorPosition="{Binding CursorPosition}"
+                        Selection="{Binding Selection}" />
                 </i:Interaction.Behaviors>
                 <avalonEdit:TextEditor.InputBindings>
                     <KeyBinding Gesture="Ctrl+Enter" Command="{Binding ExecuteCommand}" />

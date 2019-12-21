@@ -13,7 +13,5 @@
         }
 
         public override bool IsJson => false;
-
-        public override bool IsReadOnly => true;
     }
 }

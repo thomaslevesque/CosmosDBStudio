@@ -6,4 +6,7 @@
     <DataTemplate DataType="{x:Type vm:AccountEditorViewModel}">
         <v:AccountEditorView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:DocumentEditorViewModel}">
+        <v:DocumentEditorView />
+    </DataTemplate>
 </ResourceDictionary>
