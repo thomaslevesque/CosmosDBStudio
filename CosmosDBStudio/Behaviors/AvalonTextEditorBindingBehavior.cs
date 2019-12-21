@@ -37,7 +37,13 @@ namespace CosmosDBStudio.Behaviors
                 new FrameworkPropertyMetadata(
                     null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    OnTextPropertyChanged));
+                    OnTextPropertyChanged,
+                    CoerceTextProperty));
+
+        private static object CoerceTextProperty(DependencyObject d, object baseValue)
+        {
+            return baseValue ?? string.Empty;
+        }
 
         private static void OnTextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -49,6 +55,9 @@ namespace CosmosDBStudio.Behaviors
 
         private void OnTextChanged()
         {
+            if (AssociatedObject is null)
+                return;
+
             if (AssociatedObject.Text != Text)
                 AssociatedObject.Text = Text ?? string.Empty;
         }
@@ -56,7 +65,7 @@ namespace CosmosDBStudio.Behaviors
         private void AssociatedObjectTextChanged(object? sender, EventArgs e)
         {
             if (Text != AssociatedObject.Text)
-                Text = AssociatedObject.Text ?? string.Empty;
+                this.SetCurrentValue(TextProperty, AssociatedObject.Text ?? string.Empty);
         }
 
         public string SelectedText
@@ -85,6 +94,9 @@ namespace CosmosDBStudio.Behaviors
 
         private void OnSelectedTextChanged()
         {
+            if (AssociatedObject is null)
+                return;
+
             if (AssociatedObject.SelectedText != SelectedText)
                 AssociatedObject.SelectedText = SelectedText ?? string.Empty;
         }
@@ -116,6 +128,9 @@ namespace CosmosDBStudio.Behaviors
 
         private void OnSelectionChanged()
         {
+            if (AssociatedObject is null)
+                return;
+
             var associatedObjectSelection = (AssociatedObject.SelectionStart, AssociatedObject.SelectionLength);
             if (associatedObjectSelection != Selection)
             {
@@ -127,10 +142,10 @@ namespace CosmosDBStudio.Behaviors
         private void AssociatedObjectSelectionChanged(object? sender, EventArgs e)
         {
             if (SelectedText != AssociatedObject.SelectedText)
-                SelectedText = AssociatedObject.SelectedText ?? string.Empty;
+                this.SetCurrentValue(SelectedTextProperty, AssociatedObject.SelectedText ?? string.Empty);
             var associatedObjectSelection = (AssociatedObject.SelectionStart, AssociatedObject.SelectionLength);
             if (Selection != associatedObjectSelection)
-                Selection = associatedObjectSelection;
+                this.SetCurrentValue(SelectionProperty, associatedObjectSelection);
         }
 
         public int CursorPosition
@@ -159,6 +174,9 @@ namespace CosmosDBStudio.Behaviors
 
         private void OnCursorPositionChanged()
         {
+            if (AssociatedObject is null)
+                return;
+
             if (AssociatedObject.CaretOffset != CursorPosition)
                 AssociatedObject.CaretOffset = CursorPosition;
         }
@@ -166,7 +184,7 @@ namespace CosmosDBStudio.Behaviors
         private void AssociatedObjectCaretPositionChanged(object? sender, EventArgs e)
         {
             if (CursorPosition != AssociatedObject.CaretOffset)
-                CursorPosition = AssociatedObject.CaretOffset;
+                this.SetCurrentValue(CursorPositionProperty,  AssociatedObject.CaretOffset);
         }
     }
 }

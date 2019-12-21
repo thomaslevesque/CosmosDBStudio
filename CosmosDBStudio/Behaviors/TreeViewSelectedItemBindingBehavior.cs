@@ -37,7 +37,7 @@ namespace CosmosDBStudio.Behaviors
         private void AssociatedItemSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> args)
         {
             if (SelectedItem != args.NewValue)
-                SelectedItem = args.NewValue;
+                this.SetCurrentValue(SelectedItemProperty, args.NewValue);
         }
     }
 }
