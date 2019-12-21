@@ -13,5 +13,7 @@
     <sys:String x:Key="fa-plus">&#xF067;</sys:String>
     <sys:String x:Key="fa-edit">&#xF044;</sys:String>
     <sys:String x:Key="fa-save">&#xF0C7;</sys:String>
+    <sys:String x:Key="fa-redo-alt">&#xF2F9;</sys:String>
+    <sys:String x:Key="fa-times">&#xF00D;</sys:String>
 
 </ResourceDictionary>

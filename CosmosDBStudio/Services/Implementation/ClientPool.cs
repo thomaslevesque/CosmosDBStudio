@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using CosmosDBStudio.Model;
 using Microsoft.Azure.Cosmos;
 
 namespace CosmosDBStudio.Services.Implementation

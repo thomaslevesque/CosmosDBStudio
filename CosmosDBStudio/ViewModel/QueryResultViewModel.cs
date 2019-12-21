@@ -80,6 +80,38 @@ namespace CosmosDBStudio.ViewModel
                 .AndRaiseCanExecuteChanged(_deleteCommand);
         }
 
+        private AsyncDelegateCommand? _refreshCommand;
+        public ICommand RefreshCommand => _refreshCommand = new AsyncDelegateCommand(Refresh, CanRefresh);
+
+        private async Task Refresh()
+        {
+            if (SelectedItem is DocumentViewModel item && item.IsRawDocument)
+            {
+                var refreshedDocument = await _containerContext.Documents.GetAsync(
+                    item.Id,
+                    item.HasPartitionKey ? Option.Some(item.PartitionKey) : Option.None(),
+                    default);
+
+                if (refreshedDocument is null)
+                {
+                    _dialogService.ShowError("The document no longer exists");
+                    _items.Remove(item);
+                    return;
+                }
+
+                var index = _items.IndexOf(item);
+                SelectedItem = null;
+                var newItem = _viewModelFactory.CreateDocumentViewModel(refreshedDocument, _containerContext);
+                _items[index] = newItem;
+                SelectedItem = newItem;
+            }
+        }
+
+        private bool CanRefresh()
+        {
+            return SelectedItem is DocumentViewModel item && item.IsRawDocument;
+        }
+
         private AsyncDelegateCommand? _deleteCommand;
         public ICommand DeleteCommand => _deleteCommand ??= new AsyncDelegateCommand(DeleteAsync, CanDelete);
 

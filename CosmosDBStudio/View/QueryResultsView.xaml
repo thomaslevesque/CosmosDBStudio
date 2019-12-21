@@ -38,10 +38,16 @@
                 <DockPanel Grid.Column="1">
                     <ToolBar DockPanel.Dock="Top">
                         <Button FontFamily="{StaticResource FontAwesome}"
+                                Content="{StaticResource fa-redo-alt}"
+                                ToolTip="Refresh"
+                                Command="{Binding RefreshCommand}" />
+                        <Button FontFamily="{StaticResource FontAwesome}"
                                 Content="{StaticResource fa-edit}"
+                                ToolTip="Edit"
                                 Command="{Binding EditCommand}" />
                         <Button FontFamily="{StaticResource FontAwesome}"
                                 Content="{StaticResource fa-trash-alt}"
+                                ToolTip="Delete"
                                 Command="{Binding DeleteCommand}" />
                     </ToolBar>
                     <avalonEdit:TextEditor
