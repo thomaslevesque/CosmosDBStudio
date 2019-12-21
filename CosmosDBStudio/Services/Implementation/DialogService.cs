@@ -41,13 +41,16 @@ namespace CosmosDBStudio.Services.Implementation
         public bool? ShowDialog(IDialogViewModel dialog)
         {
             var window = CreateWindow(dialog);
+            bool? result = null;
             try
             {
                 dialog.CloseRequested += OnCloseRequested;
-                return window.ShowDialog();
+                result = window.ShowDialog();
+                return result;
             }
             finally
             {
+                dialog.OnClosed(result);
                 dialog.CloseRequested -= OnCloseRequested;
             }
 
@@ -63,6 +66,7 @@ namespace CosmosDBStudio.Services.Implementation
         private DialogWindow CreateWindow(IDialogViewModel dialog)
         {
             var window = new DialogWindow();
+            window.DataContext = dialog;
 
             BindingOperations.SetBinding(
                 window,
@@ -93,16 +97,17 @@ namespace CosmosDBStudio.Services.Implementation
                 {
                     window.Width = sizable.Width;
                     window.Height = sizable.Height;
+                    window.ResizeMode = ResizeMode.NoResize;
                 }
             }
             else
             {
                 window.SizeToContent = SizeToContent.WidthAndHeight;
+                window.ResizeMode = ResizeMode.NoResize;
             }
 
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.DataContext = dialog;
             return window;
         }
 

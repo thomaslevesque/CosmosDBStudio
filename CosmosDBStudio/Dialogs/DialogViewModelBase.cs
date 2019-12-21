@@ -60,5 +60,9 @@ namespace CosmosDBStudio.Dialogs
         {
             CloseRequested?.Invoke(this, dialogResult);
         }
+
+        public virtual void OnClosed(bool? result)
+        {
+        }
     }
 }

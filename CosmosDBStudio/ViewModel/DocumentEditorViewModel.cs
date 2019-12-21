@@ -6,23 +6,32 @@ using Hamlet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class DocumentEditorViewModel : DialogViewModelBase
+    public class DocumentEditorViewModel : DialogViewModelBase, ISizableDialog
     {
         private readonly IContainerContext _containerContext;
+        private readonly Timer _validateJsonTimer;
 
         private JObject? _document;
+
         public DocumentEditorViewModel(IContainerContext containerContext, JObject? document)
         {
             _containerContext = containerContext;
+            _validateJsonTimer = new Timer(
+                    state => ((DocumentEditorViewModel)state!).ValidateJson(),
+                    this,
+                    Timeout.Infinite,
+                    Timeout.Infinite);
+
             if (document is null)
             {
                 Title = "New document";
-                Text = "{}";
+                _text = "{}";
             }
             else
             {
@@ -30,7 +39,7 @@ namespace CosmosDBStudio.ViewModel
                 _document = document;
                 _id = document["id"].Value<string>();
                 _eTag = document["_etag"]?.Value<string>();
-                Text = document.ToString(Formatting.Indented);
+                _text = document.ToString(Formatting.Indented);
             }
         }
 
@@ -39,21 +48,27 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _text;
             set => Set(ref _text, value)
-                .AndExecute(ValidateJson)
+                .AndExecute(InvalidateJson)
                 .AndRaiseCanExecuteChanged(_saveCommand);
         }
 
         private AsyncDelegateCommand? _saveCommand;
         public ICommand SaveCommand => _saveCommand ??= new AsyncDelegateCommand(
             SaveAsync,
-            () => IsJsonValid);
+            () => IsJsonValid is true);
 
-        private bool _isJsonValid;
-        public bool IsJsonValid
+        private bool? _isJsonValid;
+        public bool? IsJsonValid
         {
             get => _isJsonValid;
             set => Set(ref _isJsonValid, value)
                 .AndNotifyPropertyChanged(nameof(IsError));
+        }
+
+        private void InvalidateJson()
+        {
+            IsJsonValid = null;
+            _validateJsonTimer.Change(500, Timeout.Infinite);
         }
 
         private void ValidateJson()
@@ -84,7 +99,7 @@ namespace CosmosDBStudio.ViewModel
         private bool _isError;
         public bool IsError
         {
-            get => _isError || !IsJsonValid;
+            get => _isError || (IsJsonValid is false);
             set => Set(ref _isError, value);
         }
 
@@ -141,5 +156,27 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public JObject? GetDocument() => _document;
+
+        private double _width = 500;
+        public double Width
+        {
+            get => _width;
+            set => Set(ref _width, value);
+        }
+
+        private double _height = 500;
+        public double Height
+        {
+            get => _height;
+            set => Set(ref _height, value);
+        }
+
+        public bool IsResizable => true;
+
+        public override void OnClosed(bool? result)
+        {
+            base.OnClosed(result);
+            _validateJsonTimer.Dispose();
+        }
     }
 }

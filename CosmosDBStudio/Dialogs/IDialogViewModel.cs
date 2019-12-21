@@ -8,12 +8,13 @@ namespace CosmosDBStudio.Dialogs
         string Title { get; }
         IEnumerable<DialogButton> Buttons { get; }
         event EventHandler<bool?> CloseRequested;
+        void OnClosed(bool? result);
     }
 
     public interface ISizableDialog
     {
         double Width { get; set; }
         double Height { get; set; }
-        bool IsResizable { get; set; }
+        bool IsResizable { get; }
     }
 }
