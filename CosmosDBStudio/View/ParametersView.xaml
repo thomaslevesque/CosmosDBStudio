@@ -42,7 +42,7 @@
                         </ComboBox>
                         <Button Grid.Column="2"
                                 Margin="3,3,3,0"
-                                FontFamily="{StaticResource FontAwesome}"
+                                Style="{StaticResource FontAwesomeButton}"
                                 Content="{StaticResource fa-trash-alt}"
                                 Command="{Binding DeleteCommand}" />
                     </Grid>

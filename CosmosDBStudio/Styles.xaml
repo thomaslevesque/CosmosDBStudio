@@ -33,6 +33,7 @@
 
     <Style x:Key="FontAwesomeButton" TargetType="ButtonBase">
         <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+        <Setter Property="FontSize" Value="14" />
     </Style>
 
 </ResourceDictionary>

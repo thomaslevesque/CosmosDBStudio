@@ -18,13 +18,13 @@
 
         <ToolBar Grid.Row="0" KeyboardNavigation.TabNavigation="Continue">
             <Button Content="{StaticResource fa-plus}" ToolTip="Add account"
-                    FontFamily="{StaticResource FontAwesome}"
+                    Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding AddCommand}" />
             <Button Content="{StaticResource fa-edit}" ToolTip="Edit account"
-                    FontFamily="{StaticResource FontAwesome}"
+                    Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding EditCommand}" />
             <Button Content="{StaticResource fa-trash-alt}" ToolTip="Delete account"
-                    FontFamily="{StaticResource FontAwesome}"
+                    Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding DeleteCommand}" />
         </ToolBar>
 

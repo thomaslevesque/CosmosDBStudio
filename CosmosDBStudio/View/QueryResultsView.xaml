@@ -37,15 +37,15 @@
                 <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch" />
                 <DockPanel Grid.Column="1">
                     <ToolBar DockPanel.Dock="Top">
-                        <Button FontFamily="{StaticResource FontAwesome}"
+                        <Button Style="{StaticResource FontAwesomeButton}"
                                 Content="{StaticResource fa-redo-alt}"
                                 ToolTip="Refresh"
                                 Command="{Binding RefreshCommand}" />
-                        <Button FontFamily="{StaticResource FontAwesome}"
+                        <Button Style="{StaticResource FontAwesomeButton}"
                                 Content="{StaticResource fa-edit}"
                                 ToolTip="Edit"
                                 Command="{Binding EditCommand}" />
-                        <Button FontFamily="{StaticResource FontAwesome}"
+                        <Button Style="{StaticResource FontAwesomeButton}"
                                 Content="{StaticResource fa-trash-alt}"
                                 ToolTip="Delete"
                                 Command="{Binding DeleteCommand}" />
