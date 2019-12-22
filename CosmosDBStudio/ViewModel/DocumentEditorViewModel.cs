@@ -15,15 +15,26 @@ namespace CosmosDBStudio.ViewModel
     public class DocumentEditorViewModel : DialogViewModelBase, ISizableDialog
     {
         private readonly IContainerContext _containerContext;
+        private readonly IUIDispatcher _uiDispatcher;
         private readonly Timer _validateJsonTimer;
 
         private JObject? _document;
+        private string? _id;
+        private string? _eTag;
 
-        public DocumentEditorViewModel(IContainerContext containerContext, JObject? document)
+        public DocumentEditorViewModel(
+            JObject? document,
+            IContainerContext containerContext,
+            IUIDispatcher uiDispatcher)
         {
             _containerContext = containerContext;
+            _uiDispatcher = uiDispatcher;
             _validateJsonTimer = new Timer(
-                    state => ((DocumentEditorViewModel)state!).ValidateJson(),
+                    state =>
+                    {
+                        var @this = ((DocumentEditorViewModel)state!);
+                        @this._uiDispatcher.Invoke(() => @this.ValidateJson());
+                    },
                     this,
                     Timeout.Infinite,
                     Timeout.Infinite);
@@ -31,7 +42,9 @@ namespace CosmosDBStudio.ViewModel
             if (document is null)
             {
                 Title = "New document";
-                _text = "{}";
+                _document = new JObject();
+                _document["id"] = Guid.NewGuid();
+                _text = _document.ToString(Formatting.Indented);
             }
             else
             {
@@ -41,6 +54,13 @@ namespace CosmosDBStudio.ViewModel
                 _eTag = document["_etag"]?.Value<string>();
                 _text = document.ToString(Formatting.Indented);
             }
+
+            base.AddButton(new DialogButton
+            {
+                Text = "Close",
+                Command = new DelegateCommand(() => Close(null)),
+                IsCancel = true
+            });
         }
 
         private string _text = string.Empty;
@@ -50,6 +70,14 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _text, value)
                 .AndExecute(InvalidateJson)
                 .AndRaiseCanExecuteChanged(_saveCommand);
+        }
+
+        // Static so that it's remembered between doc edits
+        private static bool _closeOnSave = true;
+        public bool CloseOnSave
+        {
+            get => _closeOnSave;
+            set => Set(ref _closeOnSave, value);
         }
 
         private AsyncDelegateCommand? _saveCommand;
@@ -62,7 +90,8 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _isJsonValid;
             set => Set(ref _isJsonValid, value)
-                .AndNotifyPropertyChanged(nameof(IsError));
+                .AndNotifyPropertyChanged(nameof(IsError))
+                .AndRaiseCanExecuteChanged(_saveCommand);
         }
 
         private void InvalidateJson()
@@ -103,9 +132,6 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _isError, value);
         }
 
-        private string? _id;
-        private string? _eTag;
-
         private async Task SaveAsync()
         {
             var doc = JObject.Parse(Text);
@@ -127,9 +153,9 @@ namespace CosmosDBStudio.ViewModel
                         _eTag,
                         default);
 
+                    _id = result["id"].Value<string>();
                     _eTag = result["_etag"]?.Value<string?>();
 
-                    Text = result.ToString(Formatting.Indented);
                     StatusText = "Successfully updated";
                 }
                 else
@@ -141,12 +167,18 @@ namespace CosmosDBStudio.ViewModel
 
                     _id = result["id"].Value<string>();
                     _eTag = result["_etag"]?.Value<string?>();
-
-                    Text = result.ToString(Formatting.Indented);
+                    
                     StatusText = "Successfully created";
                 }
+                _text = result.ToString(Formatting.Indented);
                 _document = result;
                 IsError = false;
+                OnPropertyChanged(nameof(Text));
+                _saveCommand?.RaiseCanExecuteChanged();
+                if (CloseOnSave)
+                {
+                    Close(true);
+                }
             }
             catch (Exception ex)
             {

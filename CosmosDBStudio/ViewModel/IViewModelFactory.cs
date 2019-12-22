@@ -16,6 +16,6 @@ namespace CosmosDBStudio.ViewModel
         ResultItemViewModel CreateDocumentViewModel(JToken document, IContainerContext containerContext);
         ResultItemViewModel CreateErrorItemPlaceholder();
         ResultItemViewModel CreateEmptyResultPlaceholder();
-        DocumentEditorViewModel CreateDocumentEditorViewModel(IContainerContext containerContext, JObject? document);
+        DocumentEditorViewModel CreateDocumentEditorViewModel(JObject? document, IContainerContext containerContext);
     }
 }

@@ -7,8 +7,8 @@
 	- [x] MRU values
 		- [x] Persist MRU
 - [x] Save/load query sheet
-- [ ] Load next result pages
 - [x] Items CRUD
+- [ ] Load next result pages
 - [ ] Database management
 	- [ ] Create/Delete
 	- [ ] Scaling

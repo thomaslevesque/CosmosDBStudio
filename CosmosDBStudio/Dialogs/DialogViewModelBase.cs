@@ -18,6 +18,8 @@ namespace CosmosDBStudio.Dialogs
 
         public IEnumerable<DialogButton> Buttons => _buttons;
 
+        public bool HasButtons => _buttons.Count > 0;
+
         public event EventHandler<bool?>? CloseRequested;
 
         protected void AddButton(DialogButton button)

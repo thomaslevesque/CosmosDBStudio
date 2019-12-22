@@ -10,6 +10,9 @@
              xmlns:markup="clr-namespace:CosmosDBStudio.Markup"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.InputBindings>
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCommand}" />
+    </UserControl.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -19,8 +22,10 @@
         <ToolBar Grid.Row="0" KeyboardNavigation.TabNavigation="Continue" FocusManager.IsFocusScope="False">
             <Button Style="{StaticResource FontAwesomeButton}"
                     Content="{StaticResource fa-save}"
-                    ToolTip="Save"
+                    ToolTip="Save (Ctrl+S)"
                     Command="{Binding SaveCommand}" />
+            <CheckBox Content="Close on save"
+                      IsChecked="{Binding CloseOnSave}" />
         </ToolBar>
         <avalonEdit:TextEditor Grid.Row="1"
                                SyntaxHighlighting="JavaScript"

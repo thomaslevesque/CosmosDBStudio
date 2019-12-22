@@ -151,7 +151,7 @@ namespace CosmosDBStudio.ViewModel
         {
             if (SelectedItem is DocumentViewModel item && item.GetDocument() is JObject document)
             {
-                var vm = _viewModelFactory.CreateDocumentEditorViewModel(_containerContext, document);
+                var vm = _viewModelFactory.CreateDocumentEditorViewModel(document, _containerContext);
                 _dialogService.ShowDialog(vm);
                 var modifiedDocument = vm.GetDocument();
                 if (modifiedDocument != document && modifiedDocument != null)

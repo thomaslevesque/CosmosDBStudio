@@ -11,19 +11,22 @@ namespace CosmosDBStudio.ViewModel
         private readonly IContainerContextFactory _containerContextFactory;
         private readonly IAccountBrowserService _accountBrowserService;
         private readonly IDialogService _dialogService;
+        private readonly IUIDispatcher _uiDispatcher;
 
         public ViewModelFactory(
             IMessenger messenger,
             IAccountDirectory accountDirectory,
             IContainerContextFactory containerContextFactory,
             IAccountBrowserService accountBrowserService,
-            IDialogService dialogService)
+            IDialogService dialogService,
+            IUIDispatcher uiDispatcher)
         {
             _messenger = messenger;
             _accountDirectory = accountDirectory;
             _containerContextFactory = containerContextFactory;
             _accountBrowserService = accountBrowserService;
             _dialogService = dialogService;
+            _uiDispatcher = uiDispatcher;
         }
 
         public QuerySheetViewModel CreateQuerySheetViewModel(IContainerContext containerContext, QuerySheet querySheet, string? path)
@@ -76,9 +79,9 @@ namespace CosmosDBStudio.ViewModel
             return new EmptyResultItemPlaceholderViewModel();
         }
 
-        public DocumentEditorViewModel CreateDocumentEditorViewModel(IContainerContext containerContext, JObject? document)
+        public DocumentEditorViewModel CreateDocumentEditorViewModel(JObject? document, IContainerContext containerContext)
         {
-            return new DocumentEditorViewModel(containerContext, document);
+            return new DocumentEditorViewModel(document, containerContext, _uiDispatcher);
         }
     }
 }

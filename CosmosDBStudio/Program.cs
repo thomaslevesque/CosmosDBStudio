@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Threading;
 using CosmosDBStudio.Services;
 using CosmosDBStudio.Services.Implementation;
 using CosmosDBStudio.ViewModel;
@@ -34,6 +35,8 @@ namespace CosmosDBStudio
             services.AddSingleton<IViewModelFactory, ViewModelFactory>();
             services.AddSingleton<IMessenger, Messenger>();
             services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton(sp => new Lazy<Dispatcher>(() => sp.GetRequiredService<App>().Dispatcher));
+            services.AddSingleton<IUIDispatcher, UIDispatcher>();
 
             services.AddSingleton<MainWindowViewModel>();
 

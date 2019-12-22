@@ -6,13 +6,15 @@
         xmlns:local="clr-namespace:CosmosDBStudio.View"
         xmlns:dlg="clr-namespace:CosmosDBStudio.Dialogs"
         mc:Ignorable="d"
-        Title="DialogWindow"
+        Title="Cosmos DB Studio"
+        ShowInTaskbar="False"
         d:DesignHeight="450" d:DesignWidth="800">
     <Window.Resources>
-        <Style TargetType="Button">
+        <Style x:Key="DialogButtonStyle" TargetType="Button">
             <Setter Property="Margin" Value="0,5,5,5" />
             <Setter Property="MinWidth" Value="60" />
         </Style>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -26,10 +28,12 @@
                       BorderBrush="#CCCCCC"
                       Background="#EEE"
                       Padding="5"
+                      Visibility="{Binding HasButtons, Converter={StaticResource booleanToVisibilityConverter}}"
                       ItemsSource="{Binding Buttons}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type dlg:DialogButton}">
-                    <Button Content="{Binding Text}"
+                    <Button Style="{StaticResource DialogButtonStyle}"
+                            Content="{Binding Text}"
                             IsDefault="{Binding IsDefault}"
                             IsCancel="{Binding IsCancel}"
                             Command="{Binding Command}" 

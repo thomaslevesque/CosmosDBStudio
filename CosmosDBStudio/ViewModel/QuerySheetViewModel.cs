@@ -274,7 +274,7 @@ namespace CosmosDBStudio.ViewModel
 
         private void NewDocument()
         {
-            var vm = _viewModelFactory.CreateDocumentEditorViewModel(_containerContext, null);
+            var vm = _viewModelFactory.CreateDocumentEditorViewModel(null, _containerContext);
             _dialogService.ShowDialog(vm);
         }
 
