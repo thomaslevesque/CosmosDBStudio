@@ -43,6 +43,10 @@ namespace CosmosDBStudio.ViewModel
 
             PartitionKey = querySheet.PartitionKey;
             PartitionKeyMRU = new ObservableCollection<string>();
+            foreach (var mru in querySheet.PartitionKeyMRU)
+            {
+                PartitionKeyMRU.Add(mru);
+            }
 
             Parameters = new ObservableCollection<ParameterViewModel>();
             foreach (var p in querySheet.Parameters)
