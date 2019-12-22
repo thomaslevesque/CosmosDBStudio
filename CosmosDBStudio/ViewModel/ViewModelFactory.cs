@@ -79,9 +79,12 @@ namespace CosmosDBStudio.ViewModel
             return new EmptyResultItemPlaceholderViewModel();
         }
 
-        public DocumentEditorViewModel CreateDocumentEditorViewModel(JObject? document, IContainerContext containerContext)
+        public DocumentEditorViewModel CreateDocumentEditorViewModel(
+            JObject document,
+            bool isNew,
+            IContainerContext containerContext)
         {
-            return new DocumentEditorViewModel(document, containerContext, _uiDispatcher);
+            return new DocumentEditorViewModel(document, isNew, containerContext, _uiDispatcher);
         }
     }
 }

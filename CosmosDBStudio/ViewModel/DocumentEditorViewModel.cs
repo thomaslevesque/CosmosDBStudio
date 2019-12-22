@@ -18,15 +18,19 @@ namespace CosmosDBStudio.ViewModel
         private readonly IUIDispatcher _uiDispatcher;
         private readonly Timer _validateJsonTimer;
 
-        private JObject? _document;
-        private string? _id;
+        private JObject _document;
+        private bool _isNew;
+        private string _id;
         private string? _eTag;
 
         public DocumentEditorViewModel(
-            JObject? document,
+            JObject document,
+            bool isNew,
             IContainerContext containerContext,
             IUIDispatcher uiDispatcher)
         {
+            _document = document;
+            _isNew = isNew;
             _containerContext = containerContext;
             _uiDispatcher = uiDispatcher;
             _validateJsonTimer = new Timer(
@@ -39,21 +43,18 @@ namespace CosmosDBStudio.ViewModel
                     Timeout.Infinite,
                     Timeout.Infinite);
 
-            if (document is null)
+            if (_isNew)
             {
                 Title = "New document";
-                _document = new JObject();
-                _document["id"] = Guid.NewGuid();
-                _text = _document.ToString(Formatting.Indented);
             }
             else
             {
-                Title = "Edit document";
-                _document = document;
-                _id = document["id"].Value<string>();
-                _eTag = document["_etag"]?.Value<string>();
-                _text = document.ToString(Formatting.Indented);
+                Title = "Edit document";               
             }
+
+            _id = document["id"].Value<string>();
+            _eTag = document["_etag"]?.Value<string>();
+            _text = document.ToString(Formatting.Indented);
 
             base.AddButton(new DialogButton
             {
@@ -144,32 +145,29 @@ namespace CosmosDBStudio.ViewModel
             try
             {
                 JObject result;
-                if (_id is string id)
-                {
-                    result = await _containerContext.Documents.ReplaceAsync(
-                        id,
-                        doc,
-                        partitionKey,
-                        _eTag,
-                        default);
-
-                    _id = result["id"].Value<string>();
-                    _eTag = result["_etag"]?.Value<string?>();
-
-                    StatusText = "Successfully updated";
-                }
-                else
+                if (_isNew)
                 {
                     result = await _containerContext.Documents.CreateAsync(
                         doc,
                         partitionKey,
                         default);
 
-                    _id = result["id"].Value<string>();
-                    _eTag = result["_etag"]?.Value<string?>();
-                    
                     StatusText = "Successfully created";
                 }
+                else
+                {
+                    result = await _containerContext.Documents.ReplaceAsync(
+                        _id,
+                        doc,
+                        partitionKey,
+                        _eTag,
+                        default);
+
+                    StatusText = "Successfully updated";
+                }
+
+                _id = result["id"].Value<string>();
+                _eTag = result["_etag"]?.Value<string?>();
                 _text = result.ToString(Formatting.Indented);
                 _document = result;
                 IsError = false;

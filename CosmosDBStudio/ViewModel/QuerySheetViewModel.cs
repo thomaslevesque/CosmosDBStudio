@@ -278,8 +278,70 @@ namespace CosmosDBStudio.ViewModel
 
         private void NewDocument()
         {
-            var vm = _viewModelFactory.CreateDocumentEditorViewModel(null, _containerContext);
+            var document = new JObject();
+            document["id"] = Guid.NewGuid().ToString();
+            SetPartitionKey(document, PartitionKey);
+            var vm = _viewModelFactory.CreateDocumentEditorViewModel(document, true, _containerContext);
             _dialogService.ShowDialog(vm);
+        }
+
+        /// <summary>
+        /// Sets the partition key on a new document, based on the currently
+        /// selected one, if any. If no partition key is selected, add the
+        /// partition key property with a default value so that the user
+        /// remembers to set it.
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="partitionKeyRawValue"></param>
+        private void SetPartitionKey(JObject document, string? partitionKeyRawValue)
+        {
+            if (string.IsNullOrEmpty(_containerContext.PartitionKeyPath))
+                return;
+
+            if (_containerContext.PartitionKeyPath == "/id")
+                return;
+
+            object? partitionKey = null;
+            if (TryParsePartitionKeyValue(partitionKeyRawValue, out var partitionKeyOption))
+            {
+                partitionKeyOption.TryGetValue(out partitionKey);
+            }
+
+            var pathParts = _containerContext.PartitionKeyPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            JObject current = document;
+            // Find or construct the path to the partition key property
+            for (int i = 0; i < pathParts.Length; i++)
+            {
+                var part = pathParts[i];
+                var token = current.GetValue(part);
+                if (i == pathParts.Length - 1)
+                {
+                    current[part] = partitionKey is null
+                        ? JValue.CreateNull()
+                        : JValue.FromObject(partitionKey);
+                    return;
+                }
+                else
+                {
+                    if (token is JObject obj)
+                    {
+                        current = obj;
+                    }
+                    else if (token is null)
+                    {
+                        obj = new JObject();
+                        current[part] = obj;
+                        current = obj;
+                    }
+                    else
+                    {
+                        // A property exists, but its value is not an object. Nothing
+                        // we can do here, give up. Shouldn't happen anyway, since we
+                        // control how the document is constructed.
+                        return;
+                    }
+                }
+            }
         }
 
         private DelegateCommand? _closeCommand;
