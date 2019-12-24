@@ -13,7 +13,8 @@
         <DockPanel>
             <Button DockPanel.Dock="Right"
                     Style="{StaticResource TabCloseButtonStyle}"
-                    Command="{Binding CloseCommand}" />
+                    Command="{Binding CloseCommand}"
+                    ToolTip="Close" />
             <TextBlock Text="{Binding Title}" />
         </DockPanel>
     </TabItem.Header>
@@ -47,7 +48,7 @@
         <ToolBar Grid.Row="2" KeyboardNavigation.TabNavigation="Continue"
                  FocusManager.IsFocusScope="False">
             <Button Content="{StaticResource fa-play}"
-                    ToolTip="Execute"
+                    ToolTip="Execute (Ctrl+Enter, F5)"
                     Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding ExecuteCommand}" />
 
@@ -78,6 +79,7 @@
                 </i:Interaction.Behaviors>
                 <avalonEdit:TextEditor.InputBindings>
                     <KeyBinding Gesture="Ctrl+Enter" Command="{Binding ExecuteCommand}" />
+                    <KeyBinding Gesture="F5" Command="{Binding ExecuteCommand}" />
                 </avalonEdit:TextEditor.InputBindings>
             </avalonEdit:TextEditor>
             <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch"

@@ -23,8 +23,12 @@
 
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open query sheet" Command="{Binding OpenQuerySheetCommand}" />
-                <MenuItem Header="_Save query sheet" Command="{Binding SaveQuerySheetCommand}" />
+                <MenuItem Header="_Open query sheet"
+                          Command="{Binding OpenQuerySheetCommand}"
+                          InputGestureText="Ctrl+O"/>
+                <MenuItem Header="_Save query sheet"
+                          Command="{Binding SaveQuerySheetCommand}"
+                          InputGestureText="Ctrl+S"/>
                 <MenuItem Header="Save query sheet _as&#x2026;" Command="{Binding SaveQuerySheetAsCommand}" />
                 <MenuItem Header="_Quit" Command="{Binding QuitCommand}" />
             </MenuItem>
