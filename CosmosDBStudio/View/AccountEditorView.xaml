@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CosmosDBStudio.View"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
              mc:Ignorable="d" 
              Width="450"
              d:DesignHeight="300" d:DesignWidth="450">
@@ -28,8 +30,20 @@
         <Label Grid.Row="0" Grid.Column="0" Content="Name" Style="{StaticResource labelStyle}" />
         <Label Grid.Row="1" Grid.Column="0" Content="Endpoint" Style="{StaticResource labelStyle}" />
         <Label Grid.Row="2" Grid.Column="0" Content="Key" Style="{StaticResource labelStyle}" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource fieldStyle}" />
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Endpoint}" Style="{StaticResource fieldStyle}" />
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Key}" Style="{StaticResource fieldStyle}" />
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource fieldStyle}">
+            <i:Interaction.Behaviors>
+                <bhv:ErrorBehavior Error="{Binding Validator[Name]}" />
+            </i:Interaction.Behaviors>
+        </TextBox>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Endpoint}" Style="{StaticResource fieldStyle}">
+            <i:Interaction.Behaviors>
+                <bhv:ErrorBehavior Error="{Binding Validator[Endpoint]}" />
+            </i:Interaction.Behaviors>
+        </TextBox>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Key}" Style="{StaticResource fieldStyle}">
+            <i:Interaction.Behaviors>
+                <bhv:ErrorBehavior Error="{Binding Validator[Key]}" />
+            </i:Interaction.Behaviors>
+        </TextBox>
     </Grid>
 </UserControl>
