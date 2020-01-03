@@ -1,18 +1,26 @@
 ﻿using CosmosDBStudio.Dialogs;
 using CosmosDBStudio.Model;
+using CosmosDBStudio.Services;
 using EssentialMVVM;
 using System;
+using System.Data.Common;
 using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {
     public class AccountEditorViewModel : DialogViewModelBase
     {
-        public AccountEditorViewModel(CosmosAccount? account = null)
+        public AccountEditorViewModel(CosmosAccount? account, IClipboardService clipboardService)
         {
             _name = account?.Name ?? string.Empty;
             _endpoint = account?.Endpoint ?? string.Empty;
             _key = account?.Key ?? string.Empty;
+            _folder = account?.Folder ?? string.Empty;
+
+            if (account is null && clipboardService.TryGetText(out string copiedText))
+            {
+                TrySetValuesFromConnectionString(copiedText);
+            }
 
             Title = account is null
                 ? "Add Cosmos DB account"
@@ -26,6 +34,27 @@ namespace CosmosDBStudio.ViewModel
             Validator.AddValidator(vm => vm.Name, ValidateName);
             Validator.AddValidator(vm => vm.Endpoint, ValidateEndpoint);
             Validator.AddValidator(vm => vm.Key, ValidateKey);
+        }
+
+        private void TrySetValuesFromConnectionString(string connectionString)
+        {
+            var builder = new DbConnectionStringBuilder();
+
+            try
+            {
+                builder.ConnectionString = connectionString;
+            }
+            catch (ArgumentException)
+            {
+                return;
+            }
+
+            object tmp;
+            if (builder.TryGetValue("AccountEndpoint", out tmp) && tmp is string)
+                _endpoint = (string)tmp;
+            if (builder.TryGetValue("AccountKey", out tmp) && tmp is string)
+                _key = (string)tmp;
+            SetNameFromEndpoint();
         }
 
         private static string? ValidateName(string name)
@@ -90,6 +119,13 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _key, value)
                 .AndExecute(() => Validator?.Refresh())
                 .AndRaiseCanExecuteChanged(_saveCommand);
+        }
+
+        private string _folder;
+        public string Folder
+        {
+            get => _folder;
+            set => Set(ref _folder, value);
         }
 
         private void SetNameFromEndpoint()

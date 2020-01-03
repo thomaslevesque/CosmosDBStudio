@@ -19,6 +19,49 @@ namespace CosmosDBStudio.Services.Implementation
 
         public IEnumerable<CosmosAccount> Accounts => _accounts.Values.Select(c => c.Clone());
 
+        public IEnumerable<object> GetRootNodes() => GetChildNodes(string.Empty);
+
+        public IEnumerable<object> GetChildNodes(string folderPrefix)
+        {
+            var folderNames = new HashSet<string>();
+            var folders = new List<CosmosAccountFolder>();
+            var accounts = new List<CosmosAccount>();
+            var prefix = folderPrefix.TrimStart('/');
+
+            foreach (var (_, account) in _accounts)
+            {
+                if (!account.Folder.StartsWith(prefix))
+                    continue;
+
+                string subFolder = account.Folder?.Substring(prefix.Length) ?? string.Empty;
+                
+                // false prefix, e.g. foo/barrel for prefix foo/bar
+                if (!string.IsNullOrEmpty(prefix) && !string.IsNullOrEmpty(subFolder) && !subFolder.StartsWith('/'))
+                    continue;
+
+                subFolder = subFolder.Trim('/');
+
+                if (string.IsNullOrEmpty(subFolder))
+                {
+                    accounts.Add(account);
+                }
+                else
+                {
+                    string name = subFolder.Split('/')[0];
+                    if (folderNames.Add(name))
+                    {
+                        string fullPath =
+                            string.IsNullOrEmpty(prefix)
+                            ? name
+                            : prefix + "/" + name;
+                        folders.Add(new CosmosAccountFolder(fullPath));
+                    }
+                }
+            }
+
+            return folders.Concat<object>(accounts);
+        }
+
         public bool TryGetById(string id, [NotNullWhen(true)] out CosmosAccount? account)
         {
             return TryGetById(id, out account, true);
@@ -57,6 +100,7 @@ namespace CosmosDBStudio.Services.Implementation
                 existing.Endpoint = account.Endpoint;
                 existing.Name = account.Name;
                 existing.Key = account.Key;
+                existing.Folder = account.Folder;
             }
         }
 

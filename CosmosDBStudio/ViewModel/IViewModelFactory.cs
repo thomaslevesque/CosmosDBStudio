@@ -8,7 +8,8 @@ namespace CosmosDBStudio.ViewModel
     {
         QuerySheetViewModel CreateQuerySheetViewModel(IContainerContext containerContext, QuerySheet querySheet, string? path);
         QueryResultViewModel CreateQueryResultViewModel(QueryResult result, IContainerContext containerContext);
-        AccountViewModel CreateAccountViewModel(CosmosAccount account);
+        AccountViewModel CreateAccountViewModel(CosmosAccount account, AccountFolderViewModel? parent);
+        AccountFolderViewModel CreateAccountFolderViewModel(CosmosAccountFolder folder, AccountFolderViewModel? parent);
         DatabaseViewModel CreateDatabaseViewModel(AccountViewModel account, string id);
         ContainerViewModel CreateContainerViewModel(DatabaseViewModel database, string id);
         AccountsViewModel CreateAccountsViewModel();
@@ -20,5 +21,6 @@ namespace CosmosDBStudio.ViewModel
             JObject document,
             bool isNew,
             IContainerContext containerContext);
+        AccountEditorViewModel CreateAccountEditorViewModel(CosmosAccount? account = null);
     }
 }

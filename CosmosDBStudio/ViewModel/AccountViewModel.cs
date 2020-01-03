@@ -14,10 +14,12 @@ namespace CosmosDBStudio.ViewModel
 
         public AccountViewModel(
             CosmosAccount account,
+            AccountFolderViewModel? parent,
             IAccountBrowserService accountBrowserService,
             IViewModelFactory viewModelFactory)
         {
             _account = account;
+            Parent = parent;
             _accountBrowserService = accountBrowserService;
             _viewModelFactory = viewModelFactory;
             _name = account.Name;
@@ -34,7 +36,7 @@ namespace CosmosDBStudio.ViewModel
 
         public override string Text => _name;
 
-        public override NonLeafTreeNodeViewModel? Parent => null;
+        public override NonLeafTreeNodeViewModel? Parent { get; }
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {

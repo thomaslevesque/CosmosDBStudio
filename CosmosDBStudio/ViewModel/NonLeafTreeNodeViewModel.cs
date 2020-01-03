@@ -22,11 +22,24 @@ namespace CosmosDBStudio.ViewModel
             {
                 if (IsExpanded && _children == null && _loadChildrenTask == null)
                 {
-                    _loadChildrenTask = InternalLoadChildrenAsync();
+                    DoLoadChildrenAsync();
                 }
 
                 return _children ?? _placeholderChildren;
             }
+        }
+
+        public async Task EnsureChildrenLoadedAsync()
+        {
+            if (_children == null && _loadChildrenTask == null)
+            {
+                await DoLoadChildrenAsync();
+            }
+        }
+
+        private Task DoLoadChildrenAsync()
+        {
+            return _loadChildrenTask = InternalLoadChildrenAsync();
         }
 
         protected override void OnIsExpandedChanged()
@@ -57,7 +70,7 @@ namespace CosmosDBStudio.ViewModel
 
         protected abstract Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync();
 
-        public void RetryLoadChildren()
+        public void ReloadChildren()
         {
             _children = null;
             OnPropertyChanged(nameof(Children));
@@ -91,7 +104,7 @@ namespace CosmosDBStudio.ViewModel
 
         private void Retry()
         {
-            Parent?.RetryLoadChildren();
+            Parent?.ReloadChildren();
         }
     }
 }

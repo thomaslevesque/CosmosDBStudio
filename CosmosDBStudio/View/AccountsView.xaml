@@ -28,8 +28,11 @@
                     Command="{Binding DeleteCommand}" />
         </ToolBar>
 
-        <TreeView Grid.Row="1" ItemsSource="{Binding Accounts}">
+        <TreeView Grid.Row="1" ItemsSource="{Binding RootNodes}">
             <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type vm:AccountFolderViewModel}" ItemsSource="{Binding Children}">
+                    <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
+                </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type vm:AccountViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/account.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>

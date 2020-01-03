@@ -12,6 +12,7 @@ namespace CosmosDBStudio.ViewModel
         private readonly IAccountBrowserService _accountBrowserService;
         private readonly IDialogService _dialogService;
         private readonly IUIDispatcher _uiDispatcher;
+        private readonly IClipboardService _clipboardService;
 
         public ViewModelFactory(
             IMessenger messenger,
@@ -19,7 +20,8 @@ namespace CosmosDBStudio.ViewModel
             IContainerContextFactory containerContextFactory,
             IAccountBrowserService accountBrowserService,
             IDialogService dialogService,
-            IUIDispatcher uiDispatcher)
+            IUIDispatcher uiDispatcher,
+            IClipboardService clipboardService)
         {
             _messenger = messenger;
             _accountDirectory = accountDirectory;
@@ -27,6 +29,7 @@ namespace CosmosDBStudio.ViewModel
             _accountBrowserService = accountBrowserService;
             _dialogService = dialogService;
             _uiDispatcher = uiDispatcher;
+            _clipboardService = clipboardService;
         }
 
         public QuerySheetViewModel CreateQuerySheetViewModel(IContainerContext containerContext, QuerySheet querySheet, string? path)
@@ -49,9 +52,14 @@ namespace CosmosDBStudio.ViewModel
             return new AccountsViewModel(this, _accountDirectory, _dialogService);
         }
 
-        public AccountViewModel CreateAccountViewModel(CosmosAccount account)
+        public AccountViewModel CreateAccountViewModel(CosmosAccount account, AccountFolderViewModel? parent)
         {
-            return new AccountViewModel(account, _accountBrowserService, this);
+            return new AccountViewModel(account, parent, _accountBrowserService, this);
+        }
+
+        public AccountFolderViewModel CreateAccountFolderViewModel(CosmosAccountFolder folder, AccountFolderViewModel? parent)
+        {
+            return new AccountFolderViewModel(folder, parent, _accountDirectory, this);
         }
 
         public DatabaseViewModel CreateDatabaseViewModel(AccountViewModel account, string id)
@@ -85,6 +93,11 @@ namespace CosmosDBStudio.ViewModel
             IContainerContext containerContext)
         {
             return new DocumentEditorViewModel(document, isNew, containerContext, _uiDispatcher);
+        }
+
+        public AccountEditorViewModel CreateAccountEditorViewModel(CosmosAccount? account = null)
+        {
+            return new AccountEditorViewModel(account, _clipboardService);
         }
     }
 }

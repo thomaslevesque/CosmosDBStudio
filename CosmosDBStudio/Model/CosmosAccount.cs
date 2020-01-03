@@ -6,6 +6,7 @@
         public string Name { get; set; } = string.Empty;
         public string Endpoint { get; set; } = string.Empty;
         public string Key { get; set; } = string.Empty;
+        public string Folder { get; set; } = string.Empty;
 
         public CosmosAccount Clone()
         {
@@ -14,7 +15,8 @@
                 Id = Id,
                 Name = Name,
                 Endpoint = Endpoint,
-                Key = Key
+                Key = Key,
+                Folder = Folder
             };
         }
     }

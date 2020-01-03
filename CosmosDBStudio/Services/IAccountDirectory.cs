@@ -12,5 +12,7 @@ namespace CosmosDBStudio.Services
         void Load();
         void Save();
         bool TryGetById(string id, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out CosmosAccount? account);
+        IEnumerable<object> GetRootNodes();
+        IEnumerable<object> GetChildNodes(string folderPrefix);
     }
 }

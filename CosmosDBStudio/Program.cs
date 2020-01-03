@@ -37,6 +37,7 @@ namespace CosmosDBStudio
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton(sp => new Lazy<Dispatcher>(() => sp.GetRequiredService<App>().Dispatcher));
             services.AddSingleton<IUIDispatcher, UIDispatcher>();
+            services.AddSingleton<IClipboardService, ClipboardService>();
 
             services.AddSingleton<MainWindowViewModel>();
 

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using CosmosDBStudio.Extensions;
 using CosmosDBStudio.Model;
@@ -22,19 +24,27 @@ namespace CosmosDBStudio.ViewModel
             _viewModelFactory = viewModelFactory;
             _accountDirectory = accountDirectory;
             _dialogService = dialogService;
-            Accounts = new ObservableCollection<AccountViewModel>();
+            RootNodes = new ObservableCollection<TreeNodeViewModel>();
             LoadAccounts();
         }
 
         private void LoadAccounts()
         {
-            foreach (var account in _accountDirectory.Accounts)
+            var nodes = _accountDirectory.GetRootNodes();
+            foreach (var node in nodes)
             {
-                Accounts.Add(_viewModelFactory.CreateAccountViewModel(account));
+                var vm = node switch
+                {
+                    CosmosAccount account => (TreeNodeViewModel)_viewModelFactory.CreateAccountViewModel(account, null),
+                    CosmosAccountFolder folder => (TreeNodeViewModel)_viewModelFactory.CreateAccountFolderViewModel(folder, null),
+                    _ => throw new Exception("Invalid node type")
+                };
+
+                RootNodes.Add(vm);
             }
         }
 
-        public ObservableCollection<AccountViewModel> Accounts { get; }
+        public ObservableCollection<TreeNodeViewModel> RootNodes { get; }
 
         private object? _selectedItem;
         public object? SelectedItem
@@ -50,7 +60,15 @@ namespace CosmosDBStudio.ViewModel
 
         private void AddAccount()
         {
-            var dialog = new AccountEditorViewModel();
+            string folder = SelectedItem switch
+            {
+                AccountFolderViewModel f => f.FullPath,
+                AccountViewModel a => (a.Parent as AccountFolderViewModel)?.FullPath ?? string.Empty,
+                _ => string.Empty
+            };
+
+            var dialog = _viewModelFactory.CreateAccountEditorViewModel();
+            dialog.Folder = folder;
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 var newAccount = new CosmosAccount
@@ -59,11 +77,18 @@ namespace CosmosDBStudio.ViewModel
                     Name = dialog.Name,
                     Endpoint = dialog.Endpoint,
                     Key = dialog.Key,
+                    Folder = dialog.Folder.Trim('/')
                 };
                 _accountDirectory.Add(newAccount);
                 _accountDirectory.Save();
 
-                Accounts.Add(_viewModelFactory.CreateAccountViewModel(newAccount));
+                var folderVM = GetFolder(newAccount.Folder, create: true);
+                var vm = _viewModelFactory.CreateAccountViewModel(newAccount, folderVM);
+
+                if (folderVM is null)
+                    RootNodes.Add(vm);
+                else
+                    folderVM.ReloadChildren();
             }
         }
 
@@ -81,7 +106,11 @@ namespace CosmosDBStudio.ViewModel
             _accountDirectory.Remove(accountVm.Id);
             _accountDirectory.Save();
 
-            Accounts.Remove(accountVm);
+            var folder = accountVm.Parent;
+            if (folder is null)
+                RootNodes.Remove(accountVm);
+            else
+                folder.ReloadChildren();
         }
 
         private bool CanDeleteAccount() => SelectedItem is AccountViewModel;
@@ -97,19 +126,74 @@ namespace CosmosDBStudio.ViewModel
             if (!_accountDirectory.TryGetById(accountVm.Id, out var account))
                 return;
 
-            var dialog = new AccountEditorViewModel(account);
+            var oldFolder = account.Folder;
+            var dialog = _viewModelFactory.CreateAccountEditorViewModel(account);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 account.Name = dialog.Name;
                 account.Endpoint = dialog.Endpoint;
                 account.Key = dialog.Key;
+                account.Folder = dialog.Folder.Trim('/');
                 _accountDirectory.Update(account);
                 _accountDirectory.Save();
 
                 accountVm.Name = account.Name;
+
+                if (account.Folder != oldFolder)
+                {
+                    ReloadAccounts();
+                }
             }
         }
 
+        private void ReloadAccounts()
+        {
+            RootNodes.Clear();
+            LoadAccounts();
+        }
+
         private bool CanEditAccount() => SelectedItem is AccountViewModel;
+
+        private AccountFolderViewModel? GetFolder(string folder, bool create)
+        {
+            folder = folder.Trim('/');
+            if (string.IsNullOrEmpty(folder))
+                return null;
+
+            var parts = folder.Trim('/').Split('/');
+            AccountFolderViewModel? currentFolderVM = null;
+            string currentPath = "";
+            foreach (var name in parts)
+            {
+                currentPath = string.IsNullOrEmpty(currentPath)
+                    ? name
+                    : currentPath + "/" + name;
+
+                AccountFolderViewModel? nextFolderVM = null;
+                if (currentFolderVM is null)
+                {
+                    nextFolderVM = RootNodes.OfType<AccountFolderViewModel>().FirstOrDefault(f => f.FullPath == currentPath);
+                }
+                else
+                {
+                    // Known to be synchronous for folders
+                    currentFolderVM.EnsureChildrenLoadedAsync().Wait();
+                    nextFolderVM = currentFolderVM.Children.OfType<AccountFolderViewModel>().FirstOrDefault(f => f.FullPath == currentPath);
+                }
+
+                if (nextFolderVM is null)
+                {
+                    if (!create)
+                        return null;
+
+                    var newFolder = new CosmosAccountFolder(currentPath);
+                    nextFolderVM = _viewModelFactory.CreateAccountFolderViewModel(newFolder, currentFolderVM);
+                }
+
+                currentFolderVM = nextFolderVM;
+            }
+
+            return currentFolderVM;
+        }
     }
 }
