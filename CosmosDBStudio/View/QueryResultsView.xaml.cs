@@ -20,7 +20,33 @@ namespace CosmosDBStudio.View
     {
         public QueryResultsView()
         {
+            this.DataContextChanged += OnDataContextChanged;
             InitializeComponent();
         }
+
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ResizeGridViewColumns();
+        }
+
+        private void ResizeGridViewColumns()
+        {
+            var view = (GridView)items.View;
+            foreach (var column in view.Columns)
+            {
+                ResizeGridViewColumn(column);
+            }
+        }
+
+        private void ResizeGridViewColumn(GridViewColumn column)
+        {
+            if (double.IsNaN(column.Width))
+            {
+                column.Width = column.ActualWidth;
+            }
+
+            column.Width = double.NaN;
+        }
+
     }
 }
