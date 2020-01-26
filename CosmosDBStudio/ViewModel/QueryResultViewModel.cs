@@ -39,9 +39,18 @@ namespace CosmosDBStudio.ViewModel
                 Text = new JArray(result.Items).ToString(Formatting.Indented);
                 IsJson = true;
                 SelectedTab = ResultTab.Items;
+                var firstItem = (DocumentViewModel) _items[0];
+                FirstColumnTitle = firstItem.FirstColumnTitle;
+                HasPartitionKey = firstItem.HasPartitionKey;
+                PartitionKeyPath = firstItem.HasPartitionKey
+                    ? _containerContext.PartitionKeyPath ?? string.Empty
+                    : string.Empty;
             }
             else
             {
+                FirstColumnTitle = string.Empty;
+                HasPartitionKey = false;
+                PartitionKeyPath = string.Empty;
                 ResultItemViewModel item;
                 if (_result.Error != null)
                 {
@@ -88,7 +97,7 @@ namespace CosmosDBStudio.ViewModel
             if (SelectedItem is DocumentViewModel item && item.IsRawDocument)
             {
                 var refreshedDocument = await _containerContext.Documents.GetAsync(
-                    item.Id,
+                    item.Id!, // Not null if IsRawDocument is true
                     item.HasPartitionKey ? Option.Some(item.PartitionKey) : Option.None(),
                     default);
 
@@ -117,7 +126,7 @@ namespace CosmosDBStudio.ViewModel
 
         private async Task DeleteAsync()
         {
-            if (SelectedItem is DocumentViewModel item)
+            if (SelectedItem is DocumentViewModel item && item.IsRawDocument)
             {
                 if (!_dialogService.Confirm("Do you really want to delete this document?"))
                     return;
@@ -125,7 +134,7 @@ namespace CosmosDBStudio.ViewModel
                 try
                 {
                     await _containerContext.Documents.DeleteAsync(
-                        item.Id,
+                        item.Id!, // Not null if IsRawDocument is true
                         item.HasPartitionKey ? Option.Some(item.PartitionKey) : Option.None(),
                         item.ETag,
                         default);
@@ -170,6 +179,9 @@ namespace CosmosDBStudio.ViewModel
             return SelectedItem is DocumentViewModel item && item.IsRawDocument;
         }
 
-        public string PartitionKeyPath => _containerContext.PartitionKeyPath ?? string.Empty;
+        public string PartitionKeyPath { get; }
+
+        public string FirstColumnTitle { get; }
+        public bool HasPartitionKey { get; }
     }
 }

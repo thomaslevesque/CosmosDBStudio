@@ -3,10 +3,11 @@ using CosmosDBStudio.Services;
 using Hamlet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
 
 namespace CosmosDBStudio.ViewModel
 {
-
     public class DocumentViewModel : ResultItemViewModel
     {
         private readonly JToken _document;
@@ -16,16 +17,50 @@ namespace CosmosDBStudio.ViewModel
         {
             _document = document;
             _containerContext = containerContext;
-            JToken? idToken = null;
-            HasId = document is JObject obj && obj.TryGetValue("id", out idToken);
-            if (HasId)
-                Id = idToken.Value<string>();
+            if (document is JObject obj)
+            {
+                if (obj.TryGetValue("id", out var idToken))
+                {
+                    HasId = true;
+                    FirstColumnTitle = "id";
+                    DisplayValue = Id = idToken.Value<string>();
+                }
+                else
+                {
+                    FirstColumnTitle = "value";
+                    var props = obj.Properties().ToList();
+                    if (props.Count < 2)
+                    {
+                        DisplayValue = obj.ToString(Formatting.None);
+                    }
+                    else
+                    {
+                        var firstProp = props.First();
+                        DisplayValue = $"{{{firstProp.ToString(Formatting.None)}, …}}";
+                    }
+                }
+            }
             else if (document is JValue value)
-                Id = value.Value?.ToString() ?? "(null)";
-            else
-                Id = "(no id)";
+            {
+                FirstColumnTitle = "value";
+                DisplayValue = value.Value?.ToString() ?? "(null)";
+            }
+            else if (document is JArray array)
+            {
+                FirstColumnTitle = "values";
 
-            if (HasId && !string.IsNullOrEmpty(containerContext.PartitionKeyJsonPath))
+                var firstItems = new JArray(array.Take(2));
+                if (array.Count > 2)
+                    firstItems.Add(new JRaw("…"));
+                DisplayValue = firstItems.ToString(Formatting.None);
+            }
+            else
+            {
+                // Should never happen
+                throw new InvalidOperationException("Unexpected document type");
+            }
+
+            if (!string.IsNullOrEmpty(containerContext.PartitionKeyJsonPath))
             {
                 var pk = document.ExtractScalar(containerContext.PartitionKeyJsonPath);
                 HasPartitionKey = pk.IsSome;
@@ -41,15 +76,16 @@ namespace CosmosDBStudio.ViewModel
             _text = document.ToString(Formatting.Indented);
         }
 
-        public override string DisplayId => Id;
+        public override string DisplayValue { get; }
         public override object? PartitionKey { get; }
         public override bool IsJson => true;
 
-        public string Id { get; }
+        public string? Id { get; }
         public bool HasId { get; }
         public bool HasPartitionKey { get; }
         public string? ETag { get; }
         public bool IsRawDocument { get; }
+        public string FirstColumnTitle { get; }
 
         private string _text;
         public override string Text

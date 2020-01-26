@@ -28,7 +28,8 @@
                           SelectionMode="Single">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="id" DisplayMemberBinding="{Binding Id}"  />
+                            <GridViewColumn Header="{Binding Data.FirstColumnTitle, Source={StaticResource proxy}}"
+                                            DisplayMemberBinding="{Binding DisplayValue}" />
                             <GridViewColumn Header="{Binding Data.PartitionKeyPath, Source={StaticResource proxy}, Converter={StaticResource noAccessKey}}"
                                             DisplayMemberBinding="{Binding PartitionKey}" />
                         </GridView>

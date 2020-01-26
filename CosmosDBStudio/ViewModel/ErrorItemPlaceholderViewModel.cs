@@ -2,7 +2,7 @@
 {
     public class ErrorItemPlaceholderViewModel : ResultItemViewModel
     {
-        public override string DisplayId => "(error)";
+        public override string DisplayValue => "(error)";
 
         public override object? PartitionKey => null;
 
