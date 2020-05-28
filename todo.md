@@ -8,7 +8,7 @@
 		- [x] Persist MRU
 - [x] Save/load query sheet
 - [x] Items CRUD
-- [ ] Load next result pages
+- [x] Load next result pages
 - [ ] Database management
 	- [ ] Create/Delete
 	- [ ] Scaling
@@ -25,3 +25,7 @@
 - [.] JSON syntax validation
 - [ ] Better error messages
 	- [ ] Highlight error location
+- [ ] Installer
+	- [ ] Automatic updates
+- [ ] Insert/Update/Delete DSL
+- [ ] Cancellation

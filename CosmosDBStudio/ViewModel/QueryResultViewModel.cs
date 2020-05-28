@@ -8,18 +8,23 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {
     public class QueryResultViewModel : QueryResultViewModelBase
     {
-        private readonly QueryResult _result;
         private readonly IContainerContext _containerContext;
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
         private readonly ObservableCollection<ResultItemViewModel> _items;
+        private readonly Query _query;
+        private string _text;
+        private string? _error;
+        private string? _continuationToken;
 
         public QueryResultViewModel(
             QueryResult result,
@@ -27,16 +32,16 @@ namespace CosmosDBStudio.ViewModel
             IViewModelFactory viewModelFactory,
             IDialogService dialogService)
         {
-            _result = result;
             _containerContext = containerContext;
             _viewModelFactory = viewModelFactory;
             _dialogService = dialogService;
+            _query = result.Query;
             if (result.Items != null && result.Items.Count > 0)
             {
                 _items = new ObservableCollection<ResultItemViewModel>(
                     result.Items
                         .Select(item => _viewModelFactory.CreateDocumentViewModel(item, _containerContext)));
-                Text = new JArray(result.Items).ToString(Formatting.Indented);
+                _text = new JArray(result.Items).ToString(Formatting.Indented);
                 IsJson = true;
                 SelectedTab = ResultTab.Items;
                 var firstItem = (DocumentViewModel) _items[0];
@@ -45,6 +50,7 @@ namespace CosmosDBStudio.ViewModel
                 PartitionKeyPath = firstItem.HasPartitionKey
                     ? _containerContext.PartitionKeyPath ?? string.Empty
                     : string.Empty;
+                _continuationToken = result.ContinuationToken;
             }
             else
             {
@@ -52,9 +58,10 @@ namespace CosmosDBStudio.ViewModel
                 HasPartitionKey = false;
                 PartitionKeyPath = string.Empty;
                 ResultItemViewModel item;
-                if (_result.Error != null)
+                if (result.Error != null)
                 {
                     item = _viewModelFactory.CreateErrorItemPlaceholder();
+                    _error = result.Error.Message;
                     SelectedTab = ResultTab.Error;
                 }
                 else
@@ -68,7 +75,7 @@ namespace CosmosDBStudio.ViewModel
                     item
                 };
 
-                Text = item.Text;
+                _text = item.Text;
                 IsJson = false;
             }
 
@@ -77,8 +84,11 @@ namespace CosmosDBStudio.ViewModel
 
         public override IReadOnlyList<ResultItemViewModel> Items => _items;
         public override bool IsJson { get; }
-        public override string Text { get; }
-        public override string? Error => _result?.Error?.Message;
+        public override string Text => _text;
+        public override string? Error => _error;
+        public string PartitionKeyPath { get; }
+        public string FirstColumnTitle { get; }
+        public bool HasPartitionKey { get; }
 
         private ResultItemViewModel? _selectedItem;
         public override ResultItemViewModel? SelectedItem
@@ -88,6 +98,7 @@ namespace CosmosDBStudio.ViewModel
                 .AndRaiseCanExecuteChanged(_editCommand)
                 .AndRaiseCanExecuteChanged(_deleteCommand);
         }
+
 
         private AsyncDelegateCommand? _refreshCommand;
         public ICommand RefreshCommand => _refreshCommand = new AsyncDelegateCommand(Refresh, CanRefresh);
@@ -179,9 +190,36 @@ namespace CosmosDBStudio.ViewModel
             return SelectedItem is DocumentViewModel item && item.IsRawDocument;
         }
 
-        public string PartitionKeyPath { get; }
+        private AsyncDelegateCommand? _loadNextPageCommand;
+        public ICommand LoadNextPageCommand => _loadNextPageCommand ??= new AsyncDelegateCommand(LoadNextPageAsync, CanLoadNextPage);
 
-        public string FirstColumnTitle { get; }
-        public bool HasPartitionKey { get; }
+        private async Task LoadNextPageAsync()
+        {
+            if (!string.IsNullOrEmpty(_continuationToken))
+            {
+                var result = await _containerContext.Query.ExecuteAsync(_query, _continuationToken, default);
+                if (result.Items != null)
+                {
+                    _continuationToken = result.ContinuationToken;
+                    foreach (var item in result.Items)
+                    {
+                        _items.Add(_viewModelFactory.CreateDocumentViewModel(item, _containerContext));
+                    }
+
+                    var tokens = _items.Cast<DocumentViewModel>().Select(d => d.GetDocument());
+                    _text = new JArray(tokens).ToString(Formatting.Indented);
+                    OnPropertyChanged(nameof(Text));
+                }
+                else if (result.Error != null)
+                {
+                    _items.Add(_viewModelFactory.CreateErrorItemPlaceholder());
+                    _error = result.Error.Message;
+                    SelectedTab = ResultTab.Error;
+                    OnPropertyChanged(nameof(Error));
+                }
+            }
+        }
+
+        private bool CanLoadNextPage() => !string.IsNullOrEmpty(_continuationToken);
     }
 }

@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using CosmosDBStudio.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CosmosDBStudio.View
 {
@@ -48,5 +39,18 @@ namespace CosmosDBStudio.View
             column.Width = double.NaN;
         }
 
+        private void items_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            var scrollViewer = (ScrollViewer)e.OriginalSource;
+            if (scrollViewer.ScrollableHeight > 0 &&
+                scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight &&
+                DataContext is QueryResultViewModel vm)
+            {
+                if (vm.LoadNextPageCommand.CanExecute(null))
+                {
+                    vm.LoadNextPageCommand.Execute(null);
+                }
+            }
+        }
     }
 }

@@ -25,7 +25,8 @@
                 </Grid.ColumnDefinitions>
                 <ListView Grid.Column="0" Name="items" ItemsSource="{Binding Items}"
                           DisplayMemberPath="DisplayId" SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                          SelectionMode="Single">
+                          SelectionMode="Single"
+                          ScrollViewer.ScrollChanged="items_ScrollChanged">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="{Binding Data.FirstColumnTitle, Source={StaticResource proxy}}"

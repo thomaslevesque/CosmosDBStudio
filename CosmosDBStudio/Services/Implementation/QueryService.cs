@@ -19,12 +19,12 @@ namespace CosmosDBStudio.Services.Implementation
             _container = container;
         }
 
-        public async Task<QueryResult> ExecuteAsync(Query query, CancellationToken cancellationToken)
+        public async Task<QueryResult> ExecuteAsync(Query query, string? continuationToken, CancellationToken cancellationToken)
         {
             var queryDefinition = CreateQueryDefinition(query);
             var requestOptions = CreateRequestOptions(query);
-            var iterator = _container.GetItemQueryIterator<JToken>(queryDefinition, query.ContinuationToken, requestOptions);
-            var result = new QueryResult();
+            var iterator = _container.GetItemQueryIterator<JToken>(queryDefinition, continuationToken, requestOptions);
+            var result = new QueryResult(query);
             var stopwatch = new Stopwatch();
             List<string>? warnings = null;
             try

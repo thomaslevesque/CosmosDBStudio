@@ -215,7 +215,7 @@ namespace CosmosDBStudio.ViewModel
                 query.Parameters[name] = value;
                 p.MRU.PushMRU(p.RawValue!, 10);
             }
-            var result = await _containerContext.Query.ExecuteAsync(query, default);
+            var result = await _containerContext.Query.ExecuteAsync(query, null, default);
             Result = _viewModelFactory.CreateQueryResultViewModel(result, _containerContext);
         }
 

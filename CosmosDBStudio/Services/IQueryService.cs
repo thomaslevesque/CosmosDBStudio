@@ -6,6 +6,6 @@ namespace CosmosDBStudio.Services
 {
     public interface IQueryService
     {
-        Task<QueryResult> ExecuteAsync(Query query, CancellationToken cancellationToken);
+        Task<QueryResult> ExecuteAsync(Query query, string? continuationToken, CancellationToken cancellationToken);
     }
 }
