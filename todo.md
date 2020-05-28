@@ -22,7 +22,7 @@
 	- [ ] Run pre/post
 	- [ ] CRUD
 - [ ] User-defined functions (CRUD)
-- [.] JSON syntax validation
+- [ ] Improve JSON syntax validation
 - [ ] Better error messages
 	- [ ] Highlight error location
 - [ ] Installer
