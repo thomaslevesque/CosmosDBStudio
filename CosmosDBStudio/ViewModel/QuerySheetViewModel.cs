@@ -52,9 +52,10 @@ namespace CosmosDBStudio.ViewModel
             foreach (var p in querySheet.Parameters)
             {
                 CreateParameter(p);
+                ShowParameters = true;
             }
             AddParameterPlaceholder();
-            
+
             Errors = new ViewModelValidator<QuerySheetViewModel>(this);
             Errors.AddValidator(
                 vm => vm.PartitionKey,
