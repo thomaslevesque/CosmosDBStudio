@@ -1,22 +1,52 @@
 ﻿using CosmosDBStudio.Model;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace CosmosDBStudio.Services.Implementation
 {
     public class QueryPersistenceService : IQueryPersistenceService
     {
-        public async Task<QuerySheet> LoadAsync(string path)
+        public QuerySheet Load(string path)
         {
-            string json = await File.ReadAllTextAsync(path);
+            string json = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<QuerySheet>(json);
         }
 
-        public async Task SaveAsync(QuerySheet querySheet, string path)
+        public IList<string> LoadMruList()
+        {
+            try
+            {
+                string json = File.ReadAllText(GetMruListFilePath());
+                return JsonConvert.DeserializeObject<IList<string>>(json);
+            }
+            catch(FileNotFoundException)
+            {
+                return new List<string>();
+            }
+        }
+
+        public void Save(QuerySheet querySheet, string path)
         {
             var json = JsonConvert.SerializeObject(querySheet, Formatting.Indented);
-            await File.WriteAllTextAsync(path, json);
+            File.WriteAllText(path, json);
+        }
+
+        public void SaveMruList(IList<string> mruList)
+        {
+            string json = JsonConvert.SerializeObject(mruList, Formatting.Indented);
+            File.WriteAllText(GetMruListFilePath(), json);
+        }
+
+        private static string GetMruListFilePath(bool createDirectory = false)
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var cosmosDbStudioData = Path.Combine(appData, "CosmosDBStudio");
+            if (createDirectory)
+                Directory.CreateDirectory(cosmosDbStudioData);
+            var filePath = Path.Combine(cosmosDbStudioData, "mru.json");
+            return filePath;
         }
     }
 }

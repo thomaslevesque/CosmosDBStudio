@@ -1,11 +1,14 @@
 ﻿using CosmosDBStudio.Model;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CosmosDBStudio.Services
 {
     public interface IQueryPersistenceService
     {
-        Task<QuerySheet> LoadAsync(string path);
-        Task SaveAsync(QuerySheet querySheet, string path);
+        QuerySheet Load(string path);
+        void Save(QuerySheet querySheet, string path);
+        IList<string> LoadMruList();
+        void SaveMruList(IList<string> mruList);
     }
 }

@@ -7,6 +7,7 @@ using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
 using Hamlet;
+using Linq.Extras;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -35,7 +36,7 @@ namespace CosmosDBStudio.ViewModel
 
             _messenger.Subscribe(this).To<NewQuerySheetMessage>((vm, message) => vm.OnNewQuerySheetMessage(message));
 
-            //AddDummyQuerySheet();
+            MruList = new ObservableCollection<string>(_queryPersistenceService.LoadMruList());
         }
 
         private async void OnNewQuerySheetMessage(NewQuerySheetMessage message)
@@ -84,14 +85,18 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _currentQuerySheet, value);
         }
 
-        private AsyncDelegateCommand? _saveQuerySheetCommand;
-        public ICommand SaveQuerySheetCommand => _saveQuerySheetCommand ??= new AsyncDelegateCommand(SaveCurrentQuerySheetAsync);
+        public ObservableCollection<string> MruList { get; }
 
-        private AsyncDelegateCommand? _saveQuerySheetAsCommand;
-        public ICommand SaveQuerySheetAsCommand => _saveQuerySheetAsCommand ??= new AsyncDelegateCommand(SaveCurrentQuerySheetAsAsync);
+        public bool HasMru => !MruList.IsNullOrEmpty();
 
-        private AsyncDelegateCommand? _openQuerySheetCommand;
-        public ICommand OpenQuerySheetCommand => _openQuerySheetCommand ??= new AsyncDelegateCommand(OpenQuerySheetAsync);
+        private DelegateCommand? _saveQuerySheetCommand;
+        public ICommand SaveQuerySheetCommand => _saveQuerySheetCommand ??= new DelegateCommand(SaveCurrentQuerySheet);
+
+        private DelegateCommand? _saveQuerySheetAsCommand;
+        public ICommand SaveQuerySheetAsCommand => _saveQuerySheetAsCommand ??= new DelegateCommand(SaveCurrentQuerySheetAs);
+
+        private AsyncDelegateCommand<string>? _openQuerySheetCommand;
+        public ICommand OpenQuerySheetCommand => _openQuerySheetCommand ??= new AsyncDelegateCommand<string>(OpenQuerySheetAsync);
 
         public DelegateCommand? _quitCommand;
         public ICommand QuitCommand => _quitCommand ??= new DelegateCommand(Quit);
@@ -104,31 +109,31 @@ namespace CosmosDBStudio.ViewModel
 
         private const string QueryFileFilter = "Cosmos DB Studio query sheet|*.cdbsqs";
 
-        private async Task SaveCurrentQuerySheetAsync()
+        private void SaveCurrentQuerySheet()
         {
             if (CurrentQuerySheet is QuerySheetViewModel vm)
             {
                 if (string.IsNullOrEmpty(vm.FilePath))
                 {
-                    await SaveQuerySheetAsAsync(vm);
+                    SaveQuerySheetAs(vm);
                 }
                 else
                 {
                     var querySheet = vm.GetQuerySheet();
-                    await _queryPersistenceService.SaveAsync(querySheet, vm.FilePath);
+                    _queryPersistenceService.Save(querySheet, vm.FilePath);
                 }
             }
         }
 
-        private async Task SaveCurrentQuerySheetAsAsync()
+        private void SaveCurrentQuerySheetAs()
         {
             if (CurrentQuerySheet is QuerySheetViewModel vm)
             {
-                await SaveQuerySheetAsAsync(vm);
+                SaveQuerySheetAs(vm);
             }
         }
 
-        private async Task SaveQuerySheetAsAsync(QuerySheetViewModel vm)
+        private void SaveQuerySheetAs(QuerySheetViewModel vm)
         {
             var pathOption = _dialogService.PickFileToSave(
                     filter: QueryFileFilter,
@@ -138,26 +143,26 @@ namespace CosmosDBStudio.ViewModel
             if (pathOption.TryGetValue(out var path))
             {
                 var querySheet = vm.GetQuerySheet();
-                await _queryPersistenceService.SaveAsync(querySheet, path);
+                _queryPersistenceService.Save(querySheet, path);
                 vm.FilePath = path;
-            }
-        }
-
-        private async Task OpenQuerySheetAsync()
-        {
-            var pathOption = _dialogService.PickFileToOpen(
-                filter: QueryFileFilter,
-                filterIndex: 0);
-
-            if (pathOption.TryGetValue(out var path))
-            {
-                await OpenQuerySheetAsync(path);
             }
         }
 
         private async Task OpenQuerySheetAsync(string path)
         {
-            var querySheet = await _queryPersistenceService.LoadAsync(path);
+            if (path is null)
+            {
+                var pathOption = _dialogService.PickFileToOpen(
+                filter: QueryFileFilter,
+                filterIndex: 0);
+
+                if (!pathOption.TryGetValue(out path))
+                {
+                    return;
+                }
+            }
+
+            var querySheet = _queryPersistenceService.Load(path);
             var context = await _containerContextFactory.CreateAsync(
                     querySheet.AccountId,
                     querySheet.DatabaseId,
@@ -172,6 +177,15 @@ namespace CosmosDBStudio.ViewModel
             vm.CloseRequested += OnQuerySheetCloseRequested;
             QuerySheets.Add(vm);
             CurrentQuerySheet = vm;
+
+            int index = MruList.IndexOf(path, StringComparer.InvariantCultureIgnoreCase);
+            if (index >= 0)
+            {
+                MruList.RemoveAt(index);
+            }
+            MruList.Insert(0, path);
+            OnPropertyChanged(nameof(HasMru));
+            _queryPersistenceService.SaveMruList(MruList);
         }
     }
 }

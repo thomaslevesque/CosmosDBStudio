@@ -9,6 +9,7 @@
 - [x] Save/load query sheet
 - [x] Items CRUD
 - [x] Load next result pages
+- [x] MRU query files
 - [ ] Database management
 	- [ ] Create/Delete
 	- [ ] Scaling
@@ -22,9 +23,12 @@
 	- [ ] Run pre/post
 	- [ ] CRUD
 - [ ] User-defined functions (CRUD)
-- [ ] Improve JSON syntax validation
+- [ ] Switch query sheet container
+	- [ ] Don't persist query sheet container in query
+- [ ] Status bar
+- [ ] Improve JSON syntax validation (squiggles)
 - [ ] Better error messages
-	- [ ] Highlight error location
+	- [ ] Squiggles at error location
 - [ ] Installer
 	- [ ] Automatic updates
 - [ ] Insert/Update/Delete DSL

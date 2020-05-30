@@ -6,7 +6,8 @@
         xmlns:v="clr-namespace:CosmosDBStudio.View"
         xmlns:ctl="clr-namespace:CosmosDBStudio.View.Controls"
         mc:Ignorable="d"
-        Title="Cosmos DB Studio" Height="450" Width="800">
+        Title="Cosmos DB Studio" Height="450" Width="800"
+        Name="root">
     <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenQuerySheetCommand}" />
         <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveQuerySheetCommand}" />
@@ -30,6 +31,15 @@
                           Command="{Binding SaveQuerySheetCommand}"
                           InputGestureText="Ctrl+S"/>
                 <MenuItem Header="Save query sheet _as&#x2026;" Command="{Binding SaveQuerySheetAsCommand}" />
+                <MenuItem Header="Recent files" ItemsSource="{Binding MruList}" DisplayMemberPath="."
+                          IsEnabled="{Binding HasMru}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Command" Value="{Binding DataContext.OpenQuerySheetCommand, ElementName=root}" />
+                            <Setter Property="CommandParameter" Value="{Binding}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
                 <MenuItem Header="_Quit" Command="{Binding QuitCommand}" />
             </MenuItem>
         </Menu>
