@@ -31,9 +31,9 @@ namespace CosmosDBStudio.ViewModel
 
         public async Task EnsureChildrenLoadedAsync()
         {
-            if (_children == null && _loadChildrenTask == null)
+            if (_children == null)
             {
-                await DoLoadChildrenAsync();
+                await (_loadChildrenTask ?? DoLoadChildrenAsync());
             }
         }
 

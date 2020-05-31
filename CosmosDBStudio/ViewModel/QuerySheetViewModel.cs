@@ -223,7 +223,18 @@ namespace CosmosDBStudio.ViewModel
                 query.Parameters[name] = value;
                 p.MRU.PushMRU(p.RawValue!, 10);
             }
-            var result = await containerContext.Query.ExecuteAsync(query, null, default);
+
+            QueryResult? result;
+            try
+            {
+                IsQueryRunning = true;
+                result = await containerContext.Query.ExecuteAsync(query, null, default);
+            }
+            finally
+            {
+                IsQueryRunning = false;
+            }
+
             Result = _viewModelFactory.CreateQueryResultViewModel(result, containerContext);
         }
 
@@ -457,5 +468,15 @@ namespace CosmosDBStudio.ViewModel
                 OnPropertyChanged(null);
             }
         }
+
+        private bool _isQueryRunning;
+        public bool IsQueryRunning
+        {
+            get => _isQueryRunning;
+            set => Set(ref _isQueryRunning, value)
+                .AndNotifyPropertyChanged(nameof(IsUIEnabled));
+        }
+
+        public bool IsUIEnabled => !IsQueryRunning;
     }
 }
