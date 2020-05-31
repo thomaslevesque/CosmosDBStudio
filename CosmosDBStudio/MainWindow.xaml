@@ -6,7 +6,7 @@
         xmlns:v="clr-namespace:CosmosDBStudio.View"
         xmlns:ctl="clr-namespace:CosmosDBStudio.View.Controls"
         mc:Ignorable="d"
-        Title="Cosmos DB Studio" Height="450" Width="800"
+        Title="Cosmos DB Studio" Height="800" Width="1200"
         Name="root">
     <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenQuerySheetCommand}" />
