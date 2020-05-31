@@ -66,5 +66,9 @@ namespace CosmosDBStudio.Dialogs
         public virtual void OnClosed(bool? result)
         {
         }
+
+        public virtual void OnClosing(DialogClosingEventArgs args)
+        {
+        }
     }
 }

@@ -92,7 +92,7 @@ namespace CosmosDBStudio.ViewModel
             bool isNew,
             IContainerContext containerContext)
         {
-            return new DocumentEditorViewModel(document, isNew, containerContext, _uiDispatcher);
+            return new DocumentEditorViewModel(document, isNew, containerContext, _dialogService, _uiDispatcher);
         }
 
         public AccountEditorViewModel CreateAccountEditorViewModel(CosmosAccount? account = null)

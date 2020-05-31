@@ -10,6 +10,7 @@
 - [x] Items CRUD
 - [x] Load next result pages
 - [x] MRU query files
+- [ ] Delete multiple documents
 - [ ] Database management
 	- [ ] Create/Delete
 	- [ ] Scaling

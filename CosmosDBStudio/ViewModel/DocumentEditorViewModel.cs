@@ -15,6 +15,7 @@ namespace CosmosDBStudio.ViewModel
     public class DocumentEditorViewModel : DialogViewModelBase, ISizableDialog
     {
         private readonly IContainerContext _containerContext;
+        private readonly IDialogService _dialogService;
         private readonly IUIDispatcher _uiDispatcher;
         private readonly Timer _validateJsonTimer;
 
@@ -27,11 +28,13 @@ namespace CosmosDBStudio.ViewModel
             JObject document,
             bool isNew,
             IContainerContext containerContext,
+            IDialogService dialogService,
             IUIDispatcher uiDispatcher)
         {
             _document = document;
             _isNew = isNew;
             _containerContext = containerContext;
+            _dialogService = dialogService;
             _uiDispatcher = uiDispatcher;
             _validateJsonTimer = new Timer(
                     state =>
@@ -49,12 +52,13 @@ namespace CosmosDBStudio.ViewModel
             }
             else
             {
-                Title = "Edit document";               
+                Title = "Edit document";
             }
 
             _id = document["id"].Value<string>();
             _eTag = document["_etag"]?.Value<string>();
             _text = document.ToString(Formatting.Indented);
+            _isJsonValid = true;
 
             base.AddButton(new DialogButton
             {
@@ -73,18 +77,10 @@ namespace CosmosDBStudio.ViewModel
                 .AndRaiseCanExecuteChanged(_saveCommand);
         }
 
-        // Static so that it's remembered between doc edits
-        private static bool _closeOnSave = true;
-        public bool CloseOnSave
-        {
-            get => _closeOnSave;
-            set => Set(ref _closeOnSave, value);
-        }
-
-        private AsyncDelegateCommand? _saveCommand;
-        public ICommand SaveCommand => _saveCommand ??= new AsyncDelegateCommand(
+        private AsyncDelegateCommand<bool>? _saveCommand;
+        public ICommand SaveCommand => _saveCommand ??= new AsyncDelegateCommand<bool>(
             SaveAsync,
-            () => IsJsonValid is true);
+            _ => (_isNew || HasChanged) && IsJsonValid is true);
 
         private bool? _isJsonValid;
         public bool? IsJsonValid
@@ -93,6 +89,13 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _isJsonValid, value)
                 .AndNotifyPropertyChanged(nameof(IsError))
                 .AndRaiseCanExecuteChanged(_saveCommand);
+        }
+
+        private bool _hasChanged;
+        public bool HasChanged
+        {
+            get => _hasChanged;
+            set => Set(ref _hasChanged, value);
         }
 
         private void InvalidateJson()
@@ -105,10 +108,11 @@ namespace CosmosDBStudio.ViewModel
         {
             try
             {
-                JObject.Parse(Text, new JsonLoadSettings
+                var newDoc = JObject.Parse(Text, new JsonLoadSettings
                 {
                     LineInfoHandling = LineInfoHandling.Load
                 });
+                HasChanged = _isNew || !JToken.DeepEquals(newDoc, _document);
                 IsJsonValid = true;
                 StatusText = null;
             }
@@ -133,7 +137,7 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _isError, value);
         }
 
-        private async Task SaveAsync()
+        private async Task SaveAsync(bool close)
         {
             var doc = JObject.Parse(Text);
 
@@ -169,11 +173,13 @@ namespace CosmosDBStudio.ViewModel
                 _id = result["id"].Value<string>();
                 _eTag = result["_etag"]?.Value<string?>();
                 _text = result.ToString(Formatting.Indented);
+                _isNew = false;
+                HasChanged = false;
                 _document = result;
                 IsError = false;
                 OnPropertyChanged(nameof(Text));
                 _saveCommand?.RaiseCanExecuteChanged();
-                if (CloseOnSave)
+                if (close)
                 {
                     Close(true);
                 }
@@ -202,6 +208,32 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public bool IsResizable => true;
+
+        public override void OnClosing(DialogClosingEventArgs args)
+        {
+            base.OnClosing(args);
+            if (HasChanged)
+            {
+                var result = _dialogService.YesNoCancel("Do you want to save the changes made to the document?");
+                if (result.TryGetValue(out bool save))
+                {
+                    if (save)
+                    {
+                        args.Cancel = true;
+                        _uiDispatcher.InvokeAsync(() =>
+                        {
+                            if (SaveCommand.CanExecute(true))
+                                SaveCommand.Execute(true);
+                        });
+                    }
+                }
+                else
+                {
+                    args.Cancel = true;
+                    return;
+                }
+            }
+        }
 
         public override void OnClosed(bool? result)
         {

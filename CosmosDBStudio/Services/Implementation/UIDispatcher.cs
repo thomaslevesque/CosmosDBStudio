@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace CosmosDBStudio.Services.Implementation
@@ -15,6 +16,12 @@ namespace CosmosDBStudio.Services.Implementation
         public void Invoke(Action action)
         {
             _dispatcher.Value.Invoke(action);
+        }
+
+        public Task InvokeAsync(Action action)
+        {
+            var operation = _dispatcher.Value.InvokeAsync(action);
+            return operation.Task;
         }
     }
 }

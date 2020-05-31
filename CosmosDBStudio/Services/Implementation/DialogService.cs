@@ -2,6 +2,7 @@
 using CosmosDBStudio.View;
 using Hamlet;
 using Microsoft.Win32;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
 
@@ -13,6 +14,17 @@ namespace CosmosDBStudio.Services.Implementation
         {
             var result = MessageBox.Show(text, "Confirm", MessageBoxButton.YesNo);
             return result == MessageBoxResult.Yes;
+        }
+
+        public Option<bool> YesNoCancel(string text)
+        {
+            var result = MessageBox.Show(text, "Confirm", MessageBoxButton.YesNoCancel);
+            return result switch
+            {
+                MessageBoxResult.Yes => Option.Some(true),
+                MessageBoxResult.No => Option.Some(false),
+                _ => Option.None()
+            };
         }
 
         public void ShowError(string message)
@@ -41,6 +53,7 @@ namespace CosmosDBStudio.Services.Implementation
         public bool? ShowDialog(IDialogViewModel dialog)
         {
             var window = CreateWindow(dialog);
+            window.Closing += OnWindowClosing;
             bool? result = null;
             try
             {
@@ -52,6 +65,12 @@ namespace CosmosDBStudio.Services.Implementation
             {
                 dialog.OnClosed(result);
                 dialog.CloseRequested -= OnCloseRequested;
+                window.Closing -= OnWindowClosing;
+            }
+
+            void OnWindowClosing(object? sender, CancelEventArgs e)
+            {
+                e.Cancel = !ConfirmClose(null);
             }
 
             void OnCloseRequested(object? sender, bool? dialogResult)
@@ -60,6 +79,13 @@ namespace CosmosDBStudio.Services.Implementation
                     window.DialogResult = value;
                 else
                     window.Close();
+            }
+
+            bool ConfirmClose(bool? dialogResult)
+            {
+                var closingEventArgs = new DialogClosingEventArgs(dialogResult);
+                dialog.OnClosing(closingEventArgs);
+                return !closingEventArgs.Cancel;
             }
         }
 

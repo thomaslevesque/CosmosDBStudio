@@ -9,6 +9,7 @@ namespace CosmosDBStudio.Dialogs
         IEnumerable<DialogButton> Buttons { get; }
         bool HasButtons { get; }
         event EventHandler<bool?> CloseRequested;
+        void OnClosing(DialogClosingEventArgs args);
         void OnClosed(bool? result);
     }
 

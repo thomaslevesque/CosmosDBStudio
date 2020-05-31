@@ -4,6 +4,9 @@
 
     <BooleanToVisibilityConverter x:Key="boolToVisibility" />
 
+    <sys:Boolean x:Key="True">True</sys:Boolean>
+    <sys:Boolean x:Key="False">False</sys:Boolean>
+
     <FontFamily x:Key="CodeFont">Cascadia Code, Consolas, Courier New</FontFamily>
     <FontFamily x:Key="FontAwesome">pack://application:,,,/Resources/#Font Awesome 5 Free Solid</FontFamily>
 
