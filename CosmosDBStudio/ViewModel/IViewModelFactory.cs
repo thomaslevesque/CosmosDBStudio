@@ -6,7 +6,7 @@ namespace CosmosDBStudio.ViewModel
 {
     public interface IViewModelFactory
     {
-        QuerySheetViewModel CreateQuerySheetViewModel(IContainerContext containerContext, QuerySheet querySheet, string? path);
+        QuerySheetViewModel CreateQuerySheetViewModel(QuerySheet querySheet, string? path, IContainerContext? containerContext);
         QueryResultViewModel CreateQueryResultViewModel(QueryResult result, IContainerContext containerContext);
         AccountViewModel CreateAccountViewModel(CosmosAccount account, AccountFolderViewModel? parent);
         AccountFolderViewModel CreateAccountFolderViewModel(CosmosAccountFolder folder, AccountFolderViewModel? parent);
@@ -22,5 +22,6 @@ namespace CosmosDBStudio.ViewModel
             bool isNew,
             IContainerContext containerContext);
         AccountEditorViewModel CreateAccountEditorViewModel(CosmosAccount? account = null);
+        ContainerPickerViewModel CreateContainerPickerViewModel();
     }
 }

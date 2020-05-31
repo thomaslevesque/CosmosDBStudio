@@ -32,9 +32,9 @@ namespace CosmosDBStudio.ViewModel
             _clipboardService = clipboardService;
         }
 
-        public QuerySheetViewModel CreateQuerySheetViewModel(IContainerContext containerContext, QuerySheet querySheet, string? path)
+        public QuerySheetViewModel CreateQuerySheetViewModel(QuerySheet querySheet, string? path, IContainerContext? containerContext)
         {
-            return new QuerySheetViewModel(containerContext, this, _dialogService, querySheet, path);
+            return new QuerySheetViewModel(this, _dialogService, _containerContextFactory, querySheet, path, containerContext);
         }
 
         public NotRunQueryResultViewModel CreateNotRunQueryResultViewModel()
@@ -98,6 +98,11 @@ namespace CosmosDBStudio.ViewModel
         public AccountEditorViewModel CreateAccountEditorViewModel(CosmosAccount? account = null)
         {
             return new AccountEditorViewModel(account, _clipboardService);
+        }
+
+        public ContainerPickerViewModel CreateContainerPickerViewModel()
+        {
+            return new ContainerPickerViewModel(this, _accountDirectory);
         }
     }
 }

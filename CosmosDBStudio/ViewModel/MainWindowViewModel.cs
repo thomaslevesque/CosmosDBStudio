@@ -43,26 +43,20 @@ namespace CosmosDBStudio.ViewModel
         {
             try
             {
-                var querySheet = new QuerySheet
-                {
-                    AccountId = message.AccountId,
-                    DatabaseId = message.DatabaseId,
-                    ContainerId = message.ContainerId
-                };
-
+                var querySheet = new QuerySheet();
                 var context = await _containerContextFactory.CreateAsync(
                     message.AccountId,
                     message.DatabaseId,
                     message.ContainerId,
                     default);
-                var vm = _viewModelFactory.CreateQuerySheetViewModel(context, querySheet, null);
+                var vm = _viewModelFactory.CreateQuerySheetViewModel(querySheet, null, context);
                 vm.CloseRequested += OnQuerySheetCloseRequested;
                 QuerySheets.Add(vm);
                 CurrentQuerySheet = vm;
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO show error
+                _dialogService.ShowError(ex.Message);
             }
         }
 
@@ -95,8 +89,8 @@ namespace CosmosDBStudio.ViewModel
         private DelegateCommand? _saveQuerySheetAsCommand;
         public ICommand SaveQuerySheetAsCommand => _saveQuerySheetAsCommand ??= new DelegateCommand(SaveCurrentQuerySheetAs);
 
-        private AsyncDelegateCommand<string>? _openQuerySheetCommand;
-        public ICommand OpenQuerySheetCommand => _openQuerySheetCommand ??= new AsyncDelegateCommand<string>(OpenQuerySheetAsync);
+        private DelegateCommand<string>? _openQuerySheetCommand;
+        public ICommand OpenQuerySheetCommand => _openQuerySheetCommand ??= new DelegateCommand<string>(OpenQuerySheet);
 
         public DelegateCommand? _quitCommand;
         public ICommand QuitCommand => _quitCommand ??= new DelegateCommand(Quit);
@@ -148,7 +142,7 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
-        private async Task OpenQuerySheetAsync(string path)
+        private void OpenQuerySheet(string path)
         {
             if (path is null)
             {
@@ -163,16 +157,10 @@ namespace CosmosDBStudio.ViewModel
             }
 
             var querySheet = _queryPersistenceService.Load(path);
-            var context = await _containerContextFactory.CreateAsync(
-                    querySheet.AccountId,
-                    querySheet.DatabaseId,
-                    querySheet.ContainerId,
-                    default);
-
             var vm = _viewModelFactory.CreateQuerySheetViewModel(
-                context,
                 querySheet,
-                path);
+                path,
+                null);
 
             vm.CloseRequested += OnQuerySheetCloseRequested;
             QuerySheets.Add(vm);

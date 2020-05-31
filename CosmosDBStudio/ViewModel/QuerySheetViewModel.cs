@@ -20,20 +20,24 @@ namespace CosmosDBStudio.ViewModel
         private static int _untitledCounter;
 
         private readonly int _untitledNumber;
-        private readonly IContainerContext _containerContext;
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
+        private readonly IContainerContextFactory _containerContextFactory;
+
+        private IContainerContext? _containerContext;
 
         public QuerySheetViewModel(
-            IContainerContext containerContext,
             IViewModelFactory viewModelFactory,
             IDialogService dialogService,
+            IContainerContextFactory containerContextFactory,
             QuerySheet querySheet,
-            string? path)
+            string? path,
+            IContainerContext? containerContext)
         {
             _containerContext = containerContext;
             _viewModelFactory = viewModelFactory;
             _dialogService = dialogService;
+            _containerContextFactory = containerContextFactory;
             _filePath = path;
             _untitledNumber = string.IsNullOrEmpty(path)
                 ? ++_untitledCounter
@@ -85,7 +89,9 @@ namespace CosmosDBStudio.ViewModel
                 .AndRaiseCanExecuteChanged(_executeCommand);
         }
 
-        public string ContainerPath => $"{_containerContext.AccountName}/{_containerContext.DatabaseId}/{_containerContext.ContainerId}";
+        public string ContainerPath => _containerContext is null
+            ? "(none)"
+            : $"{_containerContext.AccountName}/{_containerContext.DatabaseId}/{_containerContext.ContainerId}";
 
         private string _selectedText = string.Empty;
         public string SelectedText
@@ -142,9 +148,6 @@ namespace CosmosDBStudio.ViewModel
         {
             var querySheet =  new QuerySheet
             {
-                AccountId = _containerContext.AccountId,
-                DatabaseId = _containerContext.DatabaseId,
-                ContainerId = _containerContext.ContainerId,
                 Text = Text,
                 PartitionKey = PartitionKey,
                 PartitionKeyMRU = PartitionKeyMRU.ToList()
@@ -168,13 +171,17 @@ namespace CosmosDBStudio.ViewModel
 
         private bool CanExecute()
         {
-            return !Errors.HasError &&
+            return (_containerContext is { }) &&
+                !Errors.HasError &&
                 (!string.IsNullOrEmpty(SelectedText) ||
                  !string.IsNullOrEmpty(ExtendSelectionAroundCursor(false)));
         }
 
         private async Task ExecuteAsync()
         {
+            if (!(_containerContext is IContainerContext containerContext))
+                return;
+
             var queryText = SelectedText;
             if (string.IsNullOrEmpty(queryText))
                 queryText = ExtendSelectionAroundCursor(true);
@@ -216,8 +223,8 @@ namespace CosmosDBStudio.ViewModel
                 query.Parameters[name] = value;
                 p.MRU.PushMRU(p.RawValue!, 10);
             }
-            var result = await _containerContext.Query.ExecuteAsync(query, null, default);
-            Result = _viewModelFactory.CreateQueryResultViewModel(result, _containerContext);
+            var result = await containerContext.Query.ExecuteAsync(query, null, default);
+            Result = _viewModelFactory.CreateQueryResultViewModel(result, containerContext);
         }
 
         private static readonly string QuerySeparator = Environment.NewLine + Environment.NewLine;
@@ -275,14 +282,19 @@ namespace CosmosDBStudio.ViewModel
         }
 
         private DelegateCommand? _newDocumentCommand;
-        public ICommand NewDocumentCommand => _newDocumentCommand ??= new DelegateCommand(NewDocument);
+        public ICommand NewDocumentCommand => _newDocumentCommand ??= new DelegateCommand(NewDocument, CanCreateNewDocument);
+
+        private bool CanCreateNewDocument() => _containerContext is { };
 
         private void NewDocument()
         {
+            if (!(_containerContext is IContainerContext containerContext))
+                return;
+
             var document = new JObject();
             document["id"] = Guid.NewGuid().ToString();
             SetPartitionKey(document, PartitionKey);
-            var vm = _viewModelFactory.CreateDocumentEditorViewModel(document, true, _containerContext);
+            var vm = _viewModelFactory.CreateDocumentEditorViewModel(document, true, containerContext);
             _dialogService.ShowDialog(vm);
         }
 
@@ -296,10 +308,13 @@ namespace CosmosDBStudio.ViewModel
         /// <param name="partitionKeyRawValue"></param>
         private void SetPartitionKey(JObject document, string? partitionKeyRawValue)
         {
-            if (string.IsNullOrEmpty(_containerContext.PartitionKeyPath))
+            if (!(_containerContext is IContainerContext containerContext))
                 return;
 
-            if (_containerContext.PartitionKeyPath == "/id")
+            if (string.IsNullOrEmpty(containerContext.PartitionKeyPath))
+                return;
+
+            if (containerContext.PartitionKeyPath == "/id")
                 return;
 
             object? partitionKey = null;
@@ -308,7 +323,7 @@ namespace CosmosDBStudio.ViewModel
                 partitionKeyOption.TryGetValue(out partitionKey);
             }
 
-            var pathParts = _containerContext.PartitionKeyPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var pathParts = containerContext.PartitionKeyPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
             JObject current = document;
             // Find or construct the path to the partition key property
             for (int i = 0; i < pathParts.Length; i++)
@@ -419,6 +434,27 @@ namespace CosmosDBStudio.ViewModel
             if (sender is ParameterViewModel parameter)
             {
                 Parameters.Remove(parameter);
+            }
+        }
+
+        private AsyncDelegateCommand? _changeContainerCommand;
+        public ICommand ChangeContainerCommand => _changeContainerCommand ??= new AsyncDelegateCommand(ChangeContainerAsync);
+
+        private async Task ChangeContainerAsync()
+        {
+            var vm = _viewModelFactory.CreateContainerPickerViewModel();
+            _dialogService.ShowDialog(vm);
+            if (vm.SelectedContainer is ContainerViewModel selected)
+            {
+                var accountId = selected.Database.Account.Id;
+                var databaseId = selected.Database.Id;
+                var containerId = selected.Id;
+                var newContext = await _containerContextFactory.CreateAsync(accountId, databaseId, containerId, default);
+
+                _containerContext = newContext;
+                _executeCommand?.RaiseCanExecuteChanged();
+                _newDocumentCommand?.RaiseCanExecuteChanged();
+                OnPropertyChanged(null);
             }
         }
     }

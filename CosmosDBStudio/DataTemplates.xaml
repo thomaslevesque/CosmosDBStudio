@@ -9,4 +9,7 @@
     <DataTemplate DataType="{x:Type vm:DocumentEditorViewModel}">
         <v:DocumentEditorView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ContainerPickerViewModel}">
+        <v:ContainerPickerView />
+    </DataTemplate>
 </ResourceDictionary>

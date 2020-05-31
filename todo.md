@@ -10,6 +10,8 @@
 - [x] Items CRUD
 - [x] Load next result pages
 - [x] MRU query files
+- [x] Switch query sheet container
+	- [x] Don't persist query sheet container in query
 - [ ] Delete multiple documents
 - [ ] Database management
 	- [ ] Create/Delete
@@ -24,8 +26,6 @@
 	- [ ] Run pre/post
 	- [ ] CRUD
 - [ ] User-defined functions (CRUD)
-- [ ] Switch query sheet container
-	- [ ] Don't persist query sheet container in query
 - [ ] Status bar
 - [ ] Improve JSON syntax validation (squiggles)
 - [ ] Better error messages
@@ -34,3 +34,4 @@
 	- [ ] Automatic updates
 - [ ] Insert/Update/Delete DSL
 - [ ] Cancellation
+- [ ] Labels on accounts/databases/containers
