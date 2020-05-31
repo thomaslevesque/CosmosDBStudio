@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
@@ -53,5 +54,8 @@
                     SelectedItem="{Binding CurrentQuerySheet}">
         </ctl:QuerySheetTabControl>
 
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="2">
+            <StatusBarItem Content="{Binding StatusBarContent}" />
+        </StatusBar>
     </Grid>
 </Window>

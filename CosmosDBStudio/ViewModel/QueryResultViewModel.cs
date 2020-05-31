@@ -1,4 +1,5 @@
-﻿using CosmosDBStudio.Model;
+﻿using CosmosDBStudio.Messages;
+using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
 using Hamlet;
@@ -18,6 +19,7 @@ namespace CosmosDBStudio.ViewModel
         private readonly IContainerContext _containerContext;
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
+        private readonly IMessenger _messenger;
         private readonly ObservableCollection<ResultItemViewModel> _items;
         private readonly Query _query;
         private string _text;
@@ -28,11 +30,13 @@ namespace CosmosDBStudio.ViewModel
             QueryResult result,
             IContainerContext containerContext,
             IViewModelFactory viewModelFactory,
-            IDialogService dialogService)
+            IDialogService dialogService,
+            IMessenger messenger)
         {
             _containerContext = containerContext;
             _viewModelFactory = viewModelFactory;
             _dialogService = dialogService;
+            _messenger = messenger;
             _query = result.Query;
             if (result.Items != null && result.Items.Count > 0)
             {
@@ -195,6 +199,7 @@ namespace CosmosDBStudio.ViewModel
         {
             if (!string.IsNullOrEmpty(_continuationToken))
             {
+                _messenger.Publish(new SetStatusBarMessage("Loading 100 next results..."));
                 var result = await _containerContext.Query.ExecuteAsync(_query, _continuationToken, default);
                 if (result.Items != null)
                 {
@@ -215,6 +220,7 @@ namespace CosmosDBStudio.ViewModel
                     SelectedTab = ResultTab.Error;
                     OnPropertyChanged(nameof(Error));
                 }
+                _messenger.Publish(new SetStatusBarMessage($"Query executed in {result.TimeElapsed}. Request charge: {result.RequestCharge} RU/s"));
             }
         }
 

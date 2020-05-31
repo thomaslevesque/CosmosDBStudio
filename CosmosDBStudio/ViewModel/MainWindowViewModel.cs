@@ -35,6 +35,7 @@ namespace CosmosDBStudio.ViewModel
             Accounts = _viewModelFactory.CreateAccountsViewModel();
 
             _messenger.Subscribe(this).To<NewQuerySheetMessage>((vm, message) => vm.OnNewQuerySheetMessage(message));
+            _messenger.Subscribe(this).To<SetStatusBarMessage>((vm, message) => vm.OnSetStatusBarMessage(message));
 
             MruList = new ObservableCollection<string>(_queryPersistenceService.LoadMruList());
         }
@@ -58,6 +59,11 @@ namespace CosmosDBStudio.ViewModel
             {
                 _dialogService.ShowError(ex.Message);
             }
+        }
+
+        private void OnSetStatusBarMessage(SetStatusBarMessage message)
+        {
+            StatusBarContent = message.Text;
         }
 
         private void OnQuerySheetCloseRequested(object? sender, EventArgs e)
@@ -174,6 +180,13 @@ namespace CosmosDBStudio.ViewModel
             MruList.Insert(0, path);
             OnPropertyChanged(nameof(HasMru));
             _queryPersistenceService.SaveMruList(MruList);
+        }
+
+        private string? _statusBarContent;
+        public string? StatusBarContent
+        {
+            get => _statusBarContent;
+            set => Set(ref _statusBarContent, value);
         }
     }
 }

@@ -26,7 +26,7 @@
 	- [ ] Run pre/post
 	- [ ] CRUD
 - [ ] User-defined functions (CRUD)
-- [ ] Status bar
+- [x] Status bar
 - [ ] Improve JSON syntax validation (squiggles)
 - [ ] Better error messages
 	- [ ] Squiggles at error location

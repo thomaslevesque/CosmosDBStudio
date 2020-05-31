@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CosmosDBStudio.Extensions;
+using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
@@ -23,6 +24,7 @@ namespace CosmosDBStudio.ViewModel
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
         private readonly IContainerContextFactory _containerContextFactory;
+        private readonly IMessenger _messenger;
 
         private IContainerContext? _containerContext;
 
@@ -30,6 +32,7 @@ namespace CosmosDBStudio.ViewModel
             IViewModelFactory viewModelFactory,
             IDialogService dialogService,
             IContainerContextFactory containerContextFactory,
+            IMessenger messenger,
             QuerySheet querySheet,
             string? path,
             IContainerContext? containerContext)
@@ -38,6 +41,7 @@ namespace CosmosDBStudio.ViewModel
             _viewModelFactory = viewModelFactory;
             _dialogService = dialogService;
             _containerContextFactory = containerContextFactory;
+            _messenger = messenger;
             _filePath = path;
             _untitledNumber = string.IsNullOrEmpty(path)
                 ? ++_untitledCounter
@@ -228,7 +232,9 @@ namespace CosmosDBStudio.ViewModel
             try
             {
                 IsQueryRunning = true;
+                _messenger.Publish(new SetStatusBarMessage("Executing query..."));
                 result = await containerContext.Query.ExecuteAsync(query, null, default);
+                _messenger.Publish(new SetStatusBarMessage($"Query executed in {result.TimeElapsed}. Request charge: {result.RequestCharge} RU/s"));
             }
             finally
             {
