@@ -24,22 +24,22 @@
         <Label Grid.Row="1" Grid.Column="0" Content="Endpoint" Style="{StaticResource labelStyle}" />
         <Label Grid.Row="2" Grid.Column="0" Content="Key" Style="{StaticResource labelStyle}" />
         <Label Grid.Row="3" Grid.Column="0" Content="Folder" Style="{StaticResource labelStyle}" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource fieldStyle}">
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource fieldTextBoxStyle}">
             <i:Interaction.Behaviors>
                 <bhv:ErrorBehavior Error="{Binding Validator[Name]}" />
             </i:Interaction.Behaviors>
         </TextBox>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Endpoint}" Style="{StaticResource fieldStyle}">
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Endpoint}" Style="{StaticResource fieldTextBoxStyle}">
             <i:Interaction.Behaviors>
                 <bhv:ErrorBehavior Error="{Binding Validator[Endpoint]}" />
             </i:Interaction.Behaviors>
         </TextBox>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Key}" Style="{StaticResource fieldStyle}">
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Key}" Style="{StaticResource fieldTextBoxStyle}">
             <i:Interaction.Behaviors>
                 <bhv:ErrorBehavior Error="{Binding Validator[Key]}" />
             </i:Interaction.Behaviors>
         </TextBox>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Folder}" Style="{StaticResource fieldStyle}">
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Folder}" Style="{StaticResource fieldTextBoxStyle}">
             <i:Interaction.Behaviors>
                 <bhv:ErrorBehavior Error="{Binding Validator[Folder]}" />
             </i:Interaction.Behaviors>

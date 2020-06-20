@@ -2,11 +2,11 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
-using Microsoft.Azure.Cosmos;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -98,11 +98,11 @@ namespace CosmosDBStudio.ViewModel
         }
 
         private AsyncDelegateCommand? _addDatabaseCommand;
-        public ICommand AddDatabaseCommand => _addDatabaseCommand ??= new AsyncDelegateCommand(AddDatabase, CanAddDatabase);
+        public ICommand AddDatabaseCommand => _addDatabaseCommand ??= new AsyncDelegateCommand(AddDatabaseAsync, CanAddDatabase);
 
         private bool CanAddDatabase() => SelectedItem is AccountViewModel;
 
-        private async Task AddDatabase()
+        private async Task AddDatabaseAsync()
         {
             if (SelectedItem is AccountViewModel account)
             {
@@ -123,6 +123,26 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
+        private AsyncDelegateCommand? _addContainerCommand;
+        public ICommand AddContainerCommand => _addContainerCommand ??= new AsyncDelegateCommand(AddContainerAsync, CanAddContainer);
+
+        private bool CanAddContainer() => SelectedItem is DatabaseViewModel;
+
+        private async Task AddContainerAsync()
+        {
+            if (SelectedItem is DatabaseViewModel databaseVm)
+            {
+                var database = await _accountManager.GetDatabaseAsync(databaseVm.Account.Id, databaseVm.Id);
+                var dialog = _viewModelFactory.CreateContainerEditorViewModel(database.Throughput.HasValue);
+                if (_dialogService.ShowDialog(dialog) is true)
+                {
+                    var container = dialog.GetContainer();
+                    await _accountManager.CreateContainerAsync(databaseVm.Account.Id, databaseVm.Id, container);
+                    databaseVm.ReloadChildren();
+                }
+            }
+        }
+
         private AsyncDelegateCommand? _deleteCommand;
         public ICommand DeleteCommand => _deleteCommand ??= new AsyncDelegateCommand(DeleteAsync, CanDelete);
 
@@ -136,12 +156,15 @@ namespace CosmosDBStudio.ViewModel
                 case DatabaseViewModel databaseVm:
                     await DeleteDatabaseAsync(databaseVm);
                     break;
+                case ContainerViewModel containerVm:
+                    await DeleteContainerAsync(containerVm);
+                    break;
             }
         }
 
         private void DeleteAccount(AccountViewModel accountVm)
         {
-            if (!_dialogService.Confirm($"Are you sure you want to delete account '{accountVm.Name}'?"))
+            if (!_dialogService.Confirm($"Are you sure you want to remove account '{accountVm.Name}'?"))
                 return;
 
             _accountDirectory.Remove(accountVm.Id);
@@ -164,7 +187,21 @@ namespace CosmosDBStudio.ViewModel
             accountVm.ReloadChildren();
         }
 
-        private bool CanDelete() => SelectedItem is AccountViewModel || SelectedItem is DatabaseViewModel;
+        private async Task DeleteContainerAsync(ContainerViewModel containerVm)
+        {
+            if (!_dialogService.Confirm($"Are you sure you want to delete container '{containerVm.Id}'?"))
+                return;
+
+            var databaseVm = containerVm.Database;
+            var accountVm = databaseVm.Account;
+            await _accountManager.DeleteContainerAsync(accountVm.Id, databaseVm.Id, containerVm.Id);
+            databaseVm.ReloadChildren();
+        }
+
+        private bool CanDelete() =>
+            SelectedItem is AccountViewModel ||
+            SelectedItem is DatabaseViewModel ||
+            SelectedItem is ContainerViewModel;
 
         private DelegateCommand? _editCommand;
         public ICommand EditCommand => _editCommand ??= new DelegateCommand(EditAccount, CanEditAccount);

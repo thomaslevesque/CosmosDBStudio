@@ -44,4 +44,13 @@
         <Setter Property="Margin" Value="3" />
     </Style>
 
+    <Style x:Key="fieldTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource fieldStyle}">
+        <Setter Property="Height" Value="20" />
+        <Style.Triggers>
+            <Trigger Property="IsReadOnly" Value="True">
+                <Setter Property="Background" Value="#E6E6E6" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>

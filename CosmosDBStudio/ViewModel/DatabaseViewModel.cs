@@ -52,30 +52,12 @@ namespace CosmosDBStudio.ViewModel
 
         private async Task EditDatabaseAsync()
         {
-            int? throughput = await _accountManager.GetDatabaseThroughputAsync(Account.Id, Id);
-            var db = new CosmosDatabase
-            {
-                Id = Id,
-                Throughput = throughput
-            };
-
-            var dialog = _viewModelFactory.CreateDatabaseEditorViewModel(db);
+            var database = await _accountManager.GetDatabaseAsync(Account.Id, Id);
+            var dialog = _viewModelFactory.CreateDatabaseEditorViewModel(database);
             if (_dialogService.ShowDialog(dialog) is true)
             {
-                if (throughput.HasValue != dialog.ProvisionThroughput)
-                {
-                    // Can't change whether throughput is provisioned on existing database
-                    // Shouldn't happen, since we already check it in the editor VM
-                    return;
-                }
-
-                if (throughput.HasValue)
-                {
-                    if (dialog.Throughput != throughput)
-                    {
-                        await _accountManager.SetDatabaseThroughputAsync(Account.Id, Id, dialog.Throughput);
-                    }
-                }
+                database = dialog.GetDatabase();
+                await _accountManager.UpdateDatabaseAsync(Account.Id, database);
             }
         }
     }

@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="CosmosDBStudio.View.ContainerEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CosmosDBStudio.View"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:cnv="clr-namespace:CosmosDBStudio.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <cnv:NotConverter x:Key="not" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Content="Id" Style="{StaticResource labelStyle}" />
+        <Label Grid.Row="1" Grid.Column="0" Content="Partition key path" Style="{StaticResource labelStyle}" />
+        <CheckBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Partition key is larger than 100 bytes"
+                  IsChecked="{Binding LargePartitionKey}"
+                  IsEnabled="{Binding IsNew}"
+                  Style="{StaticResource labelStyle}" />
+        <CheckBox Grid.Row="3" Grid.Column="0" Content="Enable time to live"
+                  IsChecked="{Binding EnableTTL}"
+                  Style="{StaticResource labelStyle}" />
+        <CheckBox Grid.Row="4" Grid.Column="0" Content="Provision throughput"
+                  IsChecked="{Binding ProvisionThroughput}"
+                  IsEnabled="{Binding CanChangeProvisionThroughput}"
+                  Style="{StaticResource labelStyle}" />
+
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                 HorizontalAlignment="Left" Width="200"
+                 IsReadOnly="{Binding IsEditing}"
+                 Style="{StaticResource fieldTextBoxStyle}">
+            <i:Interaction.Behaviors>
+                <bhv:ErrorBehavior Error="{Binding Validator[Id]}" />
+            </i:Interaction.Behaviors>
+        </TextBox>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PartitionKeyPath, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                 HorizontalAlignment="Left" Width="200"
+                 IsReadOnly="{Binding IsEditing}"
+                 Style="{StaticResource fieldTextBoxStyle}">
+            <i:Interaction.Behaviors>
+                <bhv:ErrorBehavior Error="{Binding Validator[PartitionKeyPath]}" />
+            </i:Interaction.Behaviors>
+        </TextBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center"
+                    IsEnabled="{Binding EnableTTL}">
+            <RadioButton Content="No default TTL" IsChecked="{Binding HasDefaultTTL, Converter={StaticResource not}}" Style="{StaticResource fieldStyle}" />
+            <RadioButton Content="Default TTL in seconds" Style="{StaticResource fieldStyle}" />
+            <xctk:IntegerUpDown Style="{StaticResource fieldStyle}" Width="100"
+                                Value="{Binding DefaultTTL}"
+                                Minimum="1"
+                                Maximum="2147483647">
+                <i:Interaction.Behaviors>
+                    <bhv:ErrorBehavior Error="{Binding Validator[DefaultTTL]}" />
+                </i:Interaction.Behaviors>
+            </xctk:IntegerUpDown>
+        </StackPanel>
+        <xctk:IntegerUpDown Grid.Row="4" Grid.Column="1"
+                            HorizontalAlignment="Left" Width="100"
+                            IsEnabled="{Binding ProvisionThroughput}"
+                            Value="{Binding Throughput}"
+                            Minimum="400" Maximum="100000" AllowSpin="True" AllowTextInput="True" Increment="100"
+                            Style="{StaticResource fieldStyle}">
+            <i:Interaction.Behaviors>
+                <bhv:ErrorBehavior Error="{Binding Validator[Throughput]}" />
+            </i:Interaction.Behaviors>
+        </xctk:IntegerUpDown>
+
+    </Grid>
+</UserControl>

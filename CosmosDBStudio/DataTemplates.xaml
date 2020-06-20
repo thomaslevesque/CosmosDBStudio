@@ -15,4 +15,7 @@
     <DataTemplate DataType="{x:Type vm:DatabaseEditorViewModel}">
         <v:DatabaseEditorView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ContainerEditorViewModel}">
+        <v:ContainerEditorView />
+    </DataTemplate>
 </ResourceDictionary>

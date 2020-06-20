@@ -69,7 +69,7 @@ namespace CosmosDBStudio.ViewModel
 
         public ContainerViewModel CreateContainerViewModel(DatabaseViewModel database, string id)
         {
-            return new ContainerViewModel(database, id, _messenger);
+            return new ContainerViewModel(database, id, _messenger, _accountManager, this, _dialogService);
         }
 
         public ResultItemViewModel CreateDocumentViewModel(JToken document, IContainerContext containerContext)
@@ -108,6 +108,11 @@ namespace CosmosDBStudio.ViewModel
         public ContainerPickerViewModel CreateContainerPickerViewModel()
         {
             return new ContainerPickerViewModel(this, _accountDirectory);
+        }
+
+        public ContainerEditorViewModel CreateContainerEditorViewModel(bool databaseHasProvisionedThroughput, CosmosContainer? container = null)
+        {
+            return new ContainerEditorViewModel(container, databaseHasProvisionedThroughput);
         }
     }
 }

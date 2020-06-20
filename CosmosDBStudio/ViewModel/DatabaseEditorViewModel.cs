@@ -1,7 +1,7 @@
 ﻿using CosmosDBStudio.Dialogs;
+using CosmosDBStudio.Helpers;
 using CosmosDBStudio.Model;
 using EssentialMVVM;
-using System.Linq;
 using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
@@ -24,8 +24,8 @@ namespace CosmosDBStudio.ViewModel
             AddCancelButton();
 
             Validator = new ViewModelValidator<DatabaseEditorViewModel>(this);
-            Validator.AddValidator(vm => vm.Id, ValidateId);
-            Validator.AddValidator(vm => vm.Throughput, ValidateThroughput);
+            Validator.AddValidator(vm => vm.Id, id => CosmosHelper.ValidateId(id, "container id"));
+            Validator.AddValidator(vm => vm.Throughput, throughput => CosmosHelper.ValidateThroughput(throughput, ProvisionThroughput));
         }
 
         public ViewModelValidator<DatabaseEditorViewModel> Validator { get; }
@@ -60,38 +60,6 @@ namespace CosmosDBStudio.ViewModel
                 .AndRaiseCanExecuteChanged(_saveCommand);
         }
 
-        private string? ValidateThroughput(int throughput)
-        {
-            if (ProvisionThroughput)
-            {
-                if (throughput < 400)
-                    return "Throughput cannot be less than 400";
-            }
-
-            return null;
-        }
-
-        private static readonly char[] ForbiddenCharactersInId = @"/\#?".ToCharArray();
-        private static string? ValidateId(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                return "The database id must be specified";
-
-            if (id.IndexOfAny(ForbiddenCharactersInId) >= 0)
-            {
-                return "The database id must not contain characters "
-                    + string.Join(" ", ForbiddenCharactersInId.Select(c => $"'{c}'"));
-            }
-
-            if (id.Trim() != id)
-            {
-                return "The database id must not start or end with space";
-            }
-
-            return null;
-        }
-
-
         private readonly DelegateCommand _saveCommand;
         public ICommand SaveCommand => _saveCommand;
 
@@ -101,5 +69,16 @@ namespace CosmosDBStudio.ViewModel
         }
 
         private bool CanSave() => Validator?.HasError is false;
+
+        public CosmosDatabase GetDatabase()
+        {
+            return new CosmosDatabase
+            {
+                Id = Id,
+                Throughput = ProvisionThroughput
+                    ? Throughput
+                    : default(int?)
+            };
+        }
     }
 }

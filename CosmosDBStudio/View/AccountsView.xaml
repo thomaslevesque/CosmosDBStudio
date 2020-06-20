@@ -21,9 +21,11 @@
                     Style="{StaticResource FontAwesomeButton}">
                 <Button.ContextMenu>
                     <ContextMenu Placement="Bottom">
-                        <MenuItem Header="New account" Command="{Binding AddAccountCommand}"
+                        <MenuItem Header="Add account" Command="{Binding AddAccountCommand}"
                                   Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource boolToVisibility}}"/>
                         <MenuItem Header="New database" Command="{Binding AddDatabaseCommand}"
+                                  Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource boolToVisibility}}"/>
+                        <MenuItem Header="New container" Command="{Binding AddContainerCommand}"
                                   Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource boolToVisibility}}"/>
                     </ContextMenu>
                 </Button.ContextMenu>
