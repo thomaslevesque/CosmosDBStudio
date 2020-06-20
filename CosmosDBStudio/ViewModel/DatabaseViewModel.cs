@@ -1,21 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
+using EssentialMVVM;
 
 namespace CosmosDBStudio.ViewModel
 {
     public class DatabaseViewModel : NonLeafTreeNodeViewModel
     {
-        private readonly IAccountBrowserService _accountBrowserService;
+        private readonly ICosmosAccountManager _accountManager;
         private readonly IViewModelFactory _viewModelFactory;
+        private readonly IDialogService _dialogService;
 
-        public DatabaseViewModel(AccountViewModel account, string id, IAccountBrowserService accountBrowserService, IViewModelFactory viewModelFactory)
+        public DatabaseViewModel(
+            AccountViewModel account,
+            string id,
+            ICosmosAccountManager accountManager,
+            IViewModelFactory viewModelFactory,
+            IDialogService dialogService)
         {
-            _accountBrowserService = accountBrowserService;
+            _accountManager = accountManager;
             _viewModelFactory = viewModelFactory;
+            _dialogService = dialogService;
             Account = account;
             Id = id;
+            MenuCommands = new[]
+            {
+                new MenuCommandViewModel(
+                    "Edit database",
+                    new AsyncDelegateCommand(EditDatabaseAsync))
+            };
         }
 
         public AccountViewModel Account { get; }
@@ -28,8 +44,39 @@ namespace CosmosDBStudio.ViewModel
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var containers = await _accountBrowserService.GetContainersAsync(Account.Id, Id);
+            var containers = await _accountManager.GetContainersAsync(Account.Id, Id);
             return containers.Select(id => _viewModelFactory.CreateContainerViewModel(this, id)).ToList();
+        }
+
+        public override IEnumerable<MenuCommandViewModel> MenuCommands { get; }
+
+        private async Task EditDatabaseAsync()
+        {
+            int? throughput = await _accountManager.GetDatabaseThroughputAsync(Account.Id, Id);
+            var db = new CosmosDatabase
+            {
+                Id = Id,
+                Throughput = throughput
+            };
+
+            var dialog = _viewModelFactory.CreateDatabaseEditorViewModel(db);
+            if (_dialogService.ShowDialog(dialog) is true)
+            {
+                if (throughput.HasValue != dialog.ProvisionThroughput)
+                {
+                    // Can't change whether throughput is provisioned on existing database
+                    // Shouldn't happen, since we already check it in the editor VM
+                    return;
+                }
+
+                if (throughput.HasValue)
+                {
+                    if (dialog.Throughput != throughput)
+                    {
+                        await _accountManager.SetDatabaseThroughputAsync(Account.Id, Id, dialog.Throughput);
+                    }
+                }
+            }
         }
     }
 }

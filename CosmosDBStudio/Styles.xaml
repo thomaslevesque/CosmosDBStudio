@@ -31,9 +31,17 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="FontAwesomeButton" TargetType="ButtonBase">
+    <Style x:Key="FontAwesomeButton" TargetType="Control">
         <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
         <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style x:Key="labelStyle" TargetType="{x:Type FrameworkElement}">
+        <Setter Property="Margin" Value="3" />
+    </Style>
+
+    <Style x:Key="fieldStyle" TargetType="{x:Type FrameworkElement}">
+        <Setter Property="Margin" Value="3" />
     </Style>
 
 </ResourceDictionary>

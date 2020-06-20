@@ -12,4 +12,7 @@
     <DataTemplate DataType="{x:Type vm:ContainerPickerViewModel}">
         <v:ContainerPickerView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:DatabaseEditorViewModel}">
+        <v:DatabaseEditorView />
+    </DataTemplate>
 </ResourceDictionary>

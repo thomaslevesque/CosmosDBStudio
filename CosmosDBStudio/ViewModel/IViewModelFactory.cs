@@ -23,5 +23,6 @@ namespace CosmosDBStudio.ViewModel
             IContainerContext containerContext);
         AccountEditorViewModel CreateAccountEditorViewModel(CosmosAccount? account = null);
         ContainerPickerViewModel CreateContainerPickerViewModel();
+        DatabaseEditorViewModel CreateDatabaseEditorViewModel(CosmosDatabase? database = null);
     }
 }

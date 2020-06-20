@@ -7,7 +7,7 @@
              xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel"
              xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="300">
     <Grid>
@@ -17,9 +17,20 @@
         </Grid.RowDefinitions>
 
         <ToolBar Grid.Row="0" KeyboardNavigation.TabNavigation="Continue">
-            <Button Content="{StaticResource fa-plus}" ToolTip="Add account"
-                    Style="{StaticResource FontAwesomeButton}"
-                    Command="{Binding AddCommand}" />
+            <Button Content="{StaticResource fa-plus}" ToolTip="Add..."
+                    Style="{StaticResource FontAwesomeButton}">
+                <Button.ContextMenu>
+                    <ContextMenu Placement="Bottom">
+                        <MenuItem Header="New account" Command="{Binding AddAccountCommand}"
+                                  Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource boolToVisibility}}"/>
+                        <MenuItem Header="New database" Command="{Binding AddDatabaseCommand}"
+                                  Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource boolToVisibility}}"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+                <i:Interaction.Behaviors>
+                    <bhv:OpenContextMenuBehavior />
+                </i:Interaction.Behaviors>
+            </Button>
             <Button Content="{StaticResource fa-edit}" ToolTip="Edit account"
                     Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding EditCommand}" />

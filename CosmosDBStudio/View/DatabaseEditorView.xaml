@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="CosmosDBStudio.View.DatabaseEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CosmosDBStudio.View" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             Width="450"
+             d:DesignHeight="450" d:DesignWidth="450">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Content="Id" Style="{StaticResource labelStyle}" />
+        <CheckBox Grid.Row="1" Grid.Column="0" Content="Provision throughput" IsChecked="{Binding ProvisionThroughput}"
+                  IsEnabled="{Binding IsNew}"
+                  Style="{StaticResource labelStyle}" />
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                 IsReadOnly="{Binding IsEditing}"
+                 Style="{StaticResource fieldStyle}" />
+        <xctk:IntegerUpDown Grid.Row="1" Grid.Column="1"    
+                            IsEnabled="{Binding ProvisionThroughput}"
+                            Value="{Binding Throughput}"
+                            Minimum="400" Maximum="100000" AllowSpin="True" AllowTextInput="True" Increment="100"
+                            Style="{StaticResource fieldStyle}" />
+    </Grid>
+</UserControl>

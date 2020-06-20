@@ -9,18 +9,18 @@ namespace CosmosDBStudio.ViewModel
     public class AccountViewModel : NonLeafTreeNodeViewModel
     {
         private readonly CosmosAccount _account;
-        private readonly IAccountBrowserService _accountBrowserService;
+        private readonly ICosmosAccountManager _accountManager;
         private readonly IViewModelFactory _viewModelFactory;
 
         public AccountViewModel(
             CosmosAccount account,
             AccountFolderViewModel? parent,
-            IAccountBrowserService accountBrowserService,
+            ICosmosAccountManager accountManager,
             IViewModelFactory viewModelFactory)
         {
             _account = account;
             Parent = parent;
-            _accountBrowserService = accountBrowserService;
+            _accountManager = accountManager;
             _viewModelFactory = viewModelFactory;
             _name = account.Name;
         }
@@ -40,7 +40,7 @@ namespace CosmosDBStudio.ViewModel
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var databases = await _accountBrowserService.GetDatabasesAsync(_account.Id);
+            var databases = await _accountManager.GetDatabasesAsync(_account.Id);
             return databases.Select(id => _viewModelFactory.CreateDatabaseViewModel(this, id)).ToList();
         }
     }

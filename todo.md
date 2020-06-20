@@ -13,9 +13,10 @@
 - [x] Switch query sheet container
 	- [x] Don't persist query sheet container in query
 - [ ] Delete multiple documents
-- [ ] Database management
-	- [ ] Create/Delete
-	- [ ] Scaling
+- [x] Database management
+	- [x] Create/Delete
+	- [x] Scaling (throughput)
+	- [ ] Scaling (switch between manual and autoscale)
 - [ ] Container management
 	- [ ] Create/Delete
 	- [ ] Scaling, options
@@ -35,3 +36,4 @@
 - [ ] Insert/Update/Delete DSL
 - [ ] Cancellation
 - [ ] Labels on accounts/databases/containers
+- [ ] Choose account from Azure subscription
