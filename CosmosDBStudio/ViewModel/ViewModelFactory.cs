@@ -1,4 +1,5 @@
-﻿using CosmosDBStudio.Model;
+﻿using CosmosDBStudio.Commands;
+using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using Newtonsoft.Json.Linq;
 
@@ -6,6 +7,9 @@ namespace CosmosDBStudio.ViewModel
 {
     public class ViewModelFactory : IViewModelFactory
     {
+        private readonly AccountCommands _accountCommands;
+        private readonly DatabaseCommands _databaseCommands;
+        private readonly ContainerCommands _containerCommands;
         private readonly IMessenger _messenger;
         private readonly IAccountDirectory _accountDirectory;
         private readonly IContainerContextFactory _containerContextFactory;
@@ -15,6 +19,9 @@ namespace CosmosDBStudio.ViewModel
         private readonly IClipboardService _clipboardService;
 
         public ViewModelFactory(
+            AccountCommands accountCommands,
+            DatabaseCommands databaseCommands,
+            ContainerCommands containerCommands,
             IMessenger messenger,
             IAccountDirectory accountDirectory,
             IContainerContextFactory containerContextFactory,
@@ -23,6 +30,9 @@ namespace CosmosDBStudio.ViewModel
             IUIDispatcher uiDispatcher,
             IClipboardService clipboardService)
         {
+            _accountCommands = accountCommands;
+            _databaseCommands = databaseCommands;
+            _containerCommands = containerCommands;
             _messenger = messenger;
             _accountDirectory = accountDirectory;
             _containerContextFactory = containerContextFactory;
@@ -49,27 +59,27 @@ namespace CosmosDBStudio.ViewModel
 
         public AccountsViewModel CreateAccountsViewModel()
         {
-            return new AccountsViewModel(this, _accountDirectory, _accountManager, _dialogService);
+            return new AccountsViewModel(_accountCommands, this, _accountDirectory, _messenger);
         }
 
         public AccountViewModel CreateAccountViewModel(CosmosAccount account, AccountFolderViewModel? parent)
         {
-            return new AccountViewModel(account, parent, _accountManager, this);
+            return new AccountViewModel(account, parent, _accountCommands, _databaseCommands, _accountManager, this, _messenger);
         }
 
         public AccountFolderViewModel CreateAccountFolderViewModel(CosmosAccountFolder folder, AccountFolderViewModel? parent)
         {
-            return new AccountFolderViewModel(folder, parent, _accountDirectory, this);
+            return new AccountFolderViewModel(folder, parent, _accountCommands, _accountDirectory, this);
         }
 
         public DatabaseViewModel CreateDatabaseViewModel(AccountViewModel account, string id)
         {
-            return new DatabaseViewModel(account, id, _accountManager, this, _dialogService);
+            return new DatabaseViewModel(account, id, _databaseCommands, _containerCommands, _accountManager, this, _messenger);
         }
 
         public ContainerViewModel CreateContainerViewModel(DatabaseViewModel database, string id)
         {
-            return new ContainerViewModel(database, id, _messenger, _accountManager, this, _dialogService);
+            return new ContainerViewModel(database, id, _containerCommands);
         }
 
         public ResultItemViewModel CreateDocumentViewModel(JToken document, IContainerContext containerContext)

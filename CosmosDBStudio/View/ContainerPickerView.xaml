@@ -45,11 +45,12 @@
                 <Style TargetType="TreeViewItem">
                     <Setter Property="ContextMenu">
                         <Setter.Value>
-                            <ContextMenu ItemsSource="{Binding MenuCommands}">
+                            <ContextMenu ItemsSource="{Binding Commands}">
                                 <ContextMenu.ItemContainerStyle>
                                     <Style TargetType="MenuItem">
                                         <Setter Property="Header" Value="{Binding Text}" />
                                         <Setter Property="Command" Value="{Binding Command}" />
+                                        <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
                                     </Style>
                                 </ContextMenu.ItemContainerStyle>
                             </ContextMenu>

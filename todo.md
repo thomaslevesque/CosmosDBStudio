@@ -17,9 +17,10 @@
 	- [x] Create/Delete
 	- [x] Scaling (throughput)
 	- [ ] Scaling (switch between manual and autoscale)
-- [ ] Container management
-	- [ ] Create/Delete
-	- [ ] Scaling, options
+- [x] Container management
+	- [x] Create/Delete
+	- [x] Scaling, options
+	- [ ] Scaling (switch between manual and autoscale)
 - [ ] Stored procedures
 	- [ ] Run
 	- [ ] CRUD

@@ -11,37 +11,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="300">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
 
-        <ToolBar Grid.Row="0" KeyboardNavigation.TabNavigation="Continue">
-            <Button Content="{StaticResource fa-plus}" ToolTip="Add..."
-                    Style="{StaticResource FontAwesomeButton}">
-                <Button.ContextMenu>
-                    <ContextMenu Placement="Bottom">
-                        <MenuItem Header="Add account" Command="{Binding AddAccountCommand}"
-                                  Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource boolToVisibility}}"/>
-                        <MenuItem Header="New database" Command="{Binding AddDatabaseCommand}"
-                                  Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource boolToVisibility}}"/>
-                        <MenuItem Header="New container" Command="{Binding AddContainerCommand}"
-                                  Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource boolToVisibility}}"/>
-                    </ContextMenu>
-                </Button.ContextMenu>
-                <i:Interaction.Behaviors>
-                    <bhv:OpenContextMenuBehavior />
-                </i:Interaction.Behaviors>
-            </Button>
-            <Button Content="{StaticResource fa-edit}" ToolTip="Edit account"
-                    Style="{StaticResource FontAwesomeButton}"
-                    Command="{Binding EditCommand}" />
-            <Button Content="{StaticResource fa-trash-alt}" ToolTip="Delete account"
-                    Style="{StaticResource FontAwesomeButton}"
-                    Command="{Binding DeleteCommand}" />
-        </ToolBar>
-
-        <TreeView Grid.Row="1" ItemsSource="{Binding RootNodes}">
+        <TreeView ItemsSource="{Binding RootNodes}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type vm:AccountFolderViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
@@ -70,11 +41,12 @@
                 <Style TargetType="TreeViewItem">
                     <Setter Property="ContextMenu">
                         <Setter.Value>
-                            <ContextMenu ItemsSource="{Binding MenuCommands}">
+                            <ContextMenu ItemsSource="{Binding Commands}">
                                 <ContextMenu.ItemContainerStyle>
                                     <Style TargetType="MenuItem">
                                         <Setter Property="Header" Value="{Binding Text}" />
                                         <Setter Property="Command" Value="{Binding Command}" />
+                                        <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
                                     </Style>
                                 </ContextMenu.ItemContainerStyle>
                             </ContextMenu>
@@ -83,6 +55,17 @@
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                 </Style>
             </TreeView.ItemContainerStyle>
+            <TreeView.ContextMenu>
+                <ContextMenu ItemsSource="{Binding Commands}">
+                    <ContextMenu.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Text}" />
+                            <Setter Property="Command" Value="{Binding Command}" />
+                            <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
+                        </Style>
+                    </ContextMenu.ItemContainerStyle>
+                </ContextMenu>
+            </TreeView.ContextMenu>
             <i:Interaction.Behaviors>
                 <bhv:TreeViewSelectedItemBindingBehavior
                     SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}" />

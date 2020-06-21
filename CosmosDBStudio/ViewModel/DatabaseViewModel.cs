@@ -1,10 +1,9 @@
-﻿using System;
+﻿using CosmosDBStudio.Commands;
+using CosmosDBStudio.Messages;
+using CosmosDBStudio.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using EssentialMVVM;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -12,26 +11,31 @@ namespace CosmosDBStudio.ViewModel
     {
         private readonly ICosmosAccountManager _accountManager;
         private readonly IViewModelFactory _viewModelFactory;
-        private readonly IDialogService _dialogService;
 
         public DatabaseViewModel(
             AccountViewModel account,
             string id,
+            DatabaseCommands databaseCommands,
+            ContainerCommands containerCommands,
             ICosmosAccountManager accountManager,
             IViewModelFactory viewModelFactory,
-            IDialogService dialogService)
+            IMessenger messenger)
         {
-            _accountManager = accountManager;
-            _viewModelFactory = viewModelFactory;
-            _dialogService = dialogService;
             Account = account;
             Id = id;
-            MenuCommands = new[]
+            _accountManager = accountManager;
+            _viewModelFactory = viewModelFactory;
+
+            Commands = new[]
             {
-                new MenuCommandViewModel(
-                    "Edit database",
-                    new AsyncDelegateCommand(EditDatabaseAsync))
+                new CommandViewModel("Create database", databaseCommands.CreateCommand, Account),
+                new CommandViewModel("Edit database", databaseCommands.EditCommand, this),
+                new CommandViewModel("Delete database", databaseCommands.DeleteCommand, this),
+                new CommandViewModel("Create container", containerCommands.CreateCommand, this)
             };
+
+            messenger.Subscribe(this).To<ContainerCreatedMessage>((vm, message) => vm.OnContainerCreated(message));
+            messenger.Subscribe(this).To<ContainerDeletedMessage>((vm, message) => vm.OnContainerDeleted(message));
         }
 
         public AccountViewModel Account { get; }
@@ -48,17 +52,22 @@ namespace CosmosDBStudio.ViewModel
             return containers.Select(id => _viewModelFactory.CreateContainerViewModel(this, id)).ToList();
         }
 
-        public override IEnumerable<MenuCommandViewModel> MenuCommands { get; }
+        public override IEnumerable<CommandViewModel> Commands { get; }
 
-        private async Task EditDatabaseAsync()
+        private void OnContainerCreated(ContainerCreatedMessage message)
         {
-            var database = await _accountManager.GetDatabaseAsync(Account.Id, Id);
-            var dialog = _viewModelFactory.CreateDatabaseEditorViewModel(database);
-            if (_dialogService.ShowDialog(dialog) is true)
-            {
-                database = dialog.GetDatabase();
-                await _accountManager.UpdateDatabaseAsync(Account.Id, database);
-            }
+            if ((message.AccountId, message.DatabaseId) != (Account.Id, Id))
+                return;
+
+            ReloadChildren(); // TODO: improve this
+        }
+
+        private void OnContainerDeleted(ContainerDeletedMessage message)
+        {
+            if ((message.AccountId, message.DatabaseId) != (Account.Id, Id))
+                return;
+
+            ReloadChildren(); // TODO: improve this
         }
     }
 }

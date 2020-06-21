@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using EssentialMVVM;
+using System.Collections.Generic;
 using System.Linq;
-using EssentialMVVM;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -10,7 +10,7 @@ namespace CosmosDBStudio.ViewModel
 
         public abstract NonLeafTreeNodeViewModel? Parent { get; }
 
-        public virtual IEnumerable<MenuCommandViewModel> MenuCommands => Enumerable.Empty<MenuCommandViewModel>();
+        public virtual IEnumerable<CommandViewModel> Commands => Enumerable.Empty<CommandViewModel>();
 
         private bool _isExpanded;
         public bool IsExpanded
