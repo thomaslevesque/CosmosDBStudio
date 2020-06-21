@@ -5,6 +5,8 @@ namespace CosmosDBStudio.ViewModel
 {
     public class CommandViewModel : BindableBase
     {
+        private CommandViewModel() { }
+
         public CommandViewModel(string text, ICommand command, object? commandParameter = null)
         {
             _text = text;
@@ -12,15 +14,15 @@ namespace CosmosDBStudio.ViewModel
             _commandParameter = commandParameter;
         }
 
-        private string _text;
-        public string Text
+        private string? _text;
+        public string? Text
         {
             get => _text;
             set => Set(ref _text, value);
         }
 
-        private ICommand _command;
-        public ICommand Command
+        private ICommand? _command;
+        public ICommand? Command
         {
             get => _command;
             set => Set(ref _command, value);
@@ -32,5 +34,9 @@ namespace CosmosDBStudio.ViewModel
             get => _commandParameter;
             set => Set(ref _commandParameter, value);
         }
+
+        public bool IsSeparator => Text is null;
+
+        public static CommandViewModel Separator() => new CommandViewModel();
     }
 }

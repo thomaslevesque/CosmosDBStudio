@@ -7,7 +7,8 @@
              xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel"
              xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="300">
     <Grid>
@@ -41,30 +42,16 @@
                 <Style TargetType="TreeViewItem">
                     <Setter Property="ContextMenu">
                         <Setter.Value>
-                            <ContextMenu ItemsSource="{Binding Commands}">
-                                <ContextMenu.ItemContainerStyle>
-                                    <Style TargetType="MenuItem">
-                                        <Setter Property="Header" Value="{Binding Text}" />
-                                        <Setter Property="Command" Value="{Binding Command}" />
-                                        <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
-                                    </Style>
-                                </ContextMenu.ItemContainerStyle>
-                            </ContextMenu>
+                            <ContextMenu ItemsSource="{Binding Commands}"
+                                         ItemContainerStyle="{StaticResource CommandMenuItemStyle}"/>
                         </Setter.Value>
                     </Setter>
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.ContextMenu>
-                <ContextMenu ItemsSource="{Binding Commands}">
-                    <ContextMenu.ItemContainerStyle>
-                        <Style TargetType="MenuItem">
-                            <Setter Property="Header" Value="{Binding Text}" />
-                            <Setter Property="Command" Value="{Binding Command}" />
-                            <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
-                        </Style>
-                    </ContextMenu.ItemContainerStyle>
-                </ContextMenu>
+                <ContextMenu ItemsSource="{Binding Commands}"
+                             ItemContainerStyle="{StaticResource CommandMenuItemStyle}"/>
             </TreeView.ContextMenu>
             <i:Interaction.Behaviors>
                 <bhv:TreeViewSelectedItemBindingBehavior

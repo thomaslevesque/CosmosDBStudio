@@ -53,4 +53,23 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="CommandMenuItemStyle" TargetType="{x:Type MenuItem}">
+        <Setter Property="Header" Value="{Binding Text}" />
+        <Setter Property="Command" Value="{Binding Command}" />
+        <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsSeparator}" Value="True">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Separator />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Margin" Value="35,0,0,0" />
+                <Setter Property="Focusable" Value="False" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>
