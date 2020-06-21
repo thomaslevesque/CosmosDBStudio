@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using CosmosDBStudio.ViewModel;
+﻿using CosmosDBStudio.ViewModel;
+using System.Windows;
 
 namespace CosmosDBStudio
 {

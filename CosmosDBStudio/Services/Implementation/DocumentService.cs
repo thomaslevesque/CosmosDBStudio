@@ -1,9 +1,9 @@
-﻿using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Hamlet;
+﻿using Hamlet;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CosmosDBStudio.Services.Implementation
 {
@@ -28,7 +28,7 @@ namespace CosmosDBStudio.Services.Implementation
 
                 return response.Resource;
             }
-            catch(CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;
             }

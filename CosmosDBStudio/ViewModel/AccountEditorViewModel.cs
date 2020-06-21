@@ -79,7 +79,7 @@ namespace CosmosDBStudio.ViewModel
         {
             if (string.IsNullOrEmpty(key))
                 return "The account key must be specified";
-            
+
             try
             {
                 Convert.FromBase64String(key);

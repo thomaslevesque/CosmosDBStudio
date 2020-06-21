@@ -46,7 +46,7 @@ namespace CosmosDBStudio.ViewModel
                 _text = new JArray(result.Items).ToString(Formatting.Indented);
                 IsJson = true;
                 SelectedTab = ResultTab.Items;
-                var firstItem = (DocumentViewModel) _items[0];
+                var firstItem = (DocumentViewModel)_items[0];
                 FirstColumnTitle = firstItem.FirstColumnTitle;
                 HasPartitionKey = firstItem.HasPartitionKey;
                 PartitionKeyPath = firstItem.HasPartitionKey
@@ -154,7 +154,7 @@ namespace CosmosDBStudio.ViewModel
 
                     _items.Remove(item);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _dialogService.ShowError(ex.Message);
                 }

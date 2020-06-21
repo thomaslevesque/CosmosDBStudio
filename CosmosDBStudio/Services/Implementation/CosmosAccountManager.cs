@@ -1,12 +1,9 @@
-﻿using System;
+﻿using CosmosDBStudio.Model;
+using Microsoft.Azure.Cosmos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using CosmosDBStudio.Extensions;
-using CosmosDBStudio.Model;
-using Microsoft.Azure.Cosmos;
 
 namespace CosmosDBStudio.Services.Implementation
 {

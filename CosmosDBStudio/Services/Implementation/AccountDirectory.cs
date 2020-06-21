@@ -1,10 +1,10 @@
-﻿using System;
+﻿using CosmosDBStudio.Model;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using CosmosDBStudio.Model;
-using Newtonsoft.Json;
 
 namespace CosmosDBStudio.Services.Implementation
 {
@@ -34,7 +34,7 @@ namespace CosmosDBStudio.Services.Implementation
                     continue;
 
                 string subFolder = account.Folder?.Substring(prefix.Length) ?? string.Empty;
-                
+
                 // false prefix, e.g. foo/barrel for prefix foo/bar
                 if (!string.IsNullOrEmpty(prefix) && !string.IsNullOrEmpty(subFolder) && !subFolder.StartsWith('/'))
                     continue;

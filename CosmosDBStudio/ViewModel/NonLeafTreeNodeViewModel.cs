@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EssentialMVVM;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using EssentialMVVM;
 
 namespace CosmosDBStudio.ViewModel
 {

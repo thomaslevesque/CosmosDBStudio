@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using CosmosDBStudio.Messages;
+﻿using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
 using Hamlet;
 using Linq.Extras;
+using System;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {

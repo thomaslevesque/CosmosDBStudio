@@ -1,6 +1,5 @@
 ﻿using CosmosDBStudio.Model;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CosmosDBStudio.Services
 {

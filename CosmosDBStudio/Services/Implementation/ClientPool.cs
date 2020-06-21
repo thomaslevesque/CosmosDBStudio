@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Azure.Cosmos;
+using System;
 using System.Collections.Concurrent;
-using Microsoft.Azure.Cosmos;
 
 namespace CosmosDBStudio.Services.Implementation
 {

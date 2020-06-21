@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using CosmosDBStudio.Extensions;
+﻿using CosmosDBStudio.Extensions;
 using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
@@ -13,6 +6,13 @@ using EssentialMVVM;
 using Hamlet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -150,7 +150,7 @@ namespace CosmosDBStudio.ViewModel
 
         public QuerySheet GetQuerySheet()
         {
-            var querySheet =  new QuerySheet
+            var querySheet = new QuerySheet
             {
                 Text = Text,
                 PartitionKey = PartitionKey,

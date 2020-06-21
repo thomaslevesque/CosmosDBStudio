@@ -15,7 +15,7 @@ namespace CosmosDBStudio.View.Controls
 
         public ImageSource Icon
         {
-            get => (ImageSource) GetValue(IconProperty);
+            get => (ImageSource)GetValue(IconProperty);
             set => SetValue(IconProperty, value);
         }
 

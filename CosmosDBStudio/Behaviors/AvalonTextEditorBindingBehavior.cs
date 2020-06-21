@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows;
-using ICSharpCode.AvalonEdit;
+﻿using ICSharpCode.AvalonEdit;
 using Microsoft.Xaml.Behaviors;
+using System;
+using System.Windows;
 
 namespace CosmosDBStudio.Behaviors
 {
@@ -25,7 +25,7 @@ namespace CosmosDBStudio.Behaviors
 
         public string Text
         {
-            get => (string) GetValue(TextProperty);
+            get => (string)GetValue(TextProperty);
             set => SetValue(TextProperty, value);
         }
 
@@ -184,7 +184,7 @@ namespace CosmosDBStudio.Behaviors
         private void AssociatedObjectCaretPositionChanged(object? sender, EventArgs e)
         {
             if (CursorPosition != AssociatedObject.CaretOffset)
-                this.SetCurrentValue(CursorPositionProperty,  AssociatedObject.CaretOffset);
+                this.SetCurrentValue(CursorPositionProperty, AssociatedObject.CaretOffset);
         }
     }
 }

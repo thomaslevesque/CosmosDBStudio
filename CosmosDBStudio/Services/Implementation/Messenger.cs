@@ -1,7 +1,7 @@
-﻿using System;
+﻿using CosmosDBStudio.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using CosmosDBStudio.Extensions;
 
 namespace CosmosDBStudio.Services.Implementation
 {
@@ -116,7 +116,7 @@ namespace CosmosDBStudio.Services.Implementation
             {
                 if (_subscriber.TryGetTarget(out var subscriber))
                 {
-                    _handler(subscriber, (TMessage) message);
+                    _handler(subscriber, (TMessage)message);
                     return true;
                 }
 

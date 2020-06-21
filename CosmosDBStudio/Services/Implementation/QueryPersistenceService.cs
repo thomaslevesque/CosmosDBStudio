@@ -21,7 +21,7 @@ namespace CosmosDBStudio.Services.Implementation
                 string json = File.ReadAllText(GetMruListFilePath());
                 return JsonConvert.DeserializeObject<IList<string>>(json);
             }
-            catch(FileNotFoundException)
+            catch (FileNotFoundException)
             {
                 return new List<string>();
             }

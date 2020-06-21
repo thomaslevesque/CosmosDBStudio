@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using CosmosDBStudio.Model;
+﻿using CosmosDBStudio.Model;
+using System.Collections.Generic;
 
 namespace CosmosDBStudio.Services
 {

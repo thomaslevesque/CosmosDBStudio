@@ -21,7 +21,7 @@ namespace CosmosDBStudio.View
 
             if (button.Command is object)
                 return;
-            
+
             if (button.DialogResult is bool dialogResult)
                 DialogResult = dialogResult;
         }

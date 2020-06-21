@@ -56,7 +56,7 @@ namespace CosmosDBStudio.Helpers
         public static string? ValidatePartitionKeyPath(string? partitionKeyPath)
         {
             if (string.IsNullOrEmpty(partitionKeyPath))
-                return "The partition key must be set";
+                return "The partition key must be specified";
 
             if (partitionKeyPath.Trim() != partitionKeyPath)
                 return "The partition key must not start or end with space";
