@@ -55,7 +55,7 @@
     <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <EntryPointProjectUniqueName>..\CosmosDBStudio\CosmosDBStudio.csproj</EntryPointProjectUniqueName>
+    <EntryPointProjectUniqueName>..\..\src\CosmosDBStudio\CosmosDBStudio.csproj</EntryPointProjectUniqueName>
     <PackageCertificateThumbprint>E2FD142EEE0FFD9F3559B60DFB7ACBDCF64E2BC4</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemGroup>
@@ -64,13 +64,13 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Images\BadgeLogo.scale-100.png" />
     <Content Include="Images\BadgeLogo.scale-125.png" />
     <Content Include="Images\BadgeLogo.scale-150.png" />
     <Content Include="Images\BadgeLogo.scale-200.png" />
     <Content Include="Images\BadgeLogo.scale-400.png" />
     <Content Include="Images\Wide310x150Logo.scale-400.png" />
-    <None Include="CosmosDBStudio.Packaging_TemporaryKey.pfx" />
     <Content Include="Images\LargeTile.scale-100.png" />
     <Content Include="Images\LargeTile.scale-125.png" />
     <Content Include="Images\LargeTile.scale-150.png" />
@@ -123,7 +123,7 @@
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CosmosDBStudio\CosmosDBStudio.csproj">
+    <ProjectReference Include="..\..\src\CosmosDBStudio\CosmosDBStudio.csproj">
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
     </ProjectReference>
   </ItemGroup>
