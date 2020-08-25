@@ -17,11 +17,11 @@ namespace CosmosDBStudio.ViewModel
             Id = id;
             Commands = new[]
             {
+                new CommandViewModel("New query sheet", containerCommands.NewQuerySheetCommand, this),
+                CommandViewModel.Separator(),
                 new CommandViewModel("Create container", containerCommands.CreateCommand, Database),
                 new CommandViewModel("Edit container", containerCommands.EditCommand, this),
                 new CommandViewModel("Delete container", containerCommands.DeleteCommand, this),
-                CommandViewModel.Separator(),
-                new CommandViewModel("New query sheet", containerCommands.NewQuerySheetCommand, this)
             };
         }
 

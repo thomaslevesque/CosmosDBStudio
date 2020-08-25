@@ -80,6 +80,7 @@
                         SelectedText="{Binding SelectedText}"
                         CursorPosition="{Binding CursorPosition}"
                         Selection="{Binding Selection}" />
+                    <bhv:FocusOnLoadBehavior />
                 </i:Interaction.Behaviors>
                 <avalonEdit:TextEditor.InputBindings>
                     <KeyBinding Gesture="Ctrl+Enter" Command="{Binding ExecuteCommand}" />
