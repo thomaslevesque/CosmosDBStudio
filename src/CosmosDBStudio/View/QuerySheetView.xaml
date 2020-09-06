@@ -7,6 +7,7 @@
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:markup="clr-namespace:CosmosDBStudio.Markup"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <TabItem.Header>
@@ -15,7 +16,16 @@
                     Style="{StaticResource TabCloseButtonStyle}"
                     Command="{Binding CloseCommand}"
                     ToolTip="Close" />
-            <TextBlock Text="{Binding Title}" />
+            <TextBlock>
+                <Run Text="{Binding Title, Mode=OneWay}" />
+                <Run>
+                    <Run.Text>
+                        <markup:Switch Path="HasChanges"
+                                       TrueValue="*"
+                                       FalseValue="" />
+                    </Run.Text>
+                </Run>
+            </TextBlock>
         </DockPanel>
     </TabItem.Header>
     <Grid IsEnabled="{Binding IsUIEnabled}">

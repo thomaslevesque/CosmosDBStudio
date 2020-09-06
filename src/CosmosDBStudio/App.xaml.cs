@@ -13,12 +13,22 @@ namespace CosmosDBStudio
             _mainWindowViewModel = mainWindowViewModel;
         }
 
+        public static new App Current => (App)Application.Current;
+
+        public bool IsShuttingDown { get; private set; }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             MainWindow = new MainWindow();
             MainWindow.DataContext = _mainWindowViewModel;
             MainWindow.Show();
+        }
+
+        public void Quit()
+        {
+            IsShuttingDown = true;
+            Shutdown();
         }
     }
 }

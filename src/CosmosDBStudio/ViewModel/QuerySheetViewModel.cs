@@ -18,9 +18,8 @@ namespace CosmosDBStudio.ViewModel
 {
     public class QuerySheetViewModel : BindableBase
     {
-        private static int _untitledCounter;
+        public static int UntitledCounter { get; private set; }
 
-        private readonly int _untitledNumber;
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
         private readonly IContainerContextFactory _containerContextFactory;
@@ -43,9 +42,9 @@ namespace CosmosDBStudio.ViewModel
             _containerContextFactory = containerContextFactory;
             _messenger = messenger;
             _filePath = path;
-            _untitledNumber = string.IsNullOrEmpty(path)
-                ? ++_untitledCounter
-                : 0;
+            _title = string.IsNullOrEmpty(path)
+                ? "Untitled " + (++UntitledCounter)
+                : Path.GetFileName(path);
             _text = querySheet.Text;
             _result = _viewModelFactory.CreateNotRunQueryResultViewModel();
 
@@ -74,9 +73,12 @@ namespace CosmosDBStudio.ViewModel
 
         public ViewModelValidator<QuerySheetViewModel> Errors { get; }
 
-        public string Title => string.IsNullOrEmpty(FilePath)
-                ? $"Untitled {_untitledNumber}"
-                : Path.GetFileNameWithoutExtension(FilePath);
+        private string _title;
+        public string Title
+        {
+            get => _title;
+            set => Set(ref _title, value);
+        }
 
         private string? _filePath;
         public string? FilePath
@@ -90,7 +92,8 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _text;
             set => Set(ref _text, value)
-                .AndRaiseCanExecuteChanged(_executeCommand);
+                .AndRaiseCanExecuteChanged(_executeCommand)
+                .AndExecute(() => HasChanges = true);
         }
 
         public string ContainerPath => _containerContext is null
@@ -484,5 +487,12 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public bool IsUIEnabled => !IsQueryRunning;
+
+        private bool _hasChanges;
+        public bool HasChanges
+        {
+            get => _hasChanges;
+            set => Set(ref _hasChanges, value);
+        }
     }
 }

@@ -9,5 +9,9 @@ namespace CosmosDBStudio.Services
         void Save(QuerySheet querySheet, string path);
         IList<string> LoadMruList();
         void SaveMruList(IList<string> mruList);
+
+        string SaveWorkspaceTempQuery(QuerySheet querySheet);
+        void SaveWorkspace(Workspace workspace);
+        Workspace LoadWorkspace();
     }
 }

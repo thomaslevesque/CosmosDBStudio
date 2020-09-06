@@ -1,4 +1,4 @@
-- [x] View partition key in results
+﻿- [x] View partition key in results
 - [x] Partition key setting
 	- [x] MRU
 		- [x] Persist MRU
@@ -39,4 +39,4 @@
 - [ ] Labels on accounts/databases/containers (e.g. PRODUCTION)
     - [ ] Lock modification features when label is PRODUCTION
 - [ ] Choose account from Azure subscription
-- [ ] Persist/restore query sheets when closing (� la VSCode)
+- [x] Persist/restore query sheets when closing (à la VSCode)

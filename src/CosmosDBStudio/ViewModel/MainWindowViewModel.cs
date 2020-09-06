@@ -6,6 +6,7 @@ using Hamlet;
 using Linq.Extras;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
@@ -37,6 +38,7 @@ namespace CosmosDBStudio.ViewModel
             _messenger.Subscribe(this).To<SetStatusBarMessage>((vm, message) => vm.OnSetStatusBarMessage(message));
 
             MruList = new ObservableCollection<string>(_queryPersistenceService.LoadMruList());
+            LoadWorkspace();
         }
 
         private async void OnNewQuerySheetMessage(NewQuerySheetMessage message)
@@ -102,8 +104,8 @@ namespace CosmosDBStudio.ViewModel
 
         private void Quit()
         {
-            // TODO: abstraction
-            App.Current.Shutdown();
+            SaveWorkspace();
+            App.Current.Quit();
         }
 
         private const string QueryFileFilter = "Cosmos DB Studio query sheet|*.cdbsqs";
@@ -120,6 +122,7 @@ namespace CosmosDBStudio.ViewModel
                 {
                     var querySheet = vm.GetQuerySheet();
                     _queryPersistenceService.Save(querySheet, vm.FilePath);
+                    vm.HasChanges = false;
                 }
             }
         }
@@ -144,6 +147,7 @@ namespace CosmosDBStudio.ViewModel
                 var querySheet = vm.GetQuerySheet();
                 _queryPersistenceService.Save(querySheet, path);
                 vm.FilePath = path;
+                vm.HasChanges = false;
             }
         }
 
@@ -186,6 +190,60 @@ namespace CosmosDBStudio.ViewModel
         {
             get => _statusBarContent;
             set => Set(ref _statusBarContent, value);
+        }
+
+        private void SaveWorkspace()
+        {
+            var workspace = new Workspace();
+            foreach (var vm in QuerySheets)
+            {
+                var sheet = new WorkspaceQuerySheet
+                {
+                    Title = vm.Title,
+                    HasChanges = vm.HasChanges,
+                    SavedPath = vm.FilePath,
+                    IsCurrent = vm == CurrentQuerySheet
+                };
+
+                if (vm.HasChanges || string.IsNullOrEmpty(vm.FilePath))
+                {
+                    sheet.TempPath = _queryPersistenceService.SaveWorkspaceTempQuery(vm.GetQuerySheet());
+                }
+
+                workspace.QuerySheets.Add(sheet);
+            }
+            workspace.UntitledCounter = QuerySheetViewModel.UntitledCounter;
+            _queryPersistenceService.SaveWorkspace(workspace);
+        }
+
+        private void LoadWorkspace()
+        {
+            QuerySheetViewModel? currentVM = null;
+            var workspace = _queryPersistenceService.LoadWorkspace();
+            foreach (var sheet in workspace.QuerySheets)
+            {
+                var path = sheet.TempPath ?? sheet.SavedPath;
+                if (path is null)
+                {
+                    Debug.Fail("Either TempPath or SavedPath should be non-null");
+                    continue;
+                }
+
+                var querySheet = _queryPersistenceService.Load(path);
+                var vm = _viewModelFactory.CreateQuerySheetViewModel(
+                    querySheet,
+                    sheet.SavedPath,
+                    null);
+
+                vm.HasChanges = sheet.HasChanges;
+                vm.CloseRequested += OnQuerySheetCloseRequested;
+                QuerySheets.Add(vm);
+
+                if (sheet.IsCurrent)
+                    currentVM = vm;
+            }
+
+            CurrentQuerySheet = currentVM;
         }
     }
 }
