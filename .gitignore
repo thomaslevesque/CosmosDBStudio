@@ -4,3 +4,5 @@ obj/
 _ReSharper.Caches/
 *.user
 
+AppPackages/
+BundleArtifacts/

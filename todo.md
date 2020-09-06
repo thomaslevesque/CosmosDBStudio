@@ -16,11 +16,11 @@
 - [x] Database management
 	- [x] Create/Delete
 	- [x] Scaling (throughput)
-	- [ ] Scaling (switch between manual and autoscale)
+	- [ ] Scaling (switch between manual and autoscale) (possible?)
 - [x] Container management
 	- [x] Create/Delete
 	- [x] Scaling, options
-	- [ ] Scaling (switch between manual and autoscale)
+	- [ ] Scaling (switch between manual and autoscale) (possible?)
 - [ ] Stored procedures
 	- [ ] Run
 	- [ ] CRUD
@@ -36,5 +36,7 @@
 	- [ ] Automatic updates
 - [ ] Insert/Update/Delete DSL
 - [ ] Cancellation
-- [ ] Labels on accounts/databases/containers
+- [ ] Labels on accounts/databases/containers (e.g. PRODUCTION)
+    - [ ] Lock modification features when label is PRODUCTION
 - [ ] Choose account from Azure subscription
+- [ ] Persist/restore query sheets when closing (à la VSCode)
