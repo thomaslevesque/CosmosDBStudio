@@ -39,4 +39,5 @@
 - [ ] Labels on accounts/databases/containers (e.g. PRODUCTION)
     - [ ] Lock modification features when label is PRODUCTION
 - [ ] Choose account from Azure subscription
-- [x] Persist/restore query sheets when closing (à la VSCode)
+- [x] Persist workspace on exit / restore on start (like VSCode)
+- [x] Prompt to save before closing query sheet

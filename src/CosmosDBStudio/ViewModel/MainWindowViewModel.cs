@@ -70,8 +70,32 @@ namespace CosmosDBStudio.ViewModel
         private void OnQuerySheetCloseRequested(object? sender, EventArgs e)
         {
             var sheet = (QuerySheetViewModel)sender!;
+            var (close, save) = sheet.HasChanges
+                ? ConfirmCloseQuerySheet(sheet)
+                : (true, false);
+
+            if (!close)
+                return;
+
+            if (save)
+            {
+                if (!SaveQuerySheet(sheet))
+                    return;
+            }
+
             QuerySheets.Remove(sheet);
             sheet.CloseRequested -= OnQuerySheetCloseRequested;
+        }
+
+        private (bool close, bool save) ConfirmCloseQuerySheet(QuerySheetViewModel vm)
+        {
+            var confirmation = _dialogService.YesNoCancel("This query sheet has unsaved changes. Do you want to save before closing it?");
+            if (confirmation.TryGetValue(out bool save))
+            {
+                return (true, save);
+            }
+
+            return (false, false);
         }
 
         public AccountsViewModel Accounts { get; }
@@ -114,16 +138,7 @@ namespace CosmosDBStudio.ViewModel
         {
             if (CurrentQuerySheet is QuerySheetViewModel vm)
             {
-                if (string.IsNullOrEmpty(vm.FilePath))
-                {
-                    SaveQuerySheetAs(vm);
-                }
-                else
-                {
-                    var querySheet = vm.GetQuerySheet();
-                    _queryPersistenceService.Save(querySheet, vm.FilePath);
-                    vm.HasChanges = false;
-                }
+                SaveQuerySheet(vm);
             }
         }
 
@@ -135,7 +150,22 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
-        private void SaveQuerySheetAs(QuerySheetViewModel vm)
+        private bool SaveQuerySheet(QuerySheetViewModel vm)
+        {
+            if (string.IsNullOrEmpty(vm.FilePath))
+            {
+                return SaveQuerySheetAs(vm);
+            }
+            else
+            {
+                var querySheet = vm.GetQuerySheet();
+                _queryPersistenceService.Save(querySheet, vm.FilePath);
+                vm.HasChanges = false;
+                return true;
+            }
+        }
+
+        private bool SaveQuerySheetAs(QuerySheetViewModel vm)
         {
             var pathOption = _dialogService.PickFileToSave(
                     filter: QueryFileFilter,
@@ -148,7 +178,10 @@ namespace CosmosDBStudio.ViewModel
                 _queryPersistenceService.Save(querySheet, path);
                 vm.FilePath = path;
                 vm.HasChanges = false;
+                return true;
             }
+
+            return false;
         }
 
         private void OpenQuerySheet(string path)
@@ -243,6 +276,7 @@ namespace CosmosDBStudio.ViewModel
                     currentVM = vm;
             }
 
+            QuerySheetViewModel.UntitledCounter = workspace.UntitledCounter;
             CurrentQuerySheet = currentVM;
         }
     }

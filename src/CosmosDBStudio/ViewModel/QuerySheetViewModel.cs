@@ -18,7 +18,7 @@ namespace CosmosDBStudio.ViewModel
 {
     public class QuerySheetViewModel : BindableBase
     {
-        public static int UntitledCounter { get; private set; }
+        public static int UntitledCounter { get; set; }
 
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
@@ -44,7 +44,7 @@ namespace CosmosDBStudio.ViewModel
             _filePath = path;
             _title = string.IsNullOrEmpty(path)
                 ? "Untitled " + (++UntitledCounter)
-                : Path.GetFileName(path);
+                : Path.GetFileNameWithoutExtension(path);
             _text = querySheet.Text;
             _result = _viewModelFactory.CreateNotRunQueryResultViewModel();
 
