@@ -40,7 +40,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <EntryPointProjectUniqueName>..\..\src\CosmosDBStudio\CosmosDBStudio.csproj</EntryPointProjectUniqueName>
-    <PackageCertificateThumbprint>E2FD142EEE0FFD9F3559B60DFB7ACBDCF64E2BC4</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>C5F9977AC9BD1013CAEBA9257E105D29A0F53C1B</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
