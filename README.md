@@ -1,6 +1,10 @@
 # Cosmos DB Studio
 
+![Application icon](assets/cosmosdb-small.png)
+
 A tool to browse and query Azure Cosmos DB databases.
+
+![Screenshot](assets/screenshots/CosmosDBStudio-screenshot.png)
 
 I created this app out of frustration at the completely broken experience in Azure Storage Explorer (which is basically the
 same as Data Explorer in the Azure portal, with the same limitations and more bugs).
