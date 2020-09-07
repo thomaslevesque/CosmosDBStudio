@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ApplicationIcon>Images\cosmosdb.ico</ApplicationIcon>
+    <ApplicationIcon>Images\app.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
