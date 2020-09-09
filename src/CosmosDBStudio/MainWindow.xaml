@@ -25,6 +25,9 @@
 
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <MenuItem Header="_File">
+                <MenuItem Header="Add Cosmos DB account"
+                          Command="{Binding AddAccountCommand}" />
+                <Separator />
                 <MenuItem Header="_Open query sheet"
                           Command="{Binding OpenQuerySheetCommand}"
                           InputGestureText="Ctrl+O"/>
@@ -41,6 +44,7 @@
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
+                <Separator />
                 <MenuItem Header="_Quit" Command="{Binding QuitCommand}" />
             </MenuItem>
         </Menu>

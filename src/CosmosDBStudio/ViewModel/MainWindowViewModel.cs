@@ -1,4 +1,5 @@
-﻿using CosmosDBStudio.Messages;
+﻿using CosmosDBStudio.Commands;
+using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
@@ -18,19 +19,22 @@ namespace CosmosDBStudio.ViewModel
         private readonly IMessenger _messenger;
         private readonly IDialogService _dialogService;
         private readonly IQueryPersistenceService _queryPersistenceService;
+        private readonly AccountCommands _accountCommands;
 
         public MainWindowViewModel(
             IViewModelFactory viewModelFactory,
             IContainerContextFactory containerContextFactory,
             IMessenger messenger,
             IDialogService dialogService,
-            IQueryPersistenceService queryPersistenceService)
+            IQueryPersistenceService queryPersistenceService,
+            AccountCommands accountCommands)
         {
             _viewModelFactory = viewModelFactory;
             _containerContextFactory = containerContextFactory;
             _messenger = messenger;
             _dialogService = dialogService;
             _queryPersistenceService = queryPersistenceService;
+            _accountCommands = accountCommands;
             QuerySheets = new ObservableCollection<QuerySheetViewModel>();
             Accounts = _viewModelFactory.CreateAccountsViewModel();
 
@@ -113,6 +117,8 @@ namespace CosmosDBStudio.ViewModel
         public ObservableCollection<string> MruList { get; }
 
         public bool HasMru => !MruList.IsNullOrEmpty();
+
+        public ICommand AddAccountCommand => _accountCommands.AddCommand;
 
         private DelegateCommand? _saveQuerySheetCommand;
         public ICommand SaveQuerySheetCommand => _saveQuerySheetCommand ??= new DelegateCommand(SaveCurrentQuerySheet);
