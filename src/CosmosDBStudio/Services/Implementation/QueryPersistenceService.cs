@@ -25,8 +25,12 @@ namespace CosmosDBStudio.Services.Implementation
             }
             catch (FileNotFoundException)
             {
-                return new List<string>();
             }
+            catch (DirectoryNotFoundException)
+            {
+            }
+
+            return new List<string>();
         }
 
         public void Save(QuerySheet querySheet, string path)

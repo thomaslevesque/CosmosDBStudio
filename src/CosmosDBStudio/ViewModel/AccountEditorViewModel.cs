@@ -38,6 +38,9 @@ namespace CosmosDBStudio.ViewModel
 
         private void TrySetValuesFromConnectionString(string connectionString)
         {
+            if (string.IsNullOrEmpty(connectionString))
+                return;
+
             var builder = new DbConnectionStringBuilder();
 
             try
