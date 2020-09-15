@@ -138,6 +138,15 @@ namespace CosmosDBStudio.ViewModel
             App.Current.Quit();
         }
 
+        private DelegateCommand? _aboutCommand;
+        public ICommand AboutCommand => _aboutCommand ??= new DelegateCommand(About);
+
+        private void About()
+        {
+            var vm = new AboutViewModel();
+            _dialogService.ShowDialog(vm);
+        }
+
         private const string QueryFileFilter = "Cosmos DB Studio query sheet|*.cdbsqs";
 
         private void SaveCurrentQuerySheet()

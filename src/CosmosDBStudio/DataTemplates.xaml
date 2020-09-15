@@ -18,4 +18,7 @@
     <DataTemplate DataType="{x:Type vm:ContainerEditorViewModel}">
         <v:ContainerEditorView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:AboutViewModel}">
+        <v:AboutView />
+    </DataTemplate>
 </ResourceDictionary>

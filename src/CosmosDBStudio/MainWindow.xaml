@@ -47,6 +47,9 @@
                 <Separator />
                 <MenuItem Header="_Quit" Command="{Binding QuitCommand}" />
             </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Command="{Binding AboutCommand}" />
+            </MenuItem>
         </Menu>
 
         <v:AccountsView Grid.Row="1" Grid.Column="0" DataContext="{Binding Accounts}" />
