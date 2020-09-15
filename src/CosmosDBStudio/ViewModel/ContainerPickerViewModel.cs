@@ -19,6 +19,13 @@ namespace CosmosDBStudio.ViewModel
         {
             _viewModelFactory = viewModelFactory;
             _accountDirectory = accountDirectory;
+            AddCancelButton();
+            AddOkButton(button =>
+            {
+                button.Text = "Select";
+                button.Command = SelectCommand;
+            });
+
             RootNodes = new ObservableCollection<TreeNodeViewModel>();
             Title = "Pick a container";
             LoadAccounts();
