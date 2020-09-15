@@ -28,11 +28,11 @@ namespace CosmosDBStudio.ViewModel
 
             Commands = new[]
             {
+                new CommandViewModel("Create container", containerCommands.CreateCommand, this),
+                CommandViewModel.Separator(),
                 new CommandViewModel("Create database", databaseCommands.CreateCommand, Account),
                 new CommandViewModel("Edit database", databaseCommands.EditCommand, this),
                 new CommandViewModel("Delete database", databaseCommands.DeleteCommand, this),
-                CommandViewModel.Separator(),
-                new CommandViewModel("Create container", containerCommands.CreateCommand, this)
             };
 
             messenger.Subscribe(this).To<ContainerCreatedMessage>((vm, message) => vm.OnContainerCreated(message));
