@@ -40,6 +40,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                     ToolTip="Container - click to change"
@@ -47,6 +48,14 @@
                 <Image Source="/Images/container.png" Width="16" Height="16" />
             </Button>
             <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding ContainerPath, Mode=OneWay}" />
+            <TextBlock Grid.Column="2"
+                       Visibility="{Binding CanSwitchToExplorerSelectedContainer, Converter={StaticResource boolToVisibility}}"
+                       Margin="5,0">
+                <Hyperlink Command="{Binding SwitchToExplorerSelectedContainerCommand}">
+                    <Run Text="Use" />
+                    <Run Text="{Binding ExplorerSelectedContainer.Path, Mode=OneWay}" />
+                </Hyperlink>
+            </TextBlock>
         </Grid>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Label VerticalAlignment="Center">Partition key</Label>

@@ -64,7 +64,12 @@ namespace CosmosDBStudio.ViewModel
         public object? SelectedItem
         {
             get => _selectedItem;
-            set => Set(ref _selectedItem, value);
+            set => Set(ref _selectedItem, value)
+                .AndExecute(() =>
+                {
+                    var container = SelectedItem as ContainerViewModel;
+                    _messenger.Publish(new ExplorerSelectedContainerChangedMessage(container));
+                });
         }
 
         private void ReloadAccounts()

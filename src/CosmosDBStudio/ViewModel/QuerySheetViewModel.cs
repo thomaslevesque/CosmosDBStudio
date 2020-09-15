@@ -69,6 +69,9 @@ namespace CosmosDBStudio.ViewModel
                 value => TryParsePartitionKeyValue(value, out _)
                     ? null
                     : "Invalid partition key value");
+
+            _messenger.Subscribe(this).To<ExplorerSelectedContainerChangedMessage>(
+                (vm, message) => vm.OnExplorerSelectedContainerChanged(message));
         }
 
         public ViewModelValidator<QuerySheetViewModel> Errors { get; }
@@ -96,9 +99,7 @@ namespace CosmosDBStudio.ViewModel
                 .AndExecute(() => HasChanges = true);
         }
 
-        public string ContainerPath => _containerContext is null
-            ? "(none)"
-            : $"{_containerContext.AccountName}/{_containerContext.DatabaseId}/{_containerContext.ContainerId}";
+        public string ContainerPath => _containerContext?.Path ?? "(no container selected)";
 
         private string _selectedText = string.Empty;
         public string SelectedText
@@ -466,16 +467,21 @@ namespace CosmosDBStudio.ViewModel
             _dialogService.ShowDialog(vm);
             if (vm.SelectedContainer is ContainerViewModel selected)
             {
-                var accountId = selected.Database.Account.Id;
-                var databaseId = selected.Database.Id;
-                var containerId = selected.Id;
-                var newContext = await _containerContextFactory.CreateAsync(accountId, databaseId, containerId, default);
-
-                _containerContext = newContext;
-                _executeCommand?.RaiseCanExecuteChanged();
-                _newDocumentCommand?.RaiseCanExecuteChanged();
-                OnPropertyChanged(null);
+                await SetContainerAsync(selected);
             }
+        }
+
+        private async Task SetContainerAsync(ContainerViewModel container)
+        {
+            var accountId = container.Database.Account.Id;
+            var databaseId = container.Database.Id;
+            var containerId = container.Id;
+            var newContext = await _containerContextFactory.CreateAsync(accountId, databaseId, containerId, default);
+
+            _containerContext = newContext;
+            _executeCommand?.RaiseCanExecuteChanged();
+            _newDocumentCommand?.RaiseCanExecuteChanged();
+            OnPropertyChanged(null);
         }
 
         private bool _isQueryRunning;
@@ -494,5 +500,34 @@ namespace CosmosDBStudio.ViewModel
             get => _hasChanges;
             set => Set(ref _hasChanges, value);
         }
+
+        private ContainerViewModel? _explorerSelectedContainer;
+        public ContainerViewModel? ExplorerSelectedContainer
+        {
+            get => _explorerSelectedContainer;
+            set => Set(ref _explorerSelectedContainer, value)
+                .AndNotifyPropertyChanged(nameof(CanSwitchToExplorerSelectedContainer))
+                .AndRaiseCanExecuteChanged(_switchToExplorerSelectedContainerCommand);
+        }
+
+        private void OnExplorerSelectedContainerChanged(ExplorerSelectedContainerChangedMessage message)
+        {
+            ExplorerSelectedContainer = message.Container;
+        }
+
+        private AsyncDelegateCommand? _switchToExplorerSelectedContainerCommand;
+        public ICommand SwitchToExplorerSelectedContainerCommand => _switchToExplorerSelectedContainerCommand
+            ??= new AsyncDelegateCommand(SwitchToExplorerSelectedContainerAsync, () => CanSwitchToExplorerSelectedContainer);
+
+        private async Task SwitchToExplorerSelectedContainerAsync()
+        {
+            if (ExplorerSelectedContainer is ContainerViewModel container)
+            {
+                await SetContainerAsync(container);
+            }
+        }
+
+        public bool CanSwitchToExplorerSelectedContainer =>
+            ExplorerSelectedContainer is ContainerViewModel c && c.Path != this.ContainerPath;
     }
 }

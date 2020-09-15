@@ -30,5 +30,7 @@ namespace CosmosDBStudio.ViewModel
         public override IEnumerable<CommandViewModel> Commands { get; }
 
         public override NonLeafTreeNodeViewModel? Parent => Database;
+
+        public string Path => $"{Database.Account.Name}/{Database.Id}/{Id}";
     }
 }
