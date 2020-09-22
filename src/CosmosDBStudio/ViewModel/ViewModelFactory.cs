@@ -79,7 +79,7 @@ namespace CosmosDBStudio.ViewModel
 
         public ContainerViewModel CreateContainerViewModel(DatabaseViewModel database, string id)
         {
-            return new ContainerViewModel(database, id, _containerCommands);
+            return new ContainerViewModel(database, id, _containerCommands, this);
         }
 
         public ResultItemViewModel CreateDocumentViewModel(JToken document, IContainerContext containerContext)
@@ -123,6 +123,36 @@ namespace CosmosDBStudio.ViewModel
         public ContainerEditorViewModel CreateContainerEditorViewModel(bool databaseHasProvisionedThroughput, CosmosContainer? container = null)
         {
             return new ContainerEditorViewModel(container, databaseHasProvisionedThroughput);
+        }
+
+        public StoredProceduresFolderViewModel CreateStoredProceduresFolder(ContainerViewModel container)
+        {
+            return new StoredProceduresFolderViewModel(container, _accountManager, this);
+        }
+
+        public StoredProcedureViewModel CreateStoredProcedure(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosStoredProcedure storedProcedure)
+        {
+            return new StoredProcedureViewModel(container, parent, storedProcedure);
+        }
+
+        public UserDefinedFunctionsFolderViewModel CreateUserDefinedFunctionsFolder(ContainerViewModel container)
+        {
+            return new UserDefinedFunctionsFolderViewModel(container, _accountManager, this);
+        }
+
+        public UserDefinedFunctionViewModel CreateUserDefinedFunction(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosUserDefinedFunction udf)
+        {
+            return new UserDefinedFunctionViewModel(container, parent, udf);
+        }
+
+        public TriggersFolderViewModel CreateTriggersFolder(ContainerViewModel container)
+        {
+            return new TriggersFolderViewModel(container, _accountManager, this);
+        }
+
+        public TriggerViewModel CreateTrigger(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosTrigger trigger)
+        {
+            return new TriggerViewModel(container, parent, trigger);
         }
     }
 }

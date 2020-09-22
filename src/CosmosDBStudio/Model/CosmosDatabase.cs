@@ -1,6 +1,6 @@
 ﻿namespace CosmosDBStudio.Model
 {
-    public class CosmosDatabase
+    public class CosmosDatabase : ICosmosItem
     {
         public string Id { get; set; } = string.Empty;
         public int? Throughput { get; set; }

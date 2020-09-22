@@ -1,5 +1,6 @@
 ﻿using CosmosDBStudio.Model;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Scripts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,8 +90,7 @@ namespace CosmosDBStudio.Services.Implementation
         public async Task<CosmosContainer> GetContainerAsync(string accountId, string databaseId, string containerId)
         {
             var client = _clientPool.GetClientForAccount(accountId);
-            var database = client.GetDatabase(databaseId);
-            var container = database.GetContainer(containerId);
+            var container = client.GetContainer(databaseId, containerId);
             var properties = (await container.ReadContainerAsync()).Resource;
             var throughput = await container.ReadThroughputAsync();
             return new CosmosContainer
@@ -121,8 +121,7 @@ namespace CosmosDBStudio.Services.Implementation
         public async Task UpdateContainerAsync(string accountId, string databaseId, CosmosContainer container)
         {
             var client = _clientPool.GetClientForAccount(accountId);
-            var database = client.GetDatabase(databaseId);
-            var c = database.GetContainer(container.Id);
+            var c = client.GetContainer(databaseId, container.Id);
             var properties = (await c.ReadContainerAsync()).Resource;
             var throughput = await c.ReadThroughputAsync();
 
@@ -150,9 +149,70 @@ namespace CosmosDBStudio.Services.Implementation
         public Task DeleteContainerAsync(string accountId, string databaseId, string containerId)
         {
             var client = _clientPool.GetClientForAccount(accountId);
-            var database = client.GetDatabase(databaseId);
-            var container = database.GetContainer(containerId);
+            var container = client.GetContainer(databaseId, containerId);
             return container.DeleteContainerAsync();
+        }
+
+        public async Task<CosmosStoredProcedure[]> GetStoredProceduresAsync(string accountId, string databaseId, string containerId)
+        {
+            var client = _clientPool.GetClientForAccount(accountId);
+            var container = client.GetContainer(databaseId, containerId);
+            var iterator = container.Scripts.GetStoredProcedureQueryIterator<StoredProcedureProperties>();
+            var storedProcedures = new List<CosmosStoredProcedure>();
+            while (iterator.HasMoreResults)
+            {
+                var response = await iterator.ReadNextAsync();
+                storedProcedures.AddRange(response.Select(sp => new CosmosStoredProcedure
+                {
+                    Id = sp.Id,
+                    Body = sp.Body,
+                    ETag = sp.ETag
+                }));
+            }
+
+            return storedProcedures.ToArray();
+        }
+
+        public async Task<CosmosUserDefinedFunction[]> GetUserDefinedFunctionsAsync(string accountId, string databaseId, string containerId)
+        {
+            var client = _clientPool.GetClientForAccount(accountId);
+            var container = client.GetContainer(databaseId, containerId);
+            var iterator = container.Scripts.GetUserDefinedFunctionQueryIterator<UserDefinedFunctionProperties>();
+            var functions = new List<CosmosUserDefinedFunction>();
+            while (iterator.HasMoreResults)
+            {
+                var response = await iterator.ReadNextAsync();
+                functions.AddRange(response.Select(udf => new CosmosUserDefinedFunction
+                {
+                    Id = udf.Id,
+                    Body = udf.Body,
+                    ETag = udf.ETag,
+                }));
+            }
+
+            return functions.ToArray();
+        }
+
+        public async Task<CosmosTrigger[]> GetTriggersAsync(string accountId, string databaseId, string containerId)
+        {
+            var client = _clientPool.GetClientForAccount(accountId);
+            var container = client.GetContainer(databaseId, containerId);
+            var iterator = container.Scripts.GetTriggerQueryIterator<TriggerProperties>();
+            var triggers = new List<CosmosTrigger>();
+            while (iterator.HasMoreResults)
+            {
+                var response = await iterator.ReadNextAsync();
+                triggers.AddRange(response.Select(t => new CosmosTrigger
+                {
+                    Id = t.Id,
+                    Body = t.Body,
+                    ETag = t.ETag,
+                    Operation = t.TriggerOperation,
+                    Type = t.TriggerType
+                }));
+            }
+
+            return triggers.ToArray();
         }
     }
 }

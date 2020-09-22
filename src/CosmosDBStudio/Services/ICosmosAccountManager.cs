@@ -17,5 +17,9 @@ namespace CosmosDBStudio.Services
         Task CreateContainerAsync(string accountId, string databaseId, CosmosContainer container);
         Task UpdateContainerAsync(string accountId, string databaseId, CosmosContainer container);
         Task DeleteContainerAsync(string accountId, string databaseId, string containerId);
+
+        Task<CosmosStoredProcedure[]> GetStoredProceduresAsync(string accountId, string databaseId, string containerId);
+        Task<CosmosUserDefinedFunction[]> GetUserDefinedFunctionsAsync(string accountId, string databaseId, string containerId);
+        Task<CosmosTrigger[]> GetTriggersAsync(string accountId, string databaseId, string containerId);
     }
 }
