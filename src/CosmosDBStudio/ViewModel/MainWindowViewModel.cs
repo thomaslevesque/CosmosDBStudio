@@ -8,6 +8,7 @@ using Linq.Extras;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
@@ -35,7 +36,7 @@ namespace CosmosDBStudio.ViewModel
             _dialogService = dialogService;
             _queryPersistenceService = queryPersistenceService;
             _accountCommands = accountCommands;
-            QuerySheets = new ObservableCollection<QuerySheetViewModel>();
+            Tabs = new ObservableCollection<TabViewModelBase>();
             Accounts = _viewModelFactory.CreateAccountsViewModel();
 
             _messenger.Subscribe(this).To<NewQuerySheetMessage>((vm, message) => vm.OnNewQuerySheetMessage(message));
@@ -56,9 +57,9 @@ namespace CosmosDBStudio.ViewModel
                     message.ContainerId,
                     default);
                 var vm = _viewModelFactory.CreateQuerySheetViewModel(querySheet, null, context);
-                vm.CloseRequested += OnQuerySheetCloseRequested;
-                QuerySheets.Add(vm);
-                CurrentQuerySheet = vm;
+                vm.CloseRequested += OnTabCloseRequested;
+                Tabs.Add(vm);
+                CurrentTab = vm;
             }
             catch (Exception ex)
             {
@@ -71,47 +72,53 @@ namespace CosmosDBStudio.ViewModel
             StatusBarContent = message.Text;
         }
 
-        private void OnQuerySheetCloseRequested(object? sender, EventArgs e)
+        private void OnTabCloseRequested(object? sender, EventArgs e)
         {
-            var sheet = (QuerySheetViewModel)sender!;
-            var (close, save) = sheet.HasChanges
-                ? ConfirmCloseQuerySheet(sheet)
-                : (true, false);
-
-            if (!close)
+            var tab = (TabViewModelBase)sender!;
+            if (!ConfirmCloseTab(tab))
                 return;
 
-            if (save)
-            {
-                if (!SaveQuerySheet(sheet))
-                    return;
-            }
-
-            QuerySheets.Remove(sheet);
-            sheet.CloseRequested -= OnQuerySheetCloseRequested;
+            Tabs.Remove(tab);
+            tab.CloseRequested -= OnTabCloseRequested;
         }
 
-        private (bool close, bool save) ConfirmCloseQuerySheet(QuerySheetViewModel vm)
+        private bool ConfirmCloseTab(TabViewModelBase tab)
         {
-            var confirmation = _dialogService.YesNoCancel("This query sheet has unsaved changes. Do you want to save before closing it?");
-            if (confirmation.TryGetValue(out bool save))
+            if (tab is ISaveable saveable && saveable.HasChanges)
             {
-                return (true, save);
+                var confirmation = _dialogService.YesNoCancel($"This {tab.Description} has unsaved changes. Do you want to save before closing it?");
+                if (confirmation.TryGetValue(out bool save))
+                {
+                    if (save)
+                    {
+                        // User wants to save before closing
+                        // Close if they actually saved
+                        return Save(saveable);
+                    }
+                    else
+                    {
+                        // User doesn't want to save, just close
+                        return true;
+                    }
+                }
+
+                // User cancelled, don't close
+                return false;
             }
 
-            return (false, false);
+            // Nothing to save, just close
+            return true;
         }
 
         public AccountsViewModel Accounts { get; }
 
-        public ObservableCollection<QuerySheetViewModel> QuerySheets { get; }
+        public ObservableCollection<TabViewModelBase> Tabs { get; }
 
-        private QuerySheetViewModel? _currentQuerySheet;
-
-        public QuerySheetViewModel? CurrentQuerySheet
+        private TabViewModelBase? _currentTab;
+        public TabViewModelBase? CurrentTab
         {
-            get => _currentQuerySheet;
-            set => Set(ref _currentQuerySheet, value);
+            get => _currentTab;
+            set => Set(ref _currentTab, value);
         }
 
         public ObservableCollection<string> MruList { get; }
@@ -120,11 +127,11 @@ namespace CosmosDBStudio.ViewModel
 
         public ICommand AddAccountCommand => _accountCommands.AddCommand;
 
-        private DelegateCommand? _saveQuerySheetCommand;
-        public ICommand SaveQuerySheetCommand => _saveQuerySheetCommand ??= new DelegateCommand(SaveCurrentQuerySheet);
+        private DelegateCommand? _saveCommand;
+        public ICommand SaveCommand => _saveCommand ??= new DelegateCommand(SaveCurrentTab, CanSaveCurrentTab);
 
-        private DelegateCommand? _saveQuerySheetAsCommand;
-        public ICommand SaveQuerySheetAsCommand => _saveQuerySheetAsCommand ??= new DelegateCommand(SaveCurrentQuerySheetAs);
+        private DelegateCommand? _saveAsCommand;
+        public ICommand SaveAsCommand => _saveAsCommand ??= new DelegateCommand(SaveCurrentTabAs, CanSaveCurrentTabAs);
 
         private DelegateCommand<string>? _openQuerySheetCommand;
         public ICommand OpenQuerySheetCommand => _openQuerySheetCommand ??= new DelegateCommand<string>(OpenQuerySheet);
@@ -147,56 +154,45 @@ namespace CosmosDBStudio.ViewModel
             _dialogService.ShowDialog(vm);
         }
 
-        private const string QueryFileFilter = "Cosmos DB Studio query sheet|*.cdbsqs";
-
-        private void SaveCurrentQuerySheet()
+        private bool Save(ISaveable saveable)
         {
-            if (CurrentQuerySheet is QuerySheetViewModel vm)
-            {
-                SaveQuerySheet(vm);
-            }
+            if (string.IsNullOrEmpty(saveable.FilePath))
+                return SaveAs(saveable);
+
+            saveable.Save(saveable.FilePath);
+            return true;
         }
 
-        private void SaveCurrentQuerySheetAs()
-        {
-            if (CurrentQuerySheet is QuerySheetViewModel vm)
-            {
-                SaveQuerySheetAs(vm);
-            }
-        }
-
-        private bool SaveQuerySheet(QuerySheetViewModel vm)
-        {
-            if (string.IsNullOrEmpty(vm.FilePath))
-            {
-                return SaveQuerySheetAs(vm);
-            }
-            else
-            {
-                var querySheet = vm.GetQuerySheet();
-                _queryPersistenceService.Save(querySheet, vm.FilePath);
-                vm.HasChanges = false;
-                return true;
-            }
-        }
-
-        private bool SaveQuerySheetAs(QuerySheetViewModel vm)
+        private bool SaveAs(ISaveable saveable)
         {
             var pathOption = _dialogService.PickFileToSave(
-                    filter: QueryFileFilter,
-                    filterIndex: 0,
-                    fileName: vm.FilePath.SomeIfNotNull());
+                filter: saveable.FileFilter,
+                filterIndex: 0,
+                fileName: saveable.FilePath.SomeIfNotNull());
 
             if (pathOption.TryGetValue(out var path))
             {
-                var querySheet = vm.GetQuerySheet();
-                _queryPersistenceService.Save(querySheet, path);
-                vm.FilePath = path;
-                vm.HasChanges = false;
+                saveable.Save(path);
                 return true;
             }
 
             return false;
+        }
+
+        private bool CanSaveCurrentTab() => CurrentTab is ISaveable;
+
+        private void SaveCurrentTab()
+        {
+            if (CurrentTab is ISaveable saveable)
+                Save(saveable);
+        }
+
+        private bool CanSaveCurrentTabAs() => CurrentTab is ISaveable;
+
+        private void SaveCurrentTabAs()
+        {
+            if (CurrentTab is ISaveable saveable)
+                SaveAs(saveable);
         }
 
         private void OpenQuerySheet(string path)
@@ -204,7 +200,7 @@ namespace CosmosDBStudio.ViewModel
             if (path is null)
             {
                 var pathOption = _dialogService.PickFileToOpen(
-                filter: QueryFileFilter,
+                filter: QuerySheet.FileFilter,
                 filterIndex: 0);
 
                 if (!pathOption.TryGetValue(out path))
@@ -219,9 +215,9 @@ namespace CosmosDBStudio.ViewModel
                 path,
                 null);
 
-            vm.CloseRequested += OnQuerySheetCloseRequested;
-            QuerySheets.Add(vm);
-            CurrentQuerySheet = vm;
+            vm.CloseRequested += OnTabCloseRequested;
+            Tabs.Add(vm);
+            CurrentTab = vm;
 
             int index = MruList.IndexOf(path, StringComparer.InvariantCultureIgnoreCase);
             if (index >= 0)
@@ -243,14 +239,14 @@ namespace CosmosDBStudio.ViewModel
         private void SaveWorkspace()
         {
             var workspace = new Workspace();
-            foreach (var vm in QuerySheets)
+            foreach (var vm in Tabs.OfType<QuerySheetViewModel>())
             {
                 var sheet = new WorkspaceQuerySheet
                 {
                     Title = vm.Title,
                     HasChanges = vm.HasChanges,
                     SavedPath = vm.FilePath,
-                    IsCurrent = vm == CurrentQuerySheet
+                    IsCurrent = vm == CurrentTab
                 };
 
                 if (vm.HasChanges || string.IsNullOrEmpty(vm.FilePath))
@@ -284,15 +280,15 @@ namespace CosmosDBStudio.ViewModel
                     null);
 
                 vm.HasChanges = sheet.HasChanges;
-                vm.CloseRequested += OnQuerySheetCloseRequested;
-                QuerySheets.Add(vm);
+                vm.CloseRequested += OnTabCloseRequested;
+                Tabs.Add(vm);
 
                 if (sheet.IsCurrent)
                     currentVM = vm;
             }
 
             QuerySheetViewModel.UntitledCounter = workspace.UntitledCounter;
-            CurrentQuerySheet = currentVM;
+            CurrentTab = currentVM;
         }
     }
 }

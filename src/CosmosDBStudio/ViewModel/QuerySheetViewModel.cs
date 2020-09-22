@@ -1,4 +1,5 @@
 ﻿using CosmosDBStudio.Extensions;
+using CosmosDBStudio.Helpers;
 using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
@@ -16,7 +17,7 @@ using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class QuerySheetViewModel : BindableBase
+    public class QuerySheetViewModel : TabViewModelBase, ISaveable
     {
         public static int UntitledCounter { get; set; }
 
@@ -26,23 +27,26 @@ namespace CosmosDBStudio.ViewModel
         private readonly IMessenger _messenger;
 
         private IContainerContext? _containerContext;
+        private readonly IQueryPersistenceService _queryPersistenceService;
 
         public QuerySheetViewModel(
             IViewModelFactory viewModelFactory,
             IDialogService dialogService,
             IContainerContextFactory containerContextFactory,
             IMessenger messenger,
+            IQueryPersistenceService queryPersistenceService,
             QuerySheet querySheet,
             string? path,
             IContainerContext? containerContext)
         {
             _containerContext = containerContext;
+            _queryPersistenceService = queryPersistenceService;
             _viewModelFactory = viewModelFactory;
             _dialogService = dialogService;
             _containerContextFactory = containerContextFactory;
             _messenger = messenger;
             _filePath = path;
-            _title = string.IsNullOrEmpty(path)
+            Title = string.IsNullOrEmpty(path)
                 ? "Untitled " + (++UntitledCounter)
                 : Path.GetFileNameWithoutExtension(path);
             _text = querySheet.Text;
@@ -76,12 +80,9 @@ namespace CosmosDBStudio.ViewModel
 
         public ViewModelValidator<QuerySheetViewModel> Errors { get; }
 
-        private string _title;
-        public string Title
-        {
-            get => _title;
-            set => Set(ref _title, value);
-        }
+        public override string Title { get; }
+
+        public override string Description => "query sheet";
 
         private string? _filePath;
         public string? FilePath
@@ -381,16 +382,6 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
-        private DelegateCommand? _closeCommand;
-        public ICommand CloseCommand => _closeCommand ??= new DelegateCommand(Close);
-
-        private void Close()
-        {
-            CloseRequested?.Invoke(this, EventArgs.Empty);
-        }
-
-        public event EventHandler? CloseRequested;
-
         private bool TryParsePartitionKeyValue(string? rawValue, out Option<object?> value)
         {
             if (string.IsNullOrEmpty(rawValue))
@@ -529,5 +520,15 @@ namespace CosmosDBStudio.ViewModel
 
         public bool CanSwitchToExplorerSelectedContainer =>
             ExplorerSelectedContainer is ContainerViewModel c && c.Path != this.ContainerPath;
+
+        public void Save(string path)
+        {
+            var querySheet = GetQuerySheet();
+            _queryPersistenceService.Save(querySheet, path);
+            FilePath = path;
+            HasChanges = false;
+        }
+
+        public string FileFilter => QuerySheet.FileFilter;
     }
 }

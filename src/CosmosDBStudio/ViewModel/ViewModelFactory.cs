@@ -17,6 +17,7 @@ namespace CosmosDBStudio.ViewModel
         private readonly IDialogService _dialogService;
         private readonly IUIDispatcher _uiDispatcher;
         private readonly IClipboardService _clipboardService;
+        private readonly IQueryPersistenceService _queryPersistenceService;
 
         public ViewModelFactory(
             AccountCommands accountCommands,
@@ -28,7 +29,8 @@ namespace CosmosDBStudio.ViewModel
             ICosmosAccountManager accountManager,
             IDialogService dialogService,
             IUIDispatcher uiDispatcher,
-            IClipboardService clipboardService)
+            IClipboardService clipboardService,
+            IQueryPersistenceService queryPersistenceService)
         {
             _accountCommands = accountCommands;
             _databaseCommands = databaseCommands;
@@ -40,11 +42,12 @@ namespace CosmosDBStudio.ViewModel
             _dialogService = dialogService;
             _uiDispatcher = uiDispatcher;
             _clipboardService = clipboardService;
+            _queryPersistenceService = queryPersistenceService;
         }
 
         public QuerySheetViewModel CreateQuerySheetViewModel(QuerySheet querySheet, string? path, IContainerContext? containerContext)
         {
-            return new QuerySheetViewModel(this, _dialogService, _containerContextFactory, _messenger, querySheet, path, containerContext);
+            return new QuerySheetViewModel(this, _dialogService, _containerContextFactory, _messenger, _queryPersistenceService, querySheet, path, containerContext);
         }
 
         public NotRunQueryResultViewModel CreateNotRunQueryResultViewModel()

@@ -10,7 +10,7 @@
         Name="root">
     <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenQuerySheetCommand}" />
-        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveQuerySheetCommand}" />
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCommand}" />
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -32,9 +32,9 @@
                           Command="{Binding OpenQuerySheetCommand}"
                           InputGestureText="Ctrl+O"/>
                 <MenuItem Header="_Save query sheet"
-                          Command="{Binding SaveQuerySheetCommand}"
+                          Command="{Binding SaveCommand}"
                           InputGestureText="Ctrl+S"/>
-                <MenuItem Header="Save query sheet _as&#x2026;" Command="{Binding SaveQuerySheetAsCommand}" />
+                <MenuItem Header="Save query sheet _as&#x2026;" Command="{Binding SaveAsCommand}" />
                 <MenuItem Header="Recent files" ItemsSource="{Binding MruList}" DisplayMemberPath="."
                           IsEnabled="{Binding HasMru}">
                     <MenuItem.ItemContainerStyle>
@@ -57,8 +57,8 @@
         <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="5" />
 
         <ctl:QuerySheetTabControl Grid.Row="1" Grid.Column="1"
-                    ItemsSource="{Binding QuerySheets}"
-                    SelectedItem="{Binding CurrentQuerySheet}">
+                    ItemsSource="{Binding Tabs}"
+                    SelectedItem="{Binding CurrentTab}">
         </ctl:QuerySheetTabControl>
 
         <StatusBar Grid.Row="2" Grid.ColumnSpan="2">
