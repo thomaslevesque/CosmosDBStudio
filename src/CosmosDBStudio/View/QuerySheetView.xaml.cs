@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace CosmosDBStudio.View
 {
-    public partial class QuerySheetView : TabItem
+    public partial class QuerySheetView : UserControl
     {
         public QuerySheetView()
         {

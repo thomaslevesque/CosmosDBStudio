@@ -1,4 +1,4 @@
-﻿<TabItem x:Class="CosmosDBStudio.View.QuerySheetView"
+﻿<UserControl x:Class="CosmosDBStudio.View.QuerySheetView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,27 +7,8 @@
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
-             xmlns:markup="clr-namespace:CosmosDBStudio.Markup"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <TabItem.Header>
-        <DockPanel>
-            <Button DockPanel.Dock="Right"
-                    Style="{StaticResource TabCloseButtonStyle}"
-                    Command="{Binding CloseCommand}"
-                    ToolTip="Close" />
-            <TextBlock>
-                <Run Text="{Binding Title, Mode=OneWay}" />
-                <Run>
-                    <Run.Text>
-                        <markup:Switch Path="HasChanges"
-                                       TrueValue="*"
-                                       FalseValue="" />
-                    </Run.Text>
-                </Run>
-            </TextBlock>
-        </DockPanel>
-    </TabItem.Header>
     <Grid IsEnabled="{Binding IsUIEnabled}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -118,4 +99,4 @@
         <GridSplitter Grid.Row="3" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />
         <local:QueryResultsView Grid.Row="4" DataContext="{Binding Result}" />
     </Grid>
-</TabItem>
+</UserControl>

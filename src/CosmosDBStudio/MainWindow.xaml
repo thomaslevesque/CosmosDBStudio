@@ -56,10 +56,10 @@
 
         <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="5" />
 
-        <ctl:QuerySheetTabControl Grid.Row="1" Grid.Column="1"
+        <ctl:CosmosTabControl Grid.Row="1" Grid.Column="1"
                     ItemsSource="{Binding Tabs}"
                     SelectedItem="{Binding CurrentTab}">
-        </ctl:QuerySheetTabControl>
+        </ctl:CosmosTabControl>
 
         <StatusBar Grid.Row="2" Grid.ColumnSpan="2">
             <StatusBarItem Content="{Binding StatusBarContent}" />
