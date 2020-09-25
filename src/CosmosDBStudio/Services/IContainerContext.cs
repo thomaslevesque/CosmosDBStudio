@@ -11,5 +11,6 @@
         string? PartitionKeyJsonPath { get; }
         IDocumentService Documents { get; }
         IQueryService Query { get; }
+        IScriptService Scripts { get; }
     }
 }

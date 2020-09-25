@@ -19,5 +19,7 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public event EventHandler? CloseRequested;
+
+        public abstract bool HasChanges { get; }
     }
 }

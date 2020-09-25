@@ -1,4 +1,5 @@
 ﻿using CosmosDBStudio.Model;
+using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -7,8 +8,9 @@ namespace CosmosDBStudio.ViewModel
         public UserDefinedFunctionViewModel(
             ContainerViewModel container,
             NonLeafTreeNodeViewModel parent,
-            CosmosUserDefinedFunction udf)
-            : base(container, parent, udf)
+            CosmosUserDefinedFunction udf,
+            IMessenger messenger)
+            : base(container, parent, udf, messenger)
         {
         }
     }

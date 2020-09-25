@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CosmosDBStudio.View"
              xmlns:markup="clr-namespace:CosmosDBStudio.Markup"
-             xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel"
-             mc:Ignorable="d" 
+             xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel" xmlns:cosmos="clr-namespace:Microsoft.Azure.Cosmos.Scripts;assembly=Microsoft.Azure.Cosmos.Client"
+         mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <TabItem.Header>
         <DockPanel>
@@ -19,9 +19,10 @@
                 <Run>
                     <Run.Text>
                         <markup:Switch Path="HasChanges"
+                                       Mode="OneWay"
                                        TrueValue="*"
                                        FalseValue=""
-                                       FallbackValue="False" />
+                                       FallbackValue="" />
                     </Run.Text>
                 </Run>
             </TextBlock>
@@ -31,6 +32,37 @@
         <ContentControl.Resources>
             <DataTemplate DataType="{x:Type vm:QuerySheetViewModel}">
                 <local:QuerySheetView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:StoredProcedureEditorViewModel}">
+                <local:ScriptEditorView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:UserDefinedFunctionEditorViewModel}">
+                <local:ScriptEditorView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:TriggerEditorViewModel}">
+                <local:ScriptEditorView>
+                    <local:ScriptEditorView.AdditionalToolBar>
+                        <ToolBar>
+                            <Label VerticalAlignment="Center" Content="Type" />
+                            <ComboBox Margin="0,0,3,0" VerticalAlignment="Center"
+                                      IsEditable="False" Width="100"
+                                      SelectedItem="{Binding Type}">
+                                <cosmos:TriggerType>Pre</cosmos:TriggerType>
+                                <cosmos:TriggerType>Post</cosmos:TriggerType>
+                            </ComboBox>
+                            <Label VerticalAlignment="Center" Content="Operation" />
+                            <ComboBox Margin="0,0,3,0" VerticalAlignment="Center"
+                                      IsEditable="False" Width="100"
+                                      SelectedItem="{Binding Operation}">
+                                <cosmos:TriggerOperation>All</cosmos:TriggerOperation>
+                                <cosmos:TriggerOperation>Create</cosmos:TriggerOperation>
+                                <cosmos:TriggerOperation>Update</cosmos:TriggerOperation>
+                                <cosmos:TriggerOperation>Delete</cosmos:TriggerOperation>
+                                <cosmos:TriggerOperation>Replace</cosmos:TriggerOperation>
+                            </ComboBox>
+                        </ToolBar>
+                    </local:ScriptEditorView.AdditionalToolBar>
+                </local:ScriptEditorView>
             </DataTemplate>
         </ContentControl.Resources>
     </ContentControl>

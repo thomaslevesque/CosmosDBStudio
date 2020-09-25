@@ -1,4 +1,5 @@
 ﻿using CosmosDBStudio.Model;
+using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -7,8 +8,9 @@ namespace CosmosDBStudio.ViewModel
         public StoredProcedureViewModel(
             ContainerViewModel container,
             NonLeafTreeNodeViewModel parent,
-            CosmosStoredProcedure storedProcedure)
-            : base(container, parent, storedProcedure)
+            CosmosStoredProcedure storedProcedure,
+            IMessenger messenger)
+            : base(container, parent, storedProcedure, messenger)
         {
         }
     }

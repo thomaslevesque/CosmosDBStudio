@@ -1,5 +1,4 @@
 ﻿using CosmosDBStudio.Extensions;
-using CosmosDBStudio.Helpers;
 using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
@@ -97,7 +96,7 @@ namespace CosmosDBStudio.ViewModel
             get => _text;
             set => Set(ref _text, value)
                 .AndRaiseCanExecuteChanged(_executeCommand)
-                .AndExecute(() => HasChanges = true);
+                .AndExecute(() => SetHasChanges(true));
         }
 
         public string ContainerPath => _containerContext?.Path ?? "(no container selected)";
@@ -486,11 +485,12 @@ namespace CosmosDBStudio.ViewModel
         public bool IsUIEnabled => !IsQueryRunning;
 
         private bool _hasChanges;
-        public bool HasChanges
+        public override bool HasChanges
         {
             get => _hasChanges;
-            set => Set(ref _hasChanges, value);
         }
+
+        public void SetHasChanges(bool value) => Set(ref _hasChanges, value, propertyName: nameof(HasChanges));
 
         private ContainerViewModel? _explorerSelectedContainer;
         public ContainerViewModel? ExplorerSelectedContainer
@@ -526,7 +526,7 @@ namespace CosmosDBStudio.ViewModel
             var querySheet = GetQuerySheet();
             _queryPersistenceService.Save(querySheet, path);
             FilePath = path;
-            HasChanges = false;
+            SetHasChanges(false);
         }
 
         public string FileFilter => QuerySheet.FileFilter;

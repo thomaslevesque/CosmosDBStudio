@@ -1,11 +1,14 @@
 ﻿using CosmosDBStudio.Commands;
+using EssentialMVVM;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {
     public class ContainerViewModel : NonLeafTreeNodeViewModel
     {
+        private readonly ContainerCommands _containerCommands;
         private readonly IViewModelFactory _viewModelFactory;
 
         public DatabaseViewModel Database { get; }
@@ -19,6 +22,7 @@ namespace CosmosDBStudio.ViewModel
         {
             Database = database;
             Id = id;
+            _containerCommands = containerCommands;
             _viewModelFactory = viewModelFactory;
             Commands = new[]
             {
@@ -29,6 +33,9 @@ namespace CosmosDBStudio.ViewModel
                 new CommandViewModel("Delete container", containerCommands.DeleteCommand, this),
             };
         }
+
+        private DelegateCommand? _newQuerySheetCommand;
+        public ICommand NewQuerySheetCommand => _newQuerySheetCommand ??= _containerCommands.NewQuerySheetCommand.WithParameter(this);
 
         public override string Text => Id;
 

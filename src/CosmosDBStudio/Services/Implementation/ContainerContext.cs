@@ -24,6 +24,7 @@ namespace CosmosDBStudio.Services.Implementation
                 : "$" + partitionKeyPath.Replace('/', '.');
             Documents = new DocumentService(container);
             Query = new QueryService(container);
+            Scripts = new ScriptService(container);
         }
 
         public string AccountId => _account.Id;
@@ -40,5 +41,7 @@ namespace CosmosDBStudio.Services.Implementation
         public IDocumentService Documents { get; }
 
         public IQueryService Query { get; }
+
+        public IScriptService Scripts { get; }
     }
 }

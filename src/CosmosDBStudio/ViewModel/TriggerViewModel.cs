@@ -1,4 +1,5 @@
 ﻿using CosmosDBStudio.Model;
+using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -7,8 +8,9 @@ namespace CosmosDBStudio.ViewModel
         public TriggerViewModel(
             ContainerViewModel container,
             NonLeafTreeNodeViewModel parent,
-            CosmosTrigger trigger)
-            : base(container, parent, trigger)
+            CosmosTrigger trigger,
+            IMessenger messenger)
+            : base(container, parent, trigger, messenger)
         {
         }
     }

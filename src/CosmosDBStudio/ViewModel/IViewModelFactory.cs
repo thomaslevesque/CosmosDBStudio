@@ -31,5 +31,8 @@ namespace CosmosDBStudio.ViewModel
         UserDefinedFunctionViewModel CreateUserDefinedFunction(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosUserDefinedFunction udf);
         TriggersFolderViewModel CreateTriggersFolder(ContainerViewModel container);
         TriggerViewModel CreateTrigger(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosTrigger trigger);
+        StoredProcedureEditorViewModel CreateStoredProcedureEditor(CosmosStoredProcedure storedProcedure, IContainerContext containerContext);
+        UserDefinedFunctionEditorViewModel CreateUserDefinedFunctionEditor(CosmosUserDefinedFunction udf, IContainerContext containerContext);
+        TriggerEditorViewModel CreateTriggerEditor(CosmosTrigger trigger, IContainerContext containerContext);
     }
 }

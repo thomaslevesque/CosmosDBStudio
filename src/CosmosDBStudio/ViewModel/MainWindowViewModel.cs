@@ -40,6 +40,9 @@ namespace CosmosDBStudio.ViewModel
             Accounts = _viewModelFactory.CreateAccountsViewModel();
 
             _messenger.Subscribe(this).To<NewQuerySheetMessage>((vm, message) => vm.OnNewQuerySheetMessage(message));
+            _messenger.Subscribe(this).To<OpenScriptMessage<CosmosStoredProcedure>>((vm, message) => vm.OnOpenScriptMessage(message, _viewModelFactory.CreateStoredProcedureEditor));
+            _messenger.Subscribe(this).To<OpenScriptMessage<CosmosUserDefinedFunction>>((vm, message) => vm.OnOpenScriptMessage(message, _viewModelFactory.CreateUserDefinedFunctionEditor));
+            _messenger.Subscribe(this).To<OpenScriptMessage<CosmosTrigger>>((vm, message) => vm.OnOpenScriptMessage(message, _viewModelFactory.CreateTriggerEditor));
             _messenger.Subscribe(this).To<SetStatusBarMessage>((vm, message) => vm.OnSetStatusBarMessage(message));
 
             MruList = new ObservableCollection<string>(_queryPersistenceService.LoadMruList());
@@ -57,6 +60,26 @@ namespace CosmosDBStudio.ViewModel
                     message.ContainerId,
                     default);
                 var vm = _viewModelFactory.CreateQuerySheetViewModel(querySheet, null, context);
+                vm.CloseRequested += OnTabCloseRequested;
+                Tabs.Add(vm);
+                CurrentTab = vm;
+            }
+            catch (Exception ex)
+            {
+                _dialogService.ShowError(ex.Message);
+            }
+        }
+
+        private async void OnOpenScriptMessage<TScript>(OpenScriptMessage<TScript> message, Func<TScript, IContainerContext, TabViewModelBase> createViewModel)
+        {
+            try
+            {
+                var context = await _containerContextFactory.CreateAsync(
+                    message.AccountId,
+                    message.DatabaseId,
+                    message.ContainerId,
+                    default);
+                var vm = createViewModel(message.Script, context);
                 vm.CloseRequested += OnTabCloseRequested;
                 Tabs.Add(vm);
                 CurrentTab = vm;
@@ -279,7 +302,7 @@ namespace CosmosDBStudio.ViewModel
                     sheet.SavedPath,
                     null);
 
-                vm.HasChanges = sheet.HasChanges;
+                vm.SetHasChanges(sheet.HasChanges);
                 vm.CloseRequested += OnTabCloseRequested;
                 Tabs.Add(vm);
 

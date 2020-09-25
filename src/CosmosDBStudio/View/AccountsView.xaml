@@ -25,19 +25,35 @@
                     <controls:TreeNodeControl Icon="/Images/database.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ContainerViewModel}" ItemsSource="{Binding Children}">
-                    <controls:TreeNodeControl Icon="/Images/container.png" Content="{Binding Text}" />
+                    <controls:TreeNodeControl Icon="/Images/container.png" Content="{Binding Text}">
+                        <i:Interaction.Behaviors>
+                            <bhv:MouseCommandsBehavior DoubleClickCommand="{Binding NewQuerySheetCommand}" />
+                        </i:Interaction.Behaviors>
+                    </controls:TreeNodeControl>
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ContainerScriptFolderViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:StoredProcedureViewModel}">
-                    <controls:TreeNodeControl Icon="/Images/stored-procedure.png" Content="{Binding Text}" />
+                    <controls:TreeNodeControl Icon="/Images/stored-procedure.png" Content="{Binding Text}">
+                        <i:Interaction.Behaviors>
+                            <bhv:MouseCommandsBehavior DoubleClickCommand="{Binding OpenCommand}" />
+                        </i:Interaction.Behaviors>
+                    </controls:TreeNodeControl>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserDefinedFunctionViewModel}">
-                    <controls:TreeNodeControl Icon="/Images/user-defined-function.png" Content="{Binding Text}" />
+                    <controls:TreeNodeControl Icon="/Images/user-defined-function.png" Content="{Binding Text}">
+                        <i:Interaction.Behaviors>
+                            <bhv:MouseCommandsBehavior DoubleClickCommand="{Binding OpenCommand}" />
+                        </i:Interaction.Behaviors>
+                    </controls:TreeNodeControl>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:TriggerViewModel}">
-                    <controls:TreeNodeControl Icon="/Images/trigger.png" Content="{Binding Text}" />
+                    <controls:TreeNodeControl Icon="/Images/trigger.png" Content="{Binding Text}">
+                        <i:Interaction.Behaviors>
+                            <bhv:MouseCommandsBehavior DoubleClickCommand="{Binding OpenCommand}" />
+                        </i:Interaction.Behaviors>
+                    </controls:TreeNodeControl>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:PlaceholderTreeNodeViewModel}">
                     <TextBlock Text="{Binding Text}" />

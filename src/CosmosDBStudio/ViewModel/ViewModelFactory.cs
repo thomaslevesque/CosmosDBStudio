@@ -135,7 +135,12 @@ namespace CosmosDBStudio.ViewModel
 
         public StoredProcedureViewModel CreateStoredProcedure(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosStoredProcedure storedProcedure)
         {
-            return new StoredProcedureViewModel(container, parent, storedProcedure);
+            return new StoredProcedureViewModel(container, parent, storedProcedure, _messenger);
+        }
+
+        public StoredProcedureEditorViewModel CreateStoredProcedureEditor(CosmosStoredProcedure storedProcedure, IContainerContext containerContext)
+        {
+            return new StoredProcedureEditorViewModel(containerContext, storedProcedure);
         }
 
         public UserDefinedFunctionsFolderViewModel CreateUserDefinedFunctionsFolder(ContainerViewModel container)
@@ -145,7 +150,12 @@ namespace CosmosDBStudio.ViewModel
 
         public UserDefinedFunctionViewModel CreateUserDefinedFunction(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosUserDefinedFunction udf)
         {
-            return new UserDefinedFunctionViewModel(container, parent, udf);
+            return new UserDefinedFunctionViewModel(container, parent, udf, _messenger);
+        }
+
+        public UserDefinedFunctionEditorViewModel CreateUserDefinedFunctionEditor(CosmosUserDefinedFunction udf, IContainerContext containerContext)
+        {
+            return new UserDefinedFunctionEditorViewModel(containerContext, udf);
         }
 
         public TriggersFolderViewModel CreateTriggersFolder(ContainerViewModel container)
@@ -155,7 +165,12 @@ namespace CosmosDBStudio.ViewModel
 
         public TriggerViewModel CreateTrigger(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosTrigger trigger)
         {
-            return new TriggerViewModel(container, parent, trigger);
+            return new TriggerViewModel(container, parent, trigger, _messenger);
+        }
+
+        public TriggerEditorViewModel CreateTriggerEditor(CosmosTrigger trigger, IContainerContext containerContext)
+        {
+            return new TriggerEditorViewModel(containerContext, trigger);
         }
     }
 }
