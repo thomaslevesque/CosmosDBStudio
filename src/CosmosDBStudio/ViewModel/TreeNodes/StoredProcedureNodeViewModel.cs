@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class StoredProcedureViewModel : ContainerScriptViewModel<CosmosStoredProcedure>
+    public class StoredProcedureNodeViewModel : ScriptNodeViewModel<CosmosStoredProcedure>
     {
-        public StoredProcedureViewModel(
-            ContainerViewModel container,
+        public StoredProcedureNodeViewModel(
+            ContainerNodeViewModel container,
             NonLeafTreeNodeViewModel parent,
             CosmosStoredProcedure storedProcedure,
             ScriptCommands<CosmosStoredProcedure> commands,

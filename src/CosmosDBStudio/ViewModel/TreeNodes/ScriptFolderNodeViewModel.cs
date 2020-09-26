@@ -2,10 +2,10 @@
 
 namespace CosmosDBStudio.ViewModel
 {
-    public abstract class ContainerScriptFolderViewModel : NonLeafTreeNodeViewModel
+    public abstract class ScriptFolderNodeViewModel : NonLeafTreeNodeViewModel
     {
-        protected ContainerScriptFolderViewModel(
-            ContainerViewModel container,
+        protected ScriptFolderNodeViewModel(
+            ContainerNodeViewModel container,
             string text,
             ICosmosAccountManager accountManager,
             IViewModelFactory viewModelFactory)
@@ -16,7 +16,7 @@ namespace CosmosDBStudio.ViewModel
             ViewModelFactory = viewModelFactory;
         }
 
-        public ContainerViewModel Container { get; }
+        public ContainerNodeViewModel Container { get; }
 
         public override string Text { get; }
 

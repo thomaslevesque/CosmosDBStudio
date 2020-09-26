@@ -24,15 +24,15 @@ namespace CosmosDBStudio.Commands
 
         #region Create
 
-        private AsyncDelegateCommand<DatabaseViewModel>? _createCommand;
+        private AsyncDelegateCommand<DatabaseNodeViewModel>? _createCommand;
         private readonly Lazy<IViewModelFactory> _viewModelFactory;
         private readonly IDialogService _dialogService;
         private readonly ICosmosAccountManager _accountManager;
         private readonly IMessenger _messenger;
 
-        public ICommand CreateCommand => _createCommand ??= new AsyncDelegateCommand<DatabaseViewModel>(CreateAsync);
+        public ICommand CreateCommand => _createCommand ??= new AsyncDelegateCommand<DatabaseNodeViewModel>(CreateAsync);
 
-        private async Task CreateAsync(DatabaseViewModel databaseVm)
+        private async Task CreateAsync(DatabaseNodeViewModel databaseVm)
         {
             var accountId = databaseVm.Account.Id;
             var databaseId = databaseVm.Id;
@@ -50,10 +50,10 @@ namespace CosmosDBStudio.Commands
 
         #region Edit
 
-        private AsyncDelegateCommand<ContainerViewModel>? _editCommand;
-        public ICommand EditCommand => _editCommand ??= new AsyncDelegateCommand<ContainerViewModel>(EditAsync);
+        private AsyncDelegateCommand<ContainerNodeViewModel>? _editCommand;
+        public ICommand EditCommand => _editCommand ??= new AsyncDelegateCommand<ContainerNodeViewModel>(EditAsync);
 
-        private async Task EditAsync(ContainerViewModel containerVm)
+        private async Task EditAsync(ContainerNodeViewModel containerVm)
         {
             var accountId = containerVm.Database.Account.Id;
             var databaseId = containerVm.Database.Id;
@@ -73,10 +73,10 @@ namespace CosmosDBStudio.Commands
 
         #region Delete
 
-        private AsyncDelegateCommand<ContainerViewModel>? _deleteCommand;
-        public ICommand DeleteCommand => _deleteCommand ??= new AsyncDelegateCommand<ContainerViewModel>(DeleteAsync);
+        private AsyncDelegateCommand<ContainerNodeViewModel>? _deleteCommand;
+        public ICommand DeleteCommand => _deleteCommand ??= new AsyncDelegateCommand<ContainerNodeViewModel>(DeleteAsync);
 
-        private async Task DeleteAsync(ContainerViewModel containerVm)
+        private async Task DeleteAsync(ContainerNodeViewModel containerVm)
         {
             var accountId = containerVm.Database.Account.Id;
             var databaseId = containerVm.Database.Id;
@@ -94,10 +94,10 @@ namespace CosmosDBStudio.Commands
 
         #region New query sheet
 
-        private DelegateCommand<ContainerViewModel>? _newQuerySheetCommand;
-        public ICommand NewQuerySheetCommand => _newQuerySheetCommand ??= new DelegateCommand<ContainerViewModel>(NewQuerySheet);
+        private DelegateCommand<ContainerNodeViewModel>? _newQuerySheetCommand;
+        public ICommand NewQuerySheetCommand => _newQuerySheetCommand ??= new DelegateCommand<ContainerNodeViewModel>(NewQuerySheet);
 
-        private void NewQuerySheet(ContainerViewModel containerVm)
+        private void NewQuerySheet(ContainerNodeViewModel containerVm)
         {
             _messenger.Publish(new NewQuerySheetMessage(
                 containerVm.Database.Account.Id,

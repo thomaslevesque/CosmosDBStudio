@@ -6,16 +6,16 @@ using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class ContainerViewModel : NonLeafTreeNodeViewModel
+    public class ContainerNodeViewModel : NonLeafTreeNodeViewModel
     {
         private readonly ContainerCommands _containerCommands;
         private readonly IViewModelFactory _viewModelFactory;
 
-        public DatabaseViewModel Database { get; }
+        public DatabaseNodeViewModel Database { get; }
         public string Id { get; }
 
-        public ContainerViewModel(
-            DatabaseViewModel database,
+        public ContainerNodeViewModel(
+            DatabaseNodeViewModel database,
             string id,
             ContainerCommands containerCommands,
             IViewModelFactory viewModelFactory)

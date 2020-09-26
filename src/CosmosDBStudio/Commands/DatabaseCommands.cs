@@ -25,15 +25,15 @@ namespace CosmosDBStudio.Commands
 
         #region Create
 
-        private AsyncDelegateCommand<AccountViewModel>? _createCommand;
+        private AsyncDelegateCommand<AccountNodeViewModel>? _createCommand;
         private readonly Lazy<IViewModelFactory> _viewModelFactory;
         private readonly IDialogService _dialogService;
         private readonly ICosmosAccountManager _accountManager;
         private readonly IMessenger _messenger;
 
-        public ICommand CreateCommand => _createCommand ??= new AsyncDelegateCommand<AccountViewModel>(CreateAsync);
+        public ICommand CreateCommand => _createCommand ??= new AsyncDelegateCommand<AccountNodeViewModel>(CreateAsync);
 
-        private async Task CreateAsync(AccountViewModel accountVm)
+        private async Task CreateAsync(AccountNodeViewModel accountVm)
         {
             var dialog = _viewModelFactory.Value.CreateDatabaseEditor();
             if (_dialogService.ShowDialog(dialog) is true)
@@ -55,10 +55,10 @@ namespace CosmosDBStudio.Commands
 
         #region Edit
 
-        private AsyncDelegateCommand<DatabaseViewModel>? _editCommand;
-        public ICommand EditCommand => _editCommand ??= new AsyncDelegateCommand<DatabaseViewModel>(EditAsync);
+        private AsyncDelegateCommand<DatabaseNodeViewModel>? _editCommand;
+        public ICommand EditCommand => _editCommand ??= new AsyncDelegateCommand<DatabaseNodeViewModel>(EditAsync);
 
-        private async Task EditAsync(DatabaseViewModel databaseVm)
+        private async Task EditAsync(DatabaseNodeViewModel databaseVm)
         {
             var database = await _accountManager.GetDatabaseAsync(databaseVm.Account.Id, databaseVm.Id);
             var dialog = _viewModelFactory.Value.CreateDatabaseEditor(database);
@@ -73,10 +73,10 @@ namespace CosmosDBStudio.Commands
 
         #region Delete
 
-        private AsyncDelegateCommand<DatabaseViewModel>? _deleteCommand;
-        public ICommand DeleteCommand => _deleteCommand ??= new AsyncDelegateCommand<DatabaseViewModel>(DeleteAsync);
+        private AsyncDelegateCommand<DatabaseNodeViewModel>? _deleteCommand;
+        public ICommand DeleteCommand => _deleteCommand ??= new AsyncDelegateCommand<DatabaseNodeViewModel>(DeleteAsync);
 
-        private async Task DeleteAsync(DatabaseViewModel databaseVm)
+        private async Task DeleteAsync(DatabaseNodeViewModel databaseVm)
         {
             if (!_dialogService.Confirm($"Are you sure you want to delete database '{databaseVm.Id}'?"))
                 return;

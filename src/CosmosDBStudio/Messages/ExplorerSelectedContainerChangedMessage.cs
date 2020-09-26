@@ -4,11 +4,11 @@ namespace CosmosDBStudio.Messages
 {
     public class ExplorerSelectedContainerChangedMessage
     {
-        public ExplorerSelectedContainerChangedMessage(ContainerViewModel? container)
+        public ExplorerSelectedContainerChangedMessage(ContainerNodeViewModel? container)
         {
             Container = container;
         }
 
-        public ContainerViewModel? Container { get; }
+        public ContainerNodeViewModel? Container { get; }
     }
 }

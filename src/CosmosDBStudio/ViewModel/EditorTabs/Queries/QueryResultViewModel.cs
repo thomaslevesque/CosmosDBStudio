@@ -42,11 +42,11 @@ namespace CosmosDBStudio.ViewModel
             {
                 _items = new ObservableCollection<ResultItemViewModel>(
                     result.Items
-                        .Select(item => _viewModelFactory.CreateDocument(item, _containerContext)));
+                        .Select(item => _viewModelFactory.CreateDocumentResult(item, _containerContext)));
                 _text = new JArray(result.Items).ToString(Formatting.Indented);
                 IsJson = true;
                 SelectedTab = ResultTab.Items;
-                var firstItem = (DocumentViewModel)_items[0];
+                var firstItem = (DocumentResultViewModel)_items[0];
                 FirstColumnTitle = firstItem.FirstColumnTitle;
                 HasPartitionKey = firstItem.HasPartitionKey;
                 PartitionKeyPath = firstItem.HasPartitionKey
@@ -107,7 +107,7 @@ namespace CosmosDBStudio.ViewModel
 
         private async Task Refresh()
         {
-            if (SelectedItem is DocumentViewModel item && item.IsRawDocument)
+            if (SelectedItem is DocumentResultViewModel item && item.IsRawDocument)
             {
                 var refreshedDocument = await _containerContext.Documents.GetAsync(
                     item.Id!, // Not null if IsRawDocument is true
@@ -123,7 +123,7 @@ namespace CosmosDBStudio.ViewModel
 
                 var index = _items.IndexOf(item);
                 SelectedItem = null;
-                var newItem = _viewModelFactory.CreateDocument(refreshedDocument, _containerContext);
+                var newItem = _viewModelFactory.CreateDocumentResult(refreshedDocument, _containerContext);
                 _items[index] = newItem;
                 SelectedItem = newItem;
             }
@@ -131,7 +131,7 @@ namespace CosmosDBStudio.ViewModel
 
         private bool CanRefresh()
         {
-            return SelectedItem is DocumentViewModel item && item.IsRawDocument;
+            return SelectedItem is DocumentResultViewModel item && item.IsRawDocument;
         }
 
         private AsyncDelegateCommand? _deleteCommand;
@@ -139,7 +139,7 @@ namespace CosmosDBStudio.ViewModel
 
         private async Task DeleteAsync()
         {
-            if (SelectedItem is DocumentViewModel item && item.IsRawDocument)
+            if (SelectedItem is DocumentResultViewModel item && item.IsRawDocument)
             {
                 if (!_dialogService.Confirm("Do you really want to delete this document?"))
                     return;
@@ -163,7 +163,7 @@ namespace CosmosDBStudio.ViewModel
 
         private bool CanDelete()
         {
-            return SelectedItem is DocumentViewModel item && item.HasId && item.IsRawDocument;
+            return SelectedItem is DocumentResultViewModel item && item.HasId && item.IsRawDocument;
         }
 
         private DelegateCommand? _editCommand;
@@ -171,7 +171,7 @@ namespace CosmosDBStudio.ViewModel
 
         private void Edit()
         {
-            if (SelectedItem is DocumentViewModel item && item.GetDocument() is JObject document)
+            if (SelectedItem is DocumentResultViewModel item && item.GetDocument() is JObject document)
             {
                 var vm = _viewModelFactory.CreateDocumentEditor(document, false, _containerContext);
                 _dialogService.ShowDialog(vm);
@@ -180,7 +180,7 @@ namespace CosmosDBStudio.ViewModel
                 {
                     var index = _items.IndexOf(item);
                     SelectedItem = null;
-                    var newItem = _viewModelFactory.CreateDocument(modifiedDocument, _containerContext);
+                    var newItem = _viewModelFactory.CreateDocumentResult(modifiedDocument, _containerContext);
                     _items[index] = newItem;
                     SelectedItem = newItem;
                 }
@@ -189,7 +189,7 @@ namespace CosmosDBStudio.ViewModel
 
         private bool CanEdit()
         {
-            return SelectedItem is DocumentViewModel item && item.IsRawDocument;
+            return SelectedItem is DocumentResultViewModel item && item.IsRawDocument;
         }
 
         private AsyncDelegateCommand? _loadNextPageCommand;
@@ -206,10 +206,10 @@ namespace CosmosDBStudio.ViewModel
                     _continuationToken = result.ContinuationToken;
                     foreach (var item in result.Items)
                     {
-                        _items.Add(_viewModelFactory.CreateDocument(item, _containerContext));
+                        _items.Add(_viewModelFactory.CreateDocumentResult(item, _containerContext));
                     }
 
-                    var tokens = _items.Cast<DocumentViewModel>().Select(d => d.GetDocument());
+                    var tokens = _items.Cast<DocumentResultViewModel>().Select(d => d.GetDocument());
                     _text = new JArray(tokens).ToString(Formatting.Indented);
                     OnPropertyChanged(nameof(Text));
                 }

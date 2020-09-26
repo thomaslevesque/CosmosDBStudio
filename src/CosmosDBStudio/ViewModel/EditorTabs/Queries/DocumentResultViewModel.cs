@@ -8,12 +8,12 @@ using System.Linq;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class DocumentViewModel : ResultItemViewModel
+    public class DocumentResultViewModel : ResultItemViewModel
     {
         private readonly JToken _document;
         private readonly IContainerContext _containerContext;
 
-        public DocumentViewModel(JToken document, IContainerContext containerContext)
+        public DocumentResultViewModel(JToken document, IContainerContext containerContext)
         {
             _document = document;
             _containerContext = containerContext;

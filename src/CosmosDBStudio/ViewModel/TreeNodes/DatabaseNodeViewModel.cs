@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class DatabaseViewModel : NonLeafTreeNodeViewModel
+    public class DatabaseNodeViewModel : NonLeafTreeNodeViewModel
     {
         private readonly ICosmosAccountManager _accountManager;
         private readonly IViewModelFactory _viewModelFactory;
 
-        public DatabaseViewModel(
-            AccountViewModel account,
+        public DatabaseNodeViewModel(
+            AccountNodeViewModel account,
             string id,
             DatabaseCommands databaseCommands,
             ContainerCommands containerCommands,
@@ -41,7 +41,7 @@ namespace CosmosDBStudio.ViewModel
             messenger.Subscribe(this).To<ContainerDeletedMessage>((vm, message) => vm.OnContainerDeleted(message));
         }
 
-        public AccountViewModel Account { get; }
+        public AccountNodeViewModel Account { get; }
 
         public string Id { get; }
 

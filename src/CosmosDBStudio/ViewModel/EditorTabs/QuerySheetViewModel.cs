@@ -455,13 +455,13 @@ namespace CosmosDBStudio.ViewModel
         {
             var vm = _viewModelFactory.CreateContainerPicker();
             _dialogService.ShowDialog(vm);
-            if (vm.SelectedContainer is ContainerViewModel selected)
+            if (vm.SelectedContainer is ContainerNodeViewModel selected)
             {
                 await SetContainerAsync(selected);
             }
         }
 
-        private async Task SetContainerAsync(ContainerViewModel container)
+        private async Task SetContainerAsync(ContainerNodeViewModel container)
         {
             var accountId = container.Database.Account.Id;
             var databaseId = container.Database.Id;
@@ -492,8 +492,8 @@ namespace CosmosDBStudio.ViewModel
 
         public void SetHasChanges(bool value) => Set(ref _hasChanges, value, propertyName: nameof(HasChanges));
 
-        private ContainerViewModel? _explorerSelectedContainer;
-        public ContainerViewModel? ExplorerSelectedContainer
+        private ContainerNodeViewModel? _explorerSelectedContainer;
+        public ContainerNodeViewModel? ExplorerSelectedContainer
         {
             get => _explorerSelectedContainer;
             set => Set(ref _explorerSelectedContainer, value)
@@ -512,14 +512,14 @@ namespace CosmosDBStudio.ViewModel
 
         private async Task SwitchToExplorerSelectedContainerAsync()
         {
-            if (ExplorerSelectedContainer is ContainerViewModel container)
+            if (ExplorerSelectedContainer is ContainerNodeViewModel container)
             {
                 await SetContainerAsync(container);
             }
         }
 
         public bool CanSwitchToExplorerSelectedContainer =>
-            ExplorerSelectedContainer is ContainerViewModel c && c.Path != this.ContainerPath;
+            ExplorerSelectedContainer is ContainerNodeViewModel c && c.Path != this.ContainerPath;
 
         public void Save(string path)
         {

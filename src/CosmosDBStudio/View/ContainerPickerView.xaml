@@ -18,16 +18,16 @@
         </Grid.RowDefinitions>
         <TreeView Grid.Row="0" ItemsSource="{Binding RootNodes}">
             <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type vm:AccountFolderViewModel}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type vm:AccountFolderNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vm:AccountViewModel}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type vm:AccountNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/account.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vm:DatabaseViewModel}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type vm:DatabaseNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/database.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type vm:ContainerViewModel}">
+                <DataTemplate DataType="{x:Type vm:ContainerNodeViewModel}">
                     <controls:TreeNodeControl Icon="/Images/container.png" Content="{Binding Text}" />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:PlaceholderTreeNodeViewModel}">

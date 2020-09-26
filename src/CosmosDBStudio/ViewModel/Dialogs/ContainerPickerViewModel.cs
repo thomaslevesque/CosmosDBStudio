@@ -58,7 +58,7 @@ namespace CosmosDBStudio.ViewModel
                 .AndRaiseCanExecuteChanged(_selectCommand);
         }
 
-        public ContainerViewModel? SelectedContainer => SelectedItem as ContainerViewModel;
+        public ContainerNodeViewModel? SelectedContainer => SelectedItem as ContainerNodeViewModel;
 
         private DelegateCommand? _selectCommand;
         public ICommand SelectCommand => _selectCommand ??= new DelegateCommand(Select, CanSelect);

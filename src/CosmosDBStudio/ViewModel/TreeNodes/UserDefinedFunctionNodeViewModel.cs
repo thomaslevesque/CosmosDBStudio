@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class UserDefinedFunctionViewModel : ContainerScriptViewModel<CosmosUserDefinedFunction>
+    public class UserDefinedFunctionNodeViewModel : ScriptNodeViewModel<CosmosUserDefinedFunction>
     {
-        public UserDefinedFunctionViewModel(
-            ContainerViewModel container,
+        public UserDefinedFunctionNodeViewModel(
+            ContainerNodeViewModel container,
             NonLeafTreeNodeViewModel parent,
             CosmosUserDefinedFunction udf,
             ScriptCommands<CosmosUserDefinedFunction> commands,

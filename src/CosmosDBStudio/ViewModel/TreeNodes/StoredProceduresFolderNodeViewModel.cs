@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class StoredProceduresFolderViewModel : ContainerScriptFolderViewModel
+    public class StoredProceduresFolderNodeViewModel : ScriptFolderNodeViewModel
     {
-        public StoredProceduresFolderViewModel(
-            ContainerViewModel container,
+        public StoredProceduresFolderNodeViewModel(
+            ContainerNodeViewModel container,
             ICosmosAccountManager accountManager,
             ScriptCommands<CosmosStoredProcedure> commands,
             IViewModelFactory viewModelFactory)

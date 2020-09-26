@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class TriggerViewModel : ContainerScriptViewModel<CosmosTrigger>
+    public class TriggerNodeViewModel : ScriptNodeViewModel<CosmosTrigger>
     {
-        public TriggerViewModel(
-            ContainerViewModel container,
+        public TriggerNodeViewModel(
+            ContainerNodeViewModel container,
             NonLeafTreeNodeViewModel parent,
             CosmosTrigger trigger,
             ScriptCommands<CosmosTrigger> commands,

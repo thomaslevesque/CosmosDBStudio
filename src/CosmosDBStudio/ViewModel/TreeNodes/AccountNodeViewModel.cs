@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class AccountViewModel : NonLeafTreeNodeViewModel
+    public class AccountNodeViewModel : NonLeafTreeNodeViewModel
     {
         private readonly CosmosAccount _account;
         private readonly ICosmosAccountManager _accountManager;
         private readonly IViewModelFactory _viewModelFactory;
 
-        public AccountViewModel(
+        public AccountNodeViewModel(
             CosmosAccount account,
-            AccountFolderViewModel? parent,
+            AccountFolderNodeViewModel? parent,
             AccountCommands accountCommands,
             DatabaseCommands databaseCommands,
             ICosmosAccountManager accountManager,

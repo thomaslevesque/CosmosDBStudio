@@ -67,7 +67,7 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _selectedItem, value)
                 .AndExecute(() =>
                 {
-                    var container = SelectedItem as ContainerViewModel;
+                    var container = SelectedItem as ContainerNodeViewModel;
                     _messenger.Publish(new ExplorerSelectedContainerChangedMessage(container));
                 });
         }
@@ -78,14 +78,14 @@ namespace CosmosDBStudio.ViewModel
             LoadAccounts();
         }
 
-        private AccountFolderViewModel? GetFolder(string folder, bool create)
+        private AccountFolderNodeViewModel? GetFolder(string folder, bool create)
         {
             folder = folder.Trim('/');
             if (string.IsNullOrEmpty(folder))
                 return null;
 
             var parts = folder.Trim('/').Split('/');
-            AccountFolderViewModel? currentFolderVM = null;
+            AccountFolderNodeViewModel? currentFolderVM = null;
             string currentPath = "";
             foreach (var name in parts)
             {
@@ -93,16 +93,16 @@ namespace CosmosDBStudio.ViewModel
                     ? name
                     : currentPath + "/" + name;
 
-                AccountFolderViewModel? nextFolderVM = null;
+                AccountFolderNodeViewModel? nextFolderVM = null;
                 if (currentFolderVM is null)
                 {
-                    nextFolderVM = RootNodes.OfType<AccountFolderViewModel>().FirstOrDefault(f => f.FullPath == currentPath);
+                    nextFolderVM = RootNodes.OfType<AccountFolderNodeViewModel>().FirstOrDefault(f => f.FullPath == currentPath);
                 }
                 else
                 {
                     // Known to be synchronous for folders
                     currentFolderVM.EnsureChildrenLoadedAsync().Wait();
-                    nextFolderVM = currentFolderVM.Children.OfType<AccountFolderViewModel>().FirstOrDefault(f => f.FullPath == currentPath);
+                    nextFolderVM = currentFolderVM.Children.OfType<AccountFolderNodeViewModel>().FirstOrDefault(f => f.FullPath == currentPath);
                 }
 
                 if (nextFolderVM is null)
@@ -145,7 +145,7 @@ namespace CosmosDBStudio.ViewModel
             var folderVm = GetFolder(message.Account.Folder, create: false);
             if (folderVm is null)
             {
-                var vm = RootNodes.OfType<AccountViewModel>().FirstOrDefault(vm => vm.Id == message.Account.Id);
+                var vm = RootNodes.OfType<AccountNodeViewModel>().FirstOrDefault(vm => vm.Id == message.Account.Id);
                 if (vm != null)
                     RootNodes.Remove(vm);
             }

@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class AccountFolderViewModel : NonLeafTreeNodeViewModel
+    public class AccountFolderNodeViewModel : NonLeafTreeNodeViewModel
     {
         private readonly CosmosAccountFolder _folder;
         private readonly AccountCommands _accountCommands;
         private readonly IAccountDirectory _accountDirectory;
         private readonly IViewModelFactory _viewModelFactory;
 
-        public AccountFolderViewModel(
+        public AccountFolderNodeViewModel(
             CosmosAccountFolder folder,
-            AccountFolderViewModel? parent,
+            AccountFolderNodeViewModel? parent,
             AccountCommands accountCommands,
             IAccountDirectory accountDirectory,
             IViewModelFactory viewModelFactory)

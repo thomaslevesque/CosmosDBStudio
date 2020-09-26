@@ -8,17 +8,17 @@ using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public abstract class ContainerScriptViewModel : TreeNodeViewModel
+    public abstract class ScriptNodeViewModel : TreeNodeViewModel
     {
     }
 
-    public abstract class ContainerScriptViewModel<TScript> : ContainerScriptViewModel
+    public abstract class ScriptNodeViewModel<TScript> : ScriptNodeViewModel
         where TScript : ICosmosScript, new()
     {
         private readonly ScriptCommands<TScript> _commands;
 
-        protected ContainerScriptViewModel(
-            ContainerViewModel container,
+        protected ScriptNodeViewModel(
+            ContainerNodeViewModel container,
             NonLeafTreeNodeViewModel parent,
             TScript script,
             ScriptCommands<TScript> commands,
@@ -43,7 +43,7 @@ namespace CosmosDBStudio.ViewModel
 
         public override string Text => Script.Id;
         public override NonLeafTreeNodeViewModel? Parent { get; }
-        public ContainerViewModel Container { get; }
+        public ContainerNodeViewModel Container { get; }
 
         public override IEnumerable<CommandViewModel> Commands { get; }
 

@@ -36,8 +36,8 @@ namespace CosmosDBStudio.Commands
         {
             string folder = parent switch
             {
-                AccountFolderViewModel f => f.FullPath,
-                AccountViewModel a => (a.Parent as AccountFolderViewModel)?.FullPath ?? string.Empty,
+                AccountFolderNodeViewModel f => f.FullPath,
+                AccountNodeViewModel a => (a.Parent as AccountFolderNodeViewModel)?.FullPath ?? string.Empty,
                 _ => string.Empty
             };
 
@@ -63,17 +63,17 @@ namespace CosmosDBStudio.Commands
 
         private bool CanAddAccount(TreeNodeViewModel? parent) =>
             parent is null ||
-            parent is AccountFolderViewModel ||
-            parent is AccountViewModel;
+            parent is AccountFolderNodeViewModel ||
+            parent is AccountNodeViewModel;
 
         #endregion
 
         #region Edit
 
-        private DelegateCommand<AccountViewModel>? _editCommand;
-        public ICommand EditCommand => _editCommand ??= new DelegateCommand<AccountViewModel>(EditAccount);
+        private DelegateCommand<AccountNodeViewModel>? _editCommand;
+        public ICommand EditCommand => _editCommand ??= new DelegateCommand<AccountNodeViewModel>(EditAccount);
 
-        private void EditAccount(AccountViewModel accountVm)
+        private void EditAccount(AccountNodeViewModel accountVm)
         {
             if (!_accountDirectory.TryGetById(accountVm.Id, out var account))
                 return;
@@ -99,10 +99,10 @@ namespace CosmosDBStudio.Commands
 
         #region Remove
 
-        private DelegateCommand<AccountViewModel>? _removeCommand;
-        public ICommand RemoveCommand => _removeCommand ??= new DelegateCommand<AccountViewModel>(Remove);
+        private DelegateCommand<AccountNodeViewModel>? _removeCommand;
+        public ICommand RemoveCommand => _removeCommand ??= new DelegateCommand<AccountNodeViewModel>(Remove);
 
-        private void Remove(AccountViewModel accountVm)
+        private void Remove(AccountNodeViewModel accountVm)
         {
             if (!_dialogService.Confirm($"Are you sure you want to remove account '{accountVm.Name}'?"))
                 return;
