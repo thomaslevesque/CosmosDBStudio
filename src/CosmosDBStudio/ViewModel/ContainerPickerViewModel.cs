@@ -38,8 +38,8 @@ namespace CosmosDBStudio.ViewModel
             {
                 var vm = node switch
                 {
-                    CosmosAccount account => (TreeNodeViewModel)_viewModelFactory.CreateAccountViewModel(account, null),
-                    CosmosAccountFolder folder => (TreeNodeViewModel)_viewModelFactory.CreateAccountFolderViewModel(folder, null),
+                    CosmosAccount account => (TreeNodeViewModel)_viewModelFactory.CreateAccountNode(account, null),
+                    CosmosAccountFolder folder => (TreeNodeViewModel)_viewModelFactory.CreateAccountFolderNode(folder, null),
                     _ => throw new Exception("Invalid node type")
                 };
 

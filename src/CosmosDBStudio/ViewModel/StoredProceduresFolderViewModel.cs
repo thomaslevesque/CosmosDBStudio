@@ -31,7 +31,7 @@ namespace CosmosDBStudio.ViewModel
             var database = Container.Database;
             var account = database.Account;
             var storedProcedures = await AccountManager.GetStoredProceduresAsync(account.Id, database.Id, Container.Id);
-            return storedProcedures.Select(sp => ViewModelFactory.CreateStoredProcedure(Container, this, sp));
+            return storedProcedures.Select(sp => ViewModelFactory.CreateStoredProcedureNode(Container, this, sp));
         }
     }
 }

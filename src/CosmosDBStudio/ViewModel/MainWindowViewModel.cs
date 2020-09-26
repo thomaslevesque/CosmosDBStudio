@@ -37,7 +37,7 @@ namespace CosmosDBStudio.ViewModel
             _queryPersistenceService = queryPersistenceService;
             _accountCommands = accountCommands;
             Tabs = new ObservableCollection<TabViewModelBase>();
-            Accounts = _viewModelFactory.CreateAccountsViewModel();
+            Accounts = _viewModelFactory.CreateAccounts();
 
             _messenger.Subscribe(this).To<NewQuerySheetMessage>((vm, message) => vm.OnNewQuerySheetMessage(message));
             _messenger.Subscribe(this).To<OpenScriptMessage<CosmosStoredProcedure>>((vm, message) => vm.OnOpenScriptMessage(message, _viewModelFactory.CreateStoredProcedureEditor));
@@ -59,7 +59,7 @@ namespace CosmosDBStudio.ViewModel
                     message.DatabaseId,
                     message.ContainerId,
                     default);
-                var vm = _viewModelFactory.CreateQuerySheetViewModel(querySheet, null, context);
+                var vm = _viewModelFactory.CreateQuerySheet(querySheet, null, context);
                 vm.CloseRequested += OnTabCloseRequested;
                 Tabs.Add(vm);
                 CurrentTab = vm;
@@ -233,7 +233,7 @@ namespace CosmosDBStudio.ViewModel
             }
 
             var querySheet = _queryPersistenceService.Load(path);
-            var vm = _viewModelFactory.CreateQuerySheetViewModel(
+            var vm = _viewModelFactory.CreateQuerySheet(
                 querySheet,
                 path,
                 null);
@@ -297,7 +297,7 @@ namespace CosmosDBStudio.ViewModel
                 }
 
                 var querySheet = _queryPersistenceService.Load(path);
-                var vm = _viewModelFactory.CreateQuerySheetViewModel(
+                var vm = _viewModelFactory.CreateQuerySheet(
                     querySheet,
                     sheet.SavedPath,
                     null);

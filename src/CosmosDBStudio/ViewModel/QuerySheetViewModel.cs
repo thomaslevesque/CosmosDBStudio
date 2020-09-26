@@ -49,7 +49,7 @@ namespace CosmosDBStudio.ViewModel
                 ? "Untitled " + (++UntitledCounter)
                 : Path.GetFileNameWithoutExtension(path);
             _text = querySheet.Text;
-            _result = _viewModelFactory.CreateNotRunQueryResultViewModel();
+            _result = _viewModelFactory.CreateNotRunQueryResult();
 
             PartitionKey = querySheet.PartitionKey;
             PartitionKeyMRU = new ObservableCollection<string>();
@@ -245,7 +245,7 @@ namespace CosmosDBStudio.ViewModel
                 IsQueryRunning = false;
             }
 
-            Result = _viewModelFactory.CreateQueryResultViewModel(result, containerContext);
+            Result = _viewModelFactory.CreateQueryResult(result, containerContext);
         }
 
         private static readonly string QuerySeparator = Environment.NewLine + Environment.NewLine;
@@ -315,7 +315,7 @@ namespace CosmosDBStudio.ViewModel
             var document = new JObject();
             document["id"] = Guid.NewGuid().ToString();
             SetPartitionKey(document, PartitionKey);
-            var vm = _viewModelFactory.CreateDocumentEditorViewModel(document, true, containerContext);
+            var vm = _viewModelFactory.CreateDocumentEditor(document, true, containerContext);
             _dialogService.ShowDialog(vm);
         }
 
@@ -453,7 +453,7 @@ namespace CosmosDBStudio.ViewModel
 
         private async Task ChangeContainerAsync()
         {
-            var vm = _viewModelFactory.CreateContainerPickerViewModel();
+            var vm = _viewModelFactory.CreateContainerPicker();
             _dialogService.ShowDialog(vm);
             if (vm.SelectedContainer is ContainerViewModel selected)
             {

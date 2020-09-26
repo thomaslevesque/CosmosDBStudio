@@ -42,7 +42,7 @@ namespace CosmosDBStudio.ViewModel
             {
                 _items = new ObservableCollection<ResultItemViewModel>(
                     result.Items
-                        .Select(item => _viewModelFactory.CreateDocumentViewModel(item, _containerContext)));
+                        .Select(item => _viewModelFactory.CreateDocument(item, _containerContext)));
                 _text = new JArray(result.Items).ToString(Formatting.Indented);
                 IsJson = true;
                 SelectedTab = ResultTab.Items;
@@ -123,7 +123,7 @@ namespace CosmosDBStudio.ViewModel
 
                 var index = _items.IndexOf(item);
                 SelectedItem = null;
-                var newItem = _viewModelFactory.CreateDocumentViewModel(refreshedDocument, _containerContext);
+                var newItem = _viewModelFactory.CreateDocument(refreshedDocument, _containerContext);
                 _items[index] = newItem;
                 SelectedItem = newItem;
             }
@@ -173,14 +173,14 @@ namespace CosmosDBStudio.ViewModel
         {
             if (SelectedItem is DocumentViewModel item && item.GetDocument() is JObject document)
             {
-                var vm = _viewModelFactory.CreateDocumentEditorViewModel(document, false, _containerContext);
+                var vm = _viewModelFactory.CreateDocumentEditor(document, false, _containerContext);
                 _dialogService.ShowDialog(vm);
                 var modifiedDocument = vm.GetDocument();
                 if (modifiedDocument != document && modifiedDocument != null)
                 {
                     var index = _items.IndexOf(item);
                     SelectedItem = null;
-                    var newItem = _viewModelFactory.CreateDocumentViewModel(modifiedDocument, _containerContext);
+                    var newItem = _viewModelFactory.CreateDocument(modifiedDocument, _containerContext);
                     _items[index] = newItem;
                     SelectedItem = newItem;
                 }
@@ -206,7 +206,7 @@ namespace CosmosDBStudio.ViewModel
                     _continuationToken = result.ContinuationToken;
                     foreach (var item in result.Items)
                     {
-                        _items.Add(_viewModelFactory.CreateDocumentViewModel(item, _containerContext));
+                        _items.Add(_viewModelFactory.CreateDocument(item, _containerContext));
                     }
 
                     var tokens = _items.Cast<DocumentViewModel>().Select(d => d.GetDocument());

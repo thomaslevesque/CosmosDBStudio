@@ -31,7 +31,7 @@ namespace CosmosDBStudio.ViewModel
             var database = Container.Database;
             var account = database.Account;
             var functions = await AccountManager.GetUserDefinedFunctionsAsync(account.Id, database.Id, Container.Id);
-            return functions.Select(udf => ViewModelFactory.CreateUserDefinedFunction(Container, this, udf));
+            return functions.Select(udf => ViewModelFactory.CreateUserDefinedFunctionNode(Container, this, udf));
         }
     }
 }

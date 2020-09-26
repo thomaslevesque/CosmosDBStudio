@@ -49,8 +49,8 @@ namespace CosmosDBStudio.ViewModel
             {
                 var vm = node switch
                 {
-                    CosmosAccount account => (TreeNodeViewModel)_viewModelFactory.CreateAccountViewModel(account, null),
-                    CosmosAccountFolder folder => (TreeNodeViewModel)_viewModelFactory.CreateAccountFolderViewModel(folder, null),
+                    CosmosAccount account => (TreeNodeViewModel)_viewModelFactory.CreateAccountNode(account, null),
+                    CosmosAccountFolder folder => (TreeNodeViewModel)_viewModelFactory.CreateAccountFolderNode(folder, null),
                     _ => throw new Exception("Invalid node type")
                 };
 
@@ -111,7 +111,7 @@ namespace CosmosDBStudio.ViewModel
                         return null;
 
                     var newFolder = new CosmosAccountFolder(currentPath);
-                    nextFolderVM = _viewModelFactory.CreateAccountFolderViewModel(newFolder, currentFolderVM);
+                    nextFolderVM = _viewModelFactory.CreateAccountFolderNode(newFolder, currentFolderVM);
                 }
 
                 currentFolderVM = nextFolderVM;
@@ -123,7 +123,7 @@ namespace CosmosDBStudio.ViewModel
         private void OnAccountAdded(AccountAddedMessage message)
         {
             var folderVM = GetFolder(message.Account.Folder, create: true);
-            var vm = _viewModelFactory.CreateAccountViewModel(message.Account, folderVM);
+            var vm = _viewModelFactory.CreateAccountNode(message.Account, folderVM);
 
             if (folderVM is null)
                 RootNodes.Add(vm);

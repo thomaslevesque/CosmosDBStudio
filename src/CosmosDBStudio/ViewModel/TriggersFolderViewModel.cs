@@ -31,7 +31,7 @@ namespace CosmosDBStudio.ViewModel
             var database = Container.Database;
             var account = database.Account;
             var triggers = await AccountManager.GetTriggersAsync(account.Id, database.Id, Container.Id);
-            return triggers.Select(t => ViewModelFactory.CreateTrigger(Container, this, t));
+            return triggers.Select(t => ViewModelFactory.CreateTriggerNode(Container, this, t));
         }
     }
 }

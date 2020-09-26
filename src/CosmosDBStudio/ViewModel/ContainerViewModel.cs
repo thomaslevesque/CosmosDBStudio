@@ -53,9 +53,9 @@ namespace CosmosDBStudio.ViewModel
 
             IEnumerable<TreeNodeViewModel> GetChildren()
             {
-                yield return _viewModelFactory.CreateStoredProceduresFolder(this);
-                yield return _viewModelFactory.CreateUserDefinedFunctionsFolder(this);
-                yield return _viewModelFactory.CreateTriggersFolder(this);
+                yield return _viewModelFactory.CreateStoredProceduresFolderNode(this);
+                yield return _viewModelFactory.CreateUserDefinedFunctionsFolderNode(this);
+                yield return _viewModelFactory.CreateTriggersFolderNode(this);
             }
         }
     }

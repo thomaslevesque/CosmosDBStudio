@@ -35,7 +35,7 @@ namespace CosmosDBStudio.Commands
 
         private async Task CreateAsync(AccountViewModel accountVm)
         {
-            var dialog = _viewModelFactory.Value.CreateDatabaseEditorViewModel();
+            var dialog = _viewModelFactory.Value.CreateDatabaseEditor();
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 var database = new CosmosDatabase
@@ -61,7 +61,7 @@ namespace CosmosDBStudio.Commands
         private async Task EditAsync(DatabaseViewModel databaseVm)
         {
             var database = await _accountManager.GetDatabaseAsync(databaseVm.Account.Id, databaseVm.Id);
-            var dialog = _viewModelFactory.Value.CreateDatabaseEditorViewModel(database);
+            var dialog = _viewModelFactory.Value.CreateDatabaseEditor(database);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 database = dialog.GetDatabase();

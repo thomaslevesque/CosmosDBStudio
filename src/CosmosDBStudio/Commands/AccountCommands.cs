@@ -41,7 +41,7 @@ namespace CosmosDBStudio.Commands
                 _ => string.Empty
             };
 
-            var dialog = _viewModelFactory.Value.CreateAccountEditorViewModel();
+            var dialog = _viewModelFactory.Value.CreateAccountEditor();
             dialog.Folder = folder;
             if (_dialogService.ShowDialog(dialog) is true)
             {
@@ -79,7 +79,7 @@ namespace CosmosDBStudio.Commands
                 return;
 
             var oldAccount = account.Clone();
-            var dialog = _viewModelFactory.Value.CreateAccountEditorViewModel(account);
+            var dialog = _viewModelFactory.Value.CreateAccountEditor(account);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 account.Name = dialog.Name;

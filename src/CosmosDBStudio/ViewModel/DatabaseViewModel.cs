@@ -52,7 +52,7 @@ namespace CosmosDBStudio.ViewModel
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
             var containers = await _accountManager.GetContainersAsync(Account.Id, Id);
-            return containers.Select(id => _viewModelFactory.CreateContainerViewModel(this, id)).ToList();
+            return containers.Select(id => _viewModelFactory.CreateContainerNode(this, id)).ToList();
         }
 
         public override IEnumerable<CommandViewModel> Commands { get; }

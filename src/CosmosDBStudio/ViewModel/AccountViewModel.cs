@@ -60,7 +60,7 @@ namespace CosmosDBStudio.ViewModel
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
             var databases = await _accountManager.GetDatabasesAsync(_account.Id);
-            return databases.Select(id => _viewModelFactory.CreateDatabaseViewModel(this, id)).ToList();
+            return databases.Select(id => _viewModelFactory.CreateDatabaseNode(this, id)).ToList();
         }
 
         public override IEnumerable<CommandViewModel> Commands { get; }
