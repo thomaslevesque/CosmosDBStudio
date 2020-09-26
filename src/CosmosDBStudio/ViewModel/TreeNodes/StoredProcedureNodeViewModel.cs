@@ -8,24 +8,17 @@ namespace CosmosDBStudio.ViewModel
     public class StoredProcedureNodeViewModel : ScriptNodeViewModel<CosmosStoredProcedure>
     {
         public StoredProcedureNodeViewModel(
-            ContainerNodeViewModel container,
-            NonLeafTreeNodeViewModel parent,
+            IContainerContext context,
             CosmosStoredProcedure storedProcedure,
+            NonLeafTreeNodeViewModel parent,
             ScriptCommands<CosmosStoredProcedure> commands,
             IMessenger messenger)
-            : base(container, parent, storedProcedure, commands, messenger)
+            : base(storedProcedure, context, parent, commands, messenger)
         {
         }
 
         public override string Description => "stored procedure";
 
-        public override Task DeleteAsync(ICosmosAccountManager accountManager)
-        {
-            return accountManager.DeleteStoredProcedureAsync(
-                Container.Database.Account.Id,
-                Container.Database.Id,
-                Container.Id,
-                Script);
-        }
+        public override Task DeleteAsync() => Context.Scripts.DeleteStoredProcedureAsync(Script, default);
     }
 }

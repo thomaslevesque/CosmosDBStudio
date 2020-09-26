@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿using CosmosDBStudio.Model;
+using Microsoft.Azure.Cosmos;
 using System;
 using System.Collections.Concurrent;
 
@@ -6,40 +7,31 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class ClientPool : IClientPool
     {
-        private readonly IAccountDirectory _accountDirectory;
         private readonly ConcurrentDictionary<string, CosmosClient> _clients;
 
-        public ClientPool(IAccountDirectory accountDirectory)
+        public ClientPool()
         {
-            _accountDirectory = accountDirectory;
             _clients = new ConcurrentDictionary<string, CosmosClient>();
         }
 
-        public CosmosClient GetClientForAccount(string accountId)
+        public CosmosClient GetClientForAccount(CosmosAccount account)
         {
-            if (accountId is null) throw new ArgumentNullException(nameof(accountId));
+            if (account is null) throw new ArgumentNullException(nameof(account));
 
-            return _clients.GetOrAdd(accountId, CreateClient);
+            return _clients.GetOrAdd(account.Id, _ => CreateClient(account));
         }
 
-        public void RemoveClientForAccount(string accountId)
+        public void RemoveClientForAccount(CosmosAccount account)
         {
-            if (accountId is null) throw new ArgumentNullException(nameof(accountId));
+            if (account is null) throw new ArgumentNullException(nameof(account));
 
-            if (_clients.TryRemove(accountId, out var client))
+            if (_clients.TryRemove(account.Id, out var client))
                 client.Dispose();
         }
 
-        private CosmosClient CreateClient(string accountId)
+        private CosmosClient CreateClient(CosmosAccount account)
         {
-            if (_accountDirectory.TryGetById(accountId, out var account))
-            {
-                return new CosmosClient(
-                    account.Endpoint,
-                    account.Key);
-            }
-
-            throw new InvalidOperationException("Account not found");
+            return new CosmosClient(account.Endpoint, account.Key);
         }
     }
 }

@@ -8,24 +8,17 @@ namespace CosmosDBStudio.ViewModel
     public class TriggerNodeViewModel : ScriptNodeViewModel<CosmosTrigger>
     {
         public TriggerNodeViewModel(
-            ContainerNodeViewModel container,
-            NonLeafTreeNodeViewModel parent,
             CosmosTrigger trigger,
+            IContainerContext context,
+            NonLeafTreeNodeViewModel parent,
             ScriptCommands<CosmosTrigger> commands,
             IMessenger messenger)
-            : base(container, parent, trigger, commands, messenger)
+            : base(trigger, context, parent, commands, messenger)
         {
         }
 
         public override string Description => "trigger";
 
-        public override Task DeleteAsync(ICosmosAccountManager accountManager)
-        {
-            return accountManager.DeleteTriggerAsync(
-                Container.Database.Account.Id,
-                Container.Database.Id,
-                Container.Id,
-                Script);
-        }
+        public override Task DeleteAsync() => Context.Scripts.DeleteTriggerAsync(Script, default);
     }
 }

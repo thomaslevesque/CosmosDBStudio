@@ -1,4 +1,5 @@
 ﻿using CosmosDBStudio.Commands;
+using CosmosDBStudio.Services;
 using EssentialMVVM;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,11 +18,13 @@ namespace CosmosDBStudio.ViewModel
         public ContainerNodeViewModel(
             DatabaseNodeViewModel database,
             string id,
+            IContainerContext context,
             ContainerCommands containerCommands,
             IViewModelFactory viewModelFactory)
         {
             Database = database;
             Id = id;
+            Context = context;
             _containerCommands = containerCommands;
             _viewModelFactory = viewModelFactory;
             Commands = new[]
@@ -47,15 +50,17 @@ namespace CosmosDBStudio.ViewModel
 
         public string Path => $"{Database.Account.Name}/{Database.Id}/{Id}";
 
+        public IContainerContext Context { get; }
+
         protected override Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
             return Task.FromResult(GetChildren());
 
             IEnumerable<TreeNodeViewModel> GetChildren()
             {
-                yield return _viewModelFactory.CreateStoredProceduresFolderNode(this);
-                yield return _viewModelFactory.CreateUserDefinedFunctionsFolderNode(this);
-                yield return _viewModelFactory.CreateTriggersFolderNode(this);
+                yield return _viewModelFactory.CreateStoredProceduresFolderNode(Context, this);
+                yield return _viewModelFactory.CreateUserDefinedFunctionsFolderNode(Context, this);
+                yield return _viewModelFactory.CreateTriggersFolderNode(Context, this);
             }
         }
     }

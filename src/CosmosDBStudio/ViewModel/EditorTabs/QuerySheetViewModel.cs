@@ -22,7 +22,6 @@ namespace CosmosDBStudio.ViewModel
 
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
-        private readonly IContainerContextFactory _containerContextFactory;
         private readonly IMessenger _messenger;
 
         private IContainerContext? _containerContext;
@@ -34,7 +33,6 @@ namespace CosmosDBStudio.ViewModel
             IContainerContext? containerContext,
             IViewModelFactory viewModelFactory,
             IDialogService dialogService,
-            IContainerContextFactory containerContextFactory,
             IMessenger messenger,
             IQueryPersistenceService queryPersistenceService)
         {
@@ -42,7 +40,6 @@ namespace CosmosDBStudio.ViewModel
             _queryPersistenceService = queryPersistenceService;
             _viewModelFactory = viewModelFactory;
             _dialogService = dialogService;
-            _containerContextFactory = containerContextFactory;
             _messenger = messenger;
             _filePath = path;
             Title = string.IsNullOrEmpty(path)
@@ -448,27 +445,26 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
-        private AsyncDelegateCommand? _changeContainerCommand;
-        public ICommand ChangeContainerCommand => _changeContainerCommand ??= new AsyncDelegateCommand(ChangeContainerAsync);
+        private DelegateCommand? _changeContainerCommand;
+        public ICommand ChangeContainerCommand => _changeContainerCommand ??= new DelegateCommand(ChangeContainer);
 
-        private async Task ChangeContainerAsync()
+        private void ChangeContainer()
         {
             var vm = _viewModelFactory.CreateContainerPicker();
             _dialogService.ShowDialog(vm);
             if (vm.SelectedContainer is ContainerNodeViewModel selected)
             {
-                await SetContainerAsync(selected);
+                SetContainer(selected);
             }
         }
 
-        private async Task SetContainerAsync(ContainerNodeViewModel container)
+        private void SetContainer(ContainerNodeViewModel container)
         {
             var accountId = container.Database.Account.Id;
             var databaseId = container.Database.Id;
             var containerId = container.Id;
-            var newContext = await _containerContextFactory.CreateAsync(accountId, databaseId, containerId, default);
 
-            _containerContext = newContext;
+            _containerContext = container.Context;
             _executeCommand?.RaiseCanExecuteChanged();
             _newDocumentCommand?.RaiseCanExecuteChanged();
             OnPropertyChanged(null);
@@ -506,15 +502,15 @@ namespace CosmosDBStudio.ViewModel
             ExplorerSelectedContainer = message.Container;
         }
 
-        private AsyncDelegateCommand? _switchToExplorerSelectedContainerCommand;
+        private DelegateCommand? _switchToExplorerSelectedContainerCommand;
         public ICommand SwitchToExplorerSelectedContainerCommand => _switchToExplorerSelectedContainerCommand
-            ??= new AsyncDelegateCommand(SwitchToExplorerSelectedContainerAsync, () => CanSwitchToExplorerSelectedContainer);
+            ??= new DelegateCommand(SwitchToExplorerSelectedContainer, () => CanSwitchToExplorerSelectedContainer);
 
-        private async Task SwitchToExplorerSelectedContainerAsync()
+        private void SwitchToExplorerSelectedContainer()
         {
             if (ExplorerSelectedContainer is ContainerNodeViewModel container)
             {
-                await SetContainerAsync(container);
+                SetContainer(container);
             }
         }
 

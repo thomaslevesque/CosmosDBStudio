@@ -1,6 +1,7 @@
 ﻿using CosmosDBStudio.Commands;
 using CosmosDBStudio.Messages;
 using CosmosDBStudio.Services;
+using Microsoft.Azure.Cosmos.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,21 +10,20 @@ namespace CosmosDBStudio.ViewModel
 {
     public class DatabaseNodeViewModel : NonLeafTreeNodeViewModel
     {
-        private readonly ICosmosAccountManager _accountManager;
         private readonly IViewModelFactory _viewModelFactory;
 
         public DatabaseNodeViewModel(
             AccountNodeViewModel account,
             string id,
+            IDatabaseContext context,
             DatabaseCommands databaseCommands,
             ContainerCommands containerCommands,
-            ICosmosAccountManager accountManager,
             IViewModelFactory viewModelFactory,
             IMessenger messenger)
         {
             Account = account;
             Id = id;
-            _accountManager = accountManager;
+            Context = context;
             _viewModelFactory = viewModelFactory;
 
             Commands = new[]
@@ -43,6 +43,8 @@ namespace CosmosDBStudio.ViewModel
 
         public AccountNodeViewModel Account { get; }
 
+        public IDatabaseContext Context { get; }
+
         public string Id { get; }
 
         public override string Text => Id;
@@ -51,15 +53,21 @@ namespace CosmosDBStudio.ViewModel
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var containers = await _accountManager.GetContainersAsync(Account.Id, Id);
-            return containers.Select(id => _viewModelFactory.CreateContainerNode(this, id)).ToList();
+            var containers = await Context.Containers.GetContainerNamesAsync(default);
+            var vms = new List<ContainerNodeViewModel>();
+            foreach (var id in containers)
+            {
+                var context = await Context.GetContainerContextAsync(id, default);
+                vms.Add(_viewModelFactory.CreateContainerNode(this, id, context));
+            }
+            return vms;
         }
 
         public override IEnumerable<CommandViewModel> Commands { get; }
 
         private void OnContainerCreated(ContainerCreatedMessage message)
         {
-            if ((message.AccountId, message.DatabaseId) != (Account.Id, Id))
+            if ((message.Context.AccountId, message.Context.DatabaseId) != (Account.Id, Id))
                 return;
 
             ReloadChildren(); // TODO: improve this
@@ -67,7 +75,7 @@ namespace CosmosDBStudio.ViewModel
 
         private void OnContainerDeleted(ContainerDeletedMessage message)
         {
-            if ((message.AccountId, message.DatabaseId) != (Account.Id, Id))
+            if ((message.Context.AccountId, message.Context.DatabaseId) != (Account.Id, Id))
                 return;
 
             ReloadChildren(); // TODO: improve this

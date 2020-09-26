@@ -10,11 +10,11 @@ namespace CosmosDBStudio.ViewModel
     public class StoredProceduresFolderNodeViewModel : ScriptFolderNodeViewModel
     {
         public StoredProceduresFolderNodeViewModel(
-            ContainerNodeViewModel container,
-            ICosmosAccountManager accountManager,
+            IContainerContext context,
+            NonLeafTreeNodeViewModel parent,
             ScriptCommands<CosmosStoredProcedure> commands,
             IViewModelFactory viewModelFactory)
-            : base(container, "Stored procedures", accountManager, viewModelFactory)
+            : base("Stored procedures", context, parent, viewModelFactory)
         {
             Commands = new[]
             {
@@ -28,10 +28,8 @@ namespace CosmosDBStudio.ViewModel
 
         protected async override Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var database = Container.Database;
-            var account = database.Account;
-            var storedProcedures = await AccountManager.GetStoredProceduresAsync(account.Id, database.Id, Container.Id);
-            return storedProcedures.Select(sp => ViewModelFactory.CreateStoredProcedureNode(Container, this, sp));
+            var storedProcedures = await Context.Scripts.GetStoredProceduresAsync(default);
+            return storedProcedures.Select(sp => ViewModelFactory.CreateStoredProcedureNode(sp, Context, this));
         }
     }
 }

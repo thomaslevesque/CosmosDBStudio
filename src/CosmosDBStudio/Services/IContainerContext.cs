@@ -2,6 +2,7 @@
 {
     public interface IContainerContext
     {
+        IDatabaseContext DatabaseContext { get; }
         string AccountId { get; }
         string AccountName { get; }
         string DatabaseId { get; }

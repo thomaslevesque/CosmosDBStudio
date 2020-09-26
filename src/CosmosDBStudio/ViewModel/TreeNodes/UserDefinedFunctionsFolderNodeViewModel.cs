@@ -10,11 +10,11 @@ namespace CosmosDBStudio.ViewModel
     public class UserDefinedFunctionsFolderNodeViewModel : ScriptFolderNodeViewModel
     {
         public UserDefinedFunctionsFolderNodeViewModel(
-            ContainerNodeViewModel container,
-            ICosmosAccountManager accountManager,
+            IContainerContext containerContext,
+            NonLeafTreeNodeViewModel parent,
             ScriptCommands<CosmosUserDefinedFunction> commands,
             IViewModelFactory viewModelFactory)
-            : base(container, "User-defined functions", accountManager, viewModelFactory)
+            : base("User-defined functions", containerContext, parent, viewModelFactory)
         {
             Commands = new[]
             {
@@ -28,10 +28,8 @@ namespace CosmosDBStudio.ViewModel
 
         protected async override Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var database = Container.Database;
-            var account = database.Account;
-            var functions = await AccountManager.GetUserDefinedFunctionsAsync(account.Id, database.Id, Container.Id);
-            return functions.Select(udf => ViewModelFactory.CreateUserDefinedFunctionNode(Container, this, udf));
+            var functions = await Context.Scripts.GetUserDefinedFunctionsAsync(default);
+            return functions.Select(udf => ViewModelFactory.CreateUserDefinedFunctionNode(udf, Context, this));
         }
     }
 }

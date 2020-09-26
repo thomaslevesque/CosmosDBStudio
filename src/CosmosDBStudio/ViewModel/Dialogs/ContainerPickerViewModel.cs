@@ -10,13 +10,16 @@ namespace CosmosDBStudio.ViewModel
 {
     public class ContainerPickerViewModel : DialogViewModelBase
     {
+        private readonly IAccountContextFactory _accountContextFactory;
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IAccountDirectory _accountDirectory;
 
         public ContainerPickerViewModel(
+            IAccountContextFactory accountContextFactory,
             IViewModelFactory viewModelFactory,
             IAccountDirectory accountDirectory)
         {
+            _accountContextFactory = accountContextFactory;
             _viewModelFactory = viewModelFactory;
             _accountDirectory = accountDirectory;
             AddCancelButton();
@@ -38,7 +41,11 @@ namespace CosmosDBStudio.ViewModel
             {
                 var vm = node switch
                 {
-                    CosmosAccount account => (TreeNodeViewModel)_viewModelFactory.CreateAccountNode(account, null),
+                    CosmosAccount account =>
+                        (TreeNodeViewModel)_viewModelFactory.CreateAccountNode(
+                            account,
+                            _accountContextFactory.Create(account),
+                            null),
                     CosmosAccountFolder folder => (TreeNodeViewModel)_viewModelFactory.CreateAccountFolderNode(folder, null),
                     _ => throw new Exception("Invalid node type")
                 };

@@ -10,22 +10,21 @@ namespace CosmosDBStudio.ViewModel
 {
     public class AccountNodeViewModel : NonLeafTreeNodeViewModel
     {
-        private readonly CosmosAccount _account;
-        private readonly ICosmosAccountManager _accountManager;
+        public readonly CosmosAccount Account;
         private readonly IViewModelFactory _viewModelFactory;
 
         public AccountNodeViewModel(
             CosmosAccount account,
+            IAccountContext context,
             AccountFolderNodeViewModel? parent,
             AccountCommands accountCommands,
             DatabaseCommands databaseCommands,
-            ICosmosAccountManager accountManager,
             IViewModelFactory viewModelFactory,
             IMessenger messenger)
         {
-            _account = account;
+            Account = account;
+            Context = context;
             Parent = parent;
-            _accountManager = accountManager;
             _viewModelFactory = viewModelFactory;
             _name = account.Name;
 
@@ -44,7 +43,7 @@ namespace CosmosDBStudio.ViewModel
             messenger.Subscribe(this).To<DatabaseDeletedMessage>((vm, message) => vm.OnDatabaseDeleted(message));
         }
 
-        public string Id => _account.Id;
+        public string Id => Account.Id;
 
         private string _name;
         public string Name
@@ -59,15 +58,19 @@ namespace CosmosDBStudio.ViewModel
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var databases = await _accountManager.GetDatabasesAsync(_account.Id);
-            return databases.Select(id => _viewModelFactory.CreateDatabaseNode(this, id)).ToList();
+            var databases = await Context.Databases.GetDatabaseNamesAsync(default);
+            return databases
+                .Select(id => _viewModelFactory.CreateDatabaseNode(this, id, Context.GetDatabaseContext(id)))
+                .ToList();
         }
 
         public override IEnumerable<CommandViewModel> Commands { get; }
 
+        public IAccountContext Context { get; }
+
         private void OnDatabaseCreated(DatabaseCreatedMessage message)
         {
-            if (message.AccountId != Id)
+            if (message.Context.AccountId != Id)
                 return;
 
             ReloadChildren(); // TODO: improve this
@@ -75,7 +78,7 @@ namespace CosmosDBStudio.ViewModel
 
         private void OnDatabaseDeleted(DatabaseDeletedMessage message)
         {
-            if (message.AccountId != Id)
+            if (message.Context.AccountId != Id)
                 return;
 
             ReloadChildren(); // TODO: improve this

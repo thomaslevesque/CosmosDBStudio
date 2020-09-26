@@ -6,16 +6,15 @@ namespace CosmosDBStudio.Services.Implementation
     public class ContainerContext : IContainerContext
     {
         private readonly Container _container;
-        private readonly CosmosAccount _account;
         private readonly Database _database;
 
         public ContainerContext(
-            CosmosAccount account,
+            IDatabaseContext databaseContext,
             Database database,
             Container container,
             string partitionKeyPath)
         {
-            _account = account;
+            DatabaseContext = databaseContext;
             _database = database;
             _container = container;
             PartitionKeyPath = partitionKeyPath;
@@ -27,9 +26,11 @@ namespace CosmosDBStudio.Services.Implementation
             Scripts = new ScriptService(container);
         }
 
-        public string AccountId => _account.Id;
+        public IDatabaseContext DatabaseContext { get; }
 
-        public string AccountName => _account.Name;
+        public string AccountId => DatabaseContext.AccountId;
+
+        public string AccountName => DatabaseContext.AccountName;
 
         public string DatabaseId => _database.Id;
 

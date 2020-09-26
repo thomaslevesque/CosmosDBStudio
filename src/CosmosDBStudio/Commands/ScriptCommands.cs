@@ -14,13 +14,11 @@ namespace CosmosDBStudio.Commands
     {
         private readonly IMessenger _messenger;
         private readonly IDialogService _dialogService;
-        private readonly ICosmosAccountManager _accountManager;
 
-        public ScriptCommands(IMessenger messenger, IDialogService dialogService, ICosmosAccountManager accountManager)
+        public ScriptCommands(IMessenger messenger, IDialogService dialogService)
         {
             _messenger = messenger;
             _dialogService = dialogService;
-            _accountManager = accountManager;
         }
 
         #region Open
@@ -30,16 +28,12 @@ namespace CosmosDBStudio.Commands
 
         private void Open(ScriptNodeViewModel<TScript> scriptVm)
         {
-            _messenger.Publish(new OpenScriptMessage<TScript>(
-                scriptVm.Container.Database.Account.Id,
-                scriptVm.Container.Database.Id,
-                scriptVm.Container.Id,
-                scriptVm.Script));
+            _messenger.Publish(new OpenScriptMessage<TScript>(scriptVm.Context, scriptVm.Script));
         }
 
         #endregion
 
-        #region
+        #region Create
 
         private DelegateCommand<ScriptFolderNodeViewModel>? _createCommand;
         public ICommand CreateCommand => _createCommand ??= new DelegateCommand<ScriptFolderNodeViewModel>(Create);
@@ -64,12 +58,7 @@ namespace CosmosDBStudio.Commands
     
 }}";
 
-            var container = parent.Container;
-            _messenger.Publish(new OpenScriptMessage<TScript>(
-                container.Database.Account.Id,
-                container.Database.Id,
-                container.Id,
-                script));
+            _messenger.Publish(new OpenScriptMessage<TScript>(parent.Context, script));
         }
 
         #endregion
@@ -84,7 +73,7 @@ namespace CosmosDBStudio.Commands
             if (!_dialogService.Confirm($"Are you sure you want to delete {scriptVm.Description} '{scriptVm.Script.Id}'?"))
                 return;
 
-            await scriptVm.DeleteAsync(_accountManager);
+            await scriptVm.DeleteAsync();
 
             scriptVm.Parent?.ReloadChildren();
         }

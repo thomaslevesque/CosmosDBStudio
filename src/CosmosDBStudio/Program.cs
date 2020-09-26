@@ -31,9 +31,8 @@ namespace CosmosDBStudio
         {
             services.AddSingleton<IAccountDirectory, AccountDirectory>();
             services.AddSingleton<IClientPool, ClientPool>();
-            services.AddSingleton<ICosmosAccountManager, CosmosAccountManager>();
-            services.AddSingleton<IContainerContextFactory, ContainerContextFactory>();
             services.AddSingleton<IQueryPersistenceService, QueryPersistenceService>();
+            services.AddSingleton<IAccountContextFactory, AccountContextFactory>();
 
             services.AddSingleton<IViewModelFactory>(ViewModelFactoryProxy.Create);
             services.AddSingleton<IMessenger, Messenger>();

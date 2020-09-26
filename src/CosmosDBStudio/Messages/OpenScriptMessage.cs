@@ -1,18 +1,16 @@
-﻿namespace CosmosDBStudio.Messages
+﻿using CosmosDBStudio.Services;
+
+namespace CosmosDBStudio.Messages
 {
     public class OpenScriptMessage<TScript>
     {
-        public OpenScriptMessage(string accountId, string databaseId, string containerId, TScript script)
+        public OpenScriptMessage(IContainerContext context, TScript script)
         {
-            AccountId = accountId;
-            DatabaseId = databaseId;
-            ContainerId = containerId;
+            Context = context;
             Script = script;
         }
 
-        public string AccountId { get; }
-        public string DatabaseId { get; }
-        public string ContainerId { get; }
+        public IContainerContext Context { get; }
         public TScript Script { get; }
     }
 }

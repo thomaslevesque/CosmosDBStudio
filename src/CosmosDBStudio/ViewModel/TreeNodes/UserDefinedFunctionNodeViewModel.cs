@@ -8,24 +8,17 @@ namespace CosmosDBStudio.ViewModel
     public class UserDefinedFunctionNodeViewModel : ScriptNodeViewModel<CosmosUserDefinedFunction>
     {
         public UserDefinedFunctionNodeViewModel(
-            ContainerNodeViewModel container,
-            NonLeafTreeNodeViewModel parent,
             CosmosUserDefinedFunction udf,
+            IContainerContext context,
+            NonLeafTreeNodeViewModel parent,
             ScriptCommands<CosmosUserDefinedFunction> commands,
             IMessenger messenger)
-            : base(container, parent, udf, commands, messenger)
+            : base(udf, context, parent, commands, messenger)
         {
         }
 
         public override string Description => "user-defined function";
 
-        public override Task DeleteAsync(ICosmosAccountManager accountManager)
-        {
-            return accountManager.DeleteUserDefindeFunctionAsync(
-                Container.Database.Account.Id,
-                Container.Database.Id,
-                Container.Id,
-                Script);
-        }
+        public override Task DeleteAsync() => Context.Scripts.DeleteUserDefinedFunctionAsync(Script, default);
     }
 }

@@ -1,18 +1,17 @@
 ﻿using CosmosDBStudio.Model;
+using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.Messages
 {
     public class ContainerCreatedMessage
     {
-        public ContainerCreatedMessage(string accountId, string databaseId, CosmosContainer container)
+        public ContainerCreatedMessage(IDatabaseContext context, CosmosContainer container)
         {
-            AccountId = accountId;
-            DatabaseId = databaseId;
+            Context = context;
             Container = container;
         }
 
-        public string AccountId { get; }
-        public string DatabaseId { get; }
+        public IDatabaseContext Context { get; }
         public CosmosContainer Container { get; }
     }
 }

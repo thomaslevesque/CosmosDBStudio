@@ -1,16 +1,14 @@
-﻿namespace CosmosDBStudio.Messages
+﻿using CosmosDBStudio.Services;
+
+namespace CosmosDBStudio.Messages
 {
     public class NewQuerySheetMessage
     {
-        public NewQuerySheetMessage(string accountId, string databaseId, string containerId)
+        public NewQuerySheetMessage(IContainerContext context)
         {
-            AccountId = accountId;
-            DatabaseId = databaseId;
-            ContainerId = containerId;
+            Context = context;
         }
 
-        public string AccountId { get; }
-        public string DatabaseId { get; }
-        public string ContainerId { get; }
+        public IContainerContext Context { get; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace CosmosDBStudio.Model
 {
-    public enum ScriptSaveResult
+    public enum OperationResult
     {
         Success,
         AlreadyExists,

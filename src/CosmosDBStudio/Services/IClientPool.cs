@@ -1,10 +1,11 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿using CosmosDBStudio.Model;
+using Microsoft.Azure.Cosmos;
 
 namespace CosmosDBStudio.Services
 {
     public interface IClientPool
     {
-        CosmosClient GetClientForAccount(string accountId);
-        void RemoveClientForAccount(string accountId);
+        CosmosClient GetClientForAccount(CosmosAccount account);
+        void RemoveClientForAccount(CosmosAccount account);
     }
 }

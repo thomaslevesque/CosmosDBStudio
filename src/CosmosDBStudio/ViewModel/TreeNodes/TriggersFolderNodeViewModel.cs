@@ -10,11 +10,11 @@ namespace CosmosDBStudio.ViewModel
     public class TriggersFolderNodeViewModel : ScriptFolderNodeViewModel
     {
         public TriggersFolderNodeViewModel(
-            ContainerNodeViewModel container,
-            ICosmosAccountManager accountManager,
+            IContainerContext containerContext,
+            NonLeafTreeNodeViewModel parent,
             ScriptCommands<CosmosTrigger> commands,
             IViewModelFactory viewModelFactory)
-            : base(container, "Triggers", accountManager, viewModelFactory)
+            : base("Triggers", containerContext, parent, viewModelFactory)
         {
             Commands = new[]
             {
@@ -28,10 +28,8 @@ namespace CosmosDBStudio.ViewModel
 
         protected async override Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var database = Container.Database;
-            var account = database.Account;
-            var triggers = await AccountManager.GetTriggersAsync(account.Id, database.Id, Container.Id);
-            return triggers.Select(t => ViewModelFactory.CreateTriggerNode(Container, this, t));
+            var triggers = await Context.Scripts.GetTriggersAsync(default);
+            return triggers.Select(t => ViewModelFactory.CreateTriggerNode(t, Context, this));
         }
     }
 }

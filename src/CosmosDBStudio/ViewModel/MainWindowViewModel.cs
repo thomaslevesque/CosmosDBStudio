@@ -16,7 +16,6 @@ namespace CosmosDBStudio.ViewModel
     public class MainWindowViewModel : BindableBase
     {
         private readonly IViewModelFactory _viewModelFactory;
-        private readonly IContainerContextFactory _containerContextFactory;
         private readonly IMessenger _messenger;
         private readonly IDialogService _dialogService;
         private readonly IQueryPersistenceService _queryPersistenceService;
@@ -24,14 +23,12 @@ namespace CosmosDBStudio.ViewModel
 
         public MainWindowViewModel(
             IViewModelFactory viewModelFactory,
-            IContainerContextFactory containerContextFactory,
             IMessenger messenger,
             IDialogService dialogService,
             IQueryPersistenceService queryPersistenceService,
             AccountCommands accountCommands)
         {
             _viewModelFactory = viewModelFactory;
-            _containerContextFactory = containerContextFactory;
             _messenger = messenger;
             _dialogService = dialogService;
             _queryPersistenceService = queryPersistenceService;
@@ -49,45 +46,21 @@ namespace CosmosDBStudio.ViewModel
             LoadWorkspace();
         }
 
-        private async void OnNewQuerySheetMessage(NewQuerySheetMessage message)
+        private void OnNewQuerySheetMessage(NewQuerySheetMessage message)
         {
-            try
-            {
-                var querySheet = new QuerySheet();
-                var context = await _containerContextFactory.CreateAsync(
-                    message.AccountId,
-                    message.DatabaseId,
-                    message.ContainerId,
-                    default);
-                var vm = _viewModelFactory.CreateQuerySheet(querySheet, null, context);
-                vm.CloseRequested += OnTabCloseRequested;
-                Tabs.Add(vm);
-                CurrentTab = vm;
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowError(ex.Message);
-            }
+            var querySheet = new QuerySheet();
+            var vm = _viewModelFactory.CreateQuerySheet(querySheet, null, message.Context);
+            vm.CloseRequested += OnTabCloseRequested;
+            Tabs.Add(vm);
+            CurrentTab = vm;
         }
 
-        private async void OnOpenScriptMessage<TScript>(OpenScriptMessage<TScript> message, Func<TScript, IContainerContext, TabViewModelBase> createViewModel)
+        private void OnOpenScriptMessage<TScript>(OpenScriptMessage<TScript> message, Func<TScript, IContainerContext, TabViewModelBase> createViewModel)
         {
-            try
-            {
-                var context = await _containerContextFactory.CreateAsync(
-                    message.AccountId,
-                    message.DatabaseId,
-                    message.ContainerId,
-                    default);
-                var vm = createViewModel(message.Script, context);
-                vm.CloseRequested += OnTabCloseRequested;
-                Tabs.Add(vm);
-                CurrentTab = vm;
-            }
-            catch (Exception ex)
-            {
-                _dialogService.ShowError(ex.Message);
-            }
+            var vm = createViewModel(message.Script, message.Context);
+            vm.CloseRequested += OnTabCloseRequested;
+            Tabs.Add(vm);
+            CurrentTab = vm;
         }
 
         private void OnSetStatusBarMessage(SetStatusBarMessage message)

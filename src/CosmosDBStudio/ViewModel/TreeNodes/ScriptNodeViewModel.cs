@@ -18,15 +18,15 @@ namespace CosmosDBStudio.ViewModel
         private readonly ScriptCommands<TScript> _commands;
 
         protected ScriptNodeViewModel(
-            ContainerNodeViewModel container,
-            NonLeafTreeNodeViewModel parent,
             TScript script,
+            IContainerContext context,
+            NonLeafTreeNodeViewModel parent,
             ScriptCommands<TScript> commands,
             IMessenger messenger)
         {
-            Container = container;
             Parent = parent;
             Script = script;
+            Context = context;
             _commands = commands;
             Messenger = messenger;
             Commands = new[]
@@ -39,11 +39,11 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public TScript Script { get; }
+        public IContainerContext Context { get; }
         public IMessenger Messenger { get; }
 
         public override string Text => Script.Id;
         public override NonLeafTreeNodeViewModel? Parent { get; }
-        public ContainerNodeViewModel Container { get; }
 
         public override IEnumerable<CommandViewModel> Commands { get; }
 
@@ -52,6 +52,6 @@ namespace CosmosDBStudio.ViewModel
         private DelegateCommand? _openCommand;
         public ICommand OpenCommand => _openCommand ??= _commands.OpenCommand.WithParameter(this);
 
-        public abstract Task DeleteAsync(ICosmosAccountManager accountManager);
+        public abstract Task DeleteAsync();
     }
 }

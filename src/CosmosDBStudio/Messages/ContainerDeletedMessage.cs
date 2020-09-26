@@ -1,18 +1,17 @@
 ﻿using CosmosDBStudio.Model;
+using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.Messages
 {
     public class ContainerDeletedMessage
     {
-        public ContainerDeletedMessage(string accountId, string databaseId, CosmosContainer container)
+        public ContainerDeletedMessage(IDatabaseContext context, CosmosContainer container)
         {
-            AccountId = accountId;
-            DatabaseId = databaseId;
+            Context = context;
             Container = container;
         }
 
-        public string AccountId { get; }
-        public string DatabaseId { get; }
+        public IDatabaseContext Context { get; }
         public CosmosContainer Container { get; }
     }
 }

@@ -6,30 +6,30 @@ namespace CosmosDBStudio.ViewModel
 {
     public interface IViewModelFactory
     {
-        QuerySheetViewModel CreateQuerySheet(QuerySheet querySheet, string? path, IContainerContext? containerContext);
-        QueryResultViewModel CreateQueryResult(QueryResult result, IContainerContext containerContext);
-        AccountNodeViewModel CreateAccountNode(CosmosAccount account, AccountFolderNodeViewModel? parent);
+        QuerySheetViewModel CreateQuerySheet(QuerySheet querySheet, string? path, IContainerContext? context);
+        QueryResultViewModel CreateQueryResult(QueryResult result, IContainerContext context);
+        AccountNodeViewModel CreateAccountNode(CosmosAccount account, IAccountContext accountContext, AccountFolderNodeViewModel? parent);
         AccountFolderNodeViewModel CreateAccountFolderNode(CosmosAccountFolder folder, AccountFolderNodeViewModel? parent);
-        DatabaseNodeViewModel CreateDatabaseNode(AccountNodeViewModel account, string id);
-        ContainerNodeViewModel CreateContainerNode(DatabaseNodeViewModel database, string id);
+        DatabaseNodeViewModel CreateDatabaseNode(AccountNodeViewModel account, string id, IDatabaseContext context);
+        ContainerNodeViewModel CreateContainerNode(DatabaseNodeViewModel database, string id, IContainerContext context);
         AccountsViewModel CreateAccounts();
         NotRunQueryResultViewModel CreateNotRunQueryResult();
-        DocumentResultViewModel CreateDocumentResult(JToken document, IContainerContext containerContext);
+        DocumentResultViewModel CreateDocumentResult(JToken document, IContainerContext context);
         ErrorItemPlaceholderViewModel CreateErrorItemPlaceholder();
         EmptyResultItemPlaceholderViewModel CreateEmptyResultPlaceholder();
-        DocumentEditorViewModel CreateDocumentEditor(JObject document, bool isNew, IContainerContext containerContext);
+        DocumentEditorViewModel CreateDocumentEditor(JObject document, bool isNew, IContainerContext context);
         AccountEditorViewModel CreateAccountEditor(CosmosAccount? account = null);
         ContainerPickerViewModel CreateContainerPicker();
         DatabaseEditorViewModel CreateDatabaseEditor(CosmosDatabase? database = null);
         ContainerEditorViewModel CreateContainerEditor(CosmosContainer? container, bool databaseHasProvisionedThroughput);
-        StoredProceduresFolderNodeViewModel CreateStoredProceduresFolderNode(ContainerNodeViewModel container);
-        StoredProcedureNodeViewModel CreateStoredProcedureNode(ContainerNodeViewModel container, NonLeafTreeNodeViewModel parent, CosmosStoredProcedure storedProcedure);
-        UserDefinedFunctionsFolderNodeViewModel CreateUserDefinedFunctionsFolderNode(ContainerNodeViewModel container);
-        UserDefinedFunctionNodeViewModel CreateUserDefinedFunctionNode(ContainerNodeViewModel container, NonLeafTreeNodeViewModel parent, CosmosUserDefinedFunction udf);
-        TriggersFolderNodeViewModel CreateTriggersFolderNode(ContainerNodeViewModel container);
-        TriggerNodeViewModel CreateTriggerNode(ContainerNodeViewModel container, NonLeafTreeNodeViewModel parent, CosmosTrigger trigger);
-        StoredProcedureEditorViewModel CreateStoredProcedureEditor(CosmosStoredProcedure storedProcedure, IContainerContext containerContext);
-        UserDefinedFunctionEditorViewModel CreateUserDefinedFunctionEditor(CosmosUserDefinedFunction udf, IContainerContext containerContext);
-        TriggerEditorViewModel CreateTriggerEditor(CosmosTrigger trigger, IContainerContext containerContext);
+        StoredProceduresFolderNodeViewModel CreateStoredProceduresFolderNode(IContainerContext context, NonLeafTreeNodeViewModel parent);
+        StoredProcedureNodeViewModel CreateStoredProcedureNode(CosmosStoredProcedure storedProcedure, IContainerContext context, NonLeafTreeNodeViewModel parent);
+        UserDefinedFunctionsFolderNodeViewModel CreateUserDefinedFunctionsFolderNode(IContainerContext context, NonLeafTreeNodeViewModel parent);
+        UserDefinedFunctionNodeViewModel CreateUserDefinedFunctionNode(CosmosUserDefinedFunction udf, IContainerContext context, NonLeafTreeNodeViewModel parent);
+        TriggersFolderNodeViewModel CreateTriggersFolderNode(IContainerContext context, NonLeafTreeNodeViewModel parent);
+        TriggerNodeViewModel CreateTriggerNode(CosmosTrigger trigger, IContainerContext context, NonLeafTreeNodeViewModel parent);
+        StoredProcedureEditorViewModel CreateStoredProcedureEditor(CosmosStoredProcedure storedProcedure, IContainerContext context);
+        UserDefinedFunctionEditorViewModel CreateUserDefinedFunctionEditor(CosmosUserDefinedFunction udf, IContainerContext context);
+        TriggerEditorViewModel CreateTriggerEditor(CosmosTrigger trigger, IContainerContext context);
     }
 }

@@ -11,6 +11,7 @@ namespace CosmosDBStudio.ViewModel
     {
         private readonly CosmosAccountFolder _folder;
         private readonly AccountCommands _accountCommands;
+        private readonly IAccountContextFactory _accountContextFactory;
         private readonly IAccountDirectory _accountDirectory;
         private readonly IViewModelFactory _viewModelFactory;
 
@@ -18,12 +19,14 @@ namespace CosmosDBStudio.ViewModel
             CosmosAccountFolder folder,
             AccountFolderNodeViewModel? parent,
             AccountCommands accountCommands,
+            IAccountContextFactory accountContextFactory,
             IAccountDirectory accountDirectory,
             IViewModelFactory viewModelFactory)
         {
             _folder = folder;
             Parent = parent;
             _accountCommands = accountCommands;
+            _accountContextFactory = accountContextFactory;
             _accountDirectory = accountDirectory;
             _viewModelFactory = viewModelFactory;
 
@@ -48,7 +51,11 @@ namespace CosmosDBStudio.ViewModel
             {
                 var childVM = node switch
                 {
-                    CosmosAccount account => (TreeNodeViewModel)_viewModelFactory.CreateAccountNode(account, this),
+                    CosmosAccount account =>
+                        (TreeNodeViewModel)_viewModelFactory.CreateAccountNode(
+                            account,
+                            _accountContextFactory.Create(account),
+                            this),
                     CosmosAccountFolder folder => (TreeNodeViewModel)_viewModelFactory.CreateAccountFolderNode(folder, this),
                     _ => throw new Exception("Invalid node type")
                 };

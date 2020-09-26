@@ -13,17 +13,20 @@ namespace CosmosDBStudio.ViewModel
     public class AccountsViewModel : BindableBase
     {
         private readonly AccountCommands _accountCommands;
+        private readonly IAccountContextFactory _accountContextFactory;
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IAccountDirectory _accountDirectory;
         private readonly IMessenger _messenger;
 
         public AccountsViewModel(
             AccountCommands accountCommands,
+            IAccountContextFactory accountContextFactory,
             IViewModelFactory viewModelFactory,
             IAccountDirectory accountDirectory,
             IMessenger messenger)
         {
             _accountCommands = accountCommands;
+            _accountContextFactory = accountContextFactory;
             _viewModelFactory = viewModelFactory;
             _accountDirectory = accountDirectory;
             _messenger = messenger;
@@ -49,7 +52,11 @@ namespace CosmosDBStudio.ViewModel
             {
                 var vm = node switch
                 {
-                    CosmosAccount account => (TreeNodeViewModel)_viewModelFactory.CreateAccountNode(account, null),
+                    CosmosAccount account =>
+                        (TreeNodeViewModel)_viewModelFactory.CreateAccountNode(
+                            account,
+                            _accountContextFactory.Create(account),
+                            null),
                     CosmosAccountFolder folder => (TreeNodeViewModel)_viewModelFactory.CreateAccountFolderNode(folder, null),
                     _ => throw new Exception("Invalid node type")
                 };
@@ -123,7 +130,10 @@ namespace CosmosDBStudio.ViewModel
         private void OnAccountAdded(AccountAddedMessage message)
         {
             var folderVM = GetFolder(message.Account.Folder, create: true);
-            var vm = _viewModelFactory.CreateAccountNode(message.Account, folderVM);
+            var vm = _viewModelFactory.CreateAccountNode(
+                message.Account,
+                _accountContextFactory.Create(message.Account),
+                folderVM);
 
             if (folderVM is null)
                 RootNodes.Add(vm);
