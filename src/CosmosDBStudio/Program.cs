@@ -35,7 +35,7 @@ namespace CosmosDBStudio
             services.AddSingleton<IContainerContextFactory, ContainerContextFactory>();
             services.AddSingleton<IQueryPersistenceService, QueryPersistenceService>();
 
-            services.AddSingleton<IViewModelFactory, ViewModelFactory>();
+            services.AddSingleton<IViewModelFactory>(ViewModelFactoryProxy.Create);
             services.AddSingleton<IMessenger, Messenger>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton(sp => new Lazy<Dispatcher>(() => sp.GetRequiredService<App>().Dispatcher));
