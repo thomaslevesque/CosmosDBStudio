@@ -56,7 +56,7 @@ namespace CosmosDBStudio.ViewModel
 
         public QuerySheetViewModel CreateQuerySheetViewModel(QuerySheet querySheet, string? path, IContainerContext? containerContext)
         {
-            return new QuerySheetViewModel(this, _dialogService, _containerContextFactory, _messenger, _queryPersistenceService, querySheet, path, containerContext);
+            return new QuerySheetViewModel(querySheet, path, containerContext, this, _dialogService, _containerContextFactory, _messenger, _queryPersistenceService);
         }
 
         public NotRunQueryResultViewModel CreateNotRunQueryResultViewModel()
@@ -132,7 +132,7 @@ namespace CosmosDBStudio.ViewModel
             return new ContainerPickerViewModel(this, _accountDirectory);
         }
 
-        public ContainerEditorViewModel CreateContainerEditorViewModel(bool databaseHasProvisionedThroughput, CosmosContainer? container = null)
+        public ContainerEditorViewModel CreateContainerEditorViewModel(CosmosContainer? container, bool databaseHasProvisionedThroughput)
         {
             return new ContainerEditorViewModel(container, databaseHasProvisionedThroughput);
         }
@@ -149,7 +149,7 @@ namespace CosmosDBStudio.ViewModel
 
         public StoredProcedureEditorViewModel CreateStoredProcedureEditor(CosmosStoredProcedure storedProcedure, IContainerContext containerContext)
         {
-            return new StoredProcedureEditorViewModel(containerContext, storedProcedure);
+            return new StoredProcedureEditorViewModel(storedProcedure, containerContext);
         }
 
         public UserDefinedFunctionsFolderViewModel CreateUserDefinedFunctionsFolder(ContainerViewModel container)
@@ -164,7 +164,7 @@ namespace CosmosDBStudio.ViewModel
 
         public UserDefinedFunctionEditorViewModel CreateUserDefinedFunctionEditor(CosmosUserDefinedFunction udf, IContainerContext containerContext)
         {
-            return new UserDefinedFunctionEditorViewModel(containerContext, udf);
+            return new UserDefinedFunctionEditorViewModel(udf, containerContext);
         }
 
         public TriggersFolderViewModel CreateTriggersFolder(ContainerViewModel container)
@@ -179,7 +179,7 @@ namespace CosmosDBStudio.ViewModel
 
         public TriggerEditorViewModel CreateTriggerEditor(CosmosTrigger trigger, IContainerContext containerContext)
         {
-            return new TriggerEditorViewModel(containerContext, trigger);
+            return new TriggerEditorViewModel(trigger, containerContext);
         }
     }
 }

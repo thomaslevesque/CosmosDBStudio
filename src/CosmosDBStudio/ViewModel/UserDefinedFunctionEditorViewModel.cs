@@ -1,14 +1,13 @@
 ﻿using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
-using System;
 using System.Threading.Tasks;
 
 namespace CosmosDBStudio.ViewModel
 {
     public class UserDefinedFunctionEditorViewModel : ScriptEditorViewModelBase<CosmosUserDefinedFunction>
     {
-        public UserDefinedFunctionEditorViewModel(IContainerContext containerContext, CosmosUserDefinedFunction udf)
-            : base(containerContext, udf)
+        public UserDefinedFunctionEditorViewModel(CosmosUserDefinedFunction udf, IContainerContext containerContext)
+            : base(udf, containerContext)
         {
         }
 

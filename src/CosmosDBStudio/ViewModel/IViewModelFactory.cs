@@ -24,7 +24,7 @@ namespace CosmosDBStudio.ViewModel
         AccountEditorViewModel CreateAccountEditorViewModel(CosmosAccount? account = null);
         ContainerPickerViewModel CreateContainerPickerViewModel();
         DatabaseEditorViewModel CreateDatabaseEditorViewModel(CosmosDatabase? database = null);
-        ContainerEditorViewModel CreateContainerEditorViewModel(bool databaseHasProvisionedThroughput, CosmosContainer? container = null);
+        ContainerEditorViewModel CreateContainerEditorViewModel(CosmosContainer? container, bool databaseHasProvisionedThroughput);
         StoredProceduresFolderViewModel CreateStoredProceduresFolder(ContainerViewModel container);
         StoredProcedureViewModel CreateStoredProcedure(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosStoredProcedure storedProcedure);
         UserDefinedFunctionsFolderViewModel CreateUserDefinedFunctionsFolder(ContainerViewModel container);

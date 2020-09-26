@@ -29,14 +29,14 @@ namespace CosmosDBStudio.ViewModel
         private readonly IQueryPersistenceService _queryPersistenceService;
 
         public QuerySheetViewModel(
+            QuerySheet querySheet,
+            string? path,
+            IContainerContext? containerContext,
             IViewModelFactory viewModelFactory,
             IDialogService dialogService,
             IContainerContextFactory containerContextFactory,
             IMessenger messenger,
-            IQueryPersistenceService queryPersistenceService,
-            QuerySheet querySheet,
-            string? path,
-            IContainerContext? containerContext)
+            IQueryPersistenceService queryPersistenceService)
         {
             _containerContext = containerContext;
             _queryPersistenceService = queryPersistenceService;

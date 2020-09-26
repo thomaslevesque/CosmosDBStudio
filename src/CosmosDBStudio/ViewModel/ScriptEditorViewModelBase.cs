@@ -9,7 +9,7 @@ namespace CosmosDBStudio.ViewModel
     public abstract class ScriptEditorViewModelBase<TScript> : TabViewModelBase
         where TScript : ICosmosScript
     {
-        public ScriptEditorViewModelBase(IContainerContext containerContext, TScript script)
+        public ScriptEditorViewModelBase(TScript script, IContainerContext containerContext)
         {
             ContainerContext = containerContext;
             Script = script;

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace CosmosDBStudio.ViewModel
+﻿namespace CosmosDBStudio.ViewModel
 {
     public interface ISaveable
     {

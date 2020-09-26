@@ -6,8 +6,8 @@ namespace CosmosDBStudio.ViewModel
 {
     public class StoredProcedureEditorViewModel : ScriptEditorViewModelBase<CosmosStoredProcedure>
     {
-        public StoredProcedureEditorViewModel(IContainerContext containerContext, CosmosStoredProcedure script)
-            : base(containerContext, script)
+        public StoredProcedureEditorViewModel(CosmosStoredProcedure script, IContainerContext containerContext)
+            : base(script, containerContext)
         {
         }
 

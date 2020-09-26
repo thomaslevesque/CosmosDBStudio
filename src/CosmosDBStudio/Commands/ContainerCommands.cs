@@ -37,7 +37,7 @@ namespace CosmosDBStudio.Commands
             var accountId = databaseVm.Account.Id;
             var databaseId = databaseVm.Id;
             var database = await _accountManager.GetDatabaseAsync(accountId, databaseId);
-            var dialog = _viewModelFactory.Value.CreateContainerEditorViewModel(database.Throughput.HasValue);
+            var dialog = _viewModelFactory.Value.CreateContainerEditorViewModel(null, database.Throughput.HasValue);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 var container = dialog.GetContainer();
@@ -61,7 +61,7 @@ namespace CosmosDBStudio.Commands
 
             var database = await _accountManager.GetDatabaseAsync(accountId, databaseId);
             var container = await _accountManager.GetContainerAsync(accountId, databaseId, containerId);
-            var dialog = _viewModelFactory.Value.CreateContainerEditorViewModel(database.Throughput.HasValue, container);
+            var dialog = _viewModelFactory.Value.CreateContainerEditorViewModel(container, database.Throughput.HasValue);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 container = dialog.GetContainer();

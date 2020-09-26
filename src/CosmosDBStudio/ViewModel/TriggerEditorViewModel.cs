@@ -7,8 +7,8 @@ namespace CosmosDBStudio.ViewModel
 {
     public class TriggerEditorViewModel : ScriptEditorViewModelBase<CosmosTrigger>
     {
-        public TriggerEditorViewModel(IContainerContext containerContext, CosmosTrigger trigger)
-            : base(containerContext, trigger)
+        public TriggerEditorViewModel(CosmosTrigger trigger, IContainerContext containerContext)
+            : base(trigger, containerContext)
         {
             Type = trigger.Type;
             Operation = trigger.Operation;
