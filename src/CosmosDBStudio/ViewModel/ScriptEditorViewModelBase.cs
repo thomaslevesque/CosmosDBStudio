@@ -65,6 +65,7 @@ namespace CosmosDBStudio.ViewModel
                 : ReplaceScriptAsync(script);
             await task;
             Script = script;
+            OnPropertyChanged(nameof(HasChanges));
             RefreshCommands();
         }
 
@@ -88,7 +89,7 @@ namespace CosmosDBStudio.ViewModel
 
         private bool CanRevert() => HasChanges;
 
-        public override bool HasChanges => Text != Script.Body;
+        public override bool HasChanges => Text != Script.Body || string.IsNullOrEmpty(Script.ETag);
 
         protected void RefreshCommands()
         {

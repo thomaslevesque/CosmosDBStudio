@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="CosmosDBStudio.View.TextPromptView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CosmosDBStudio.View"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             mc:Ignorable="d" 
+             MinHeight="60" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Content="{Binding Prompt}" HorizontalAlignment="Left" />
+        <TextBox Grid.Row="1" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5">
+            <i:Interaction.Behaviors>
+                <bhv:FocusOnLoadBehavior />
+            </i:Interaction.Behaviors>
+        </TextBox>
+    </Grid>
+</UserControl>

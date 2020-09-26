@@ -1,5 +1,4 @@
-﻿using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
+﻿using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.ViewModel
 {

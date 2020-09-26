@@ -10,6 +10,9 @@ namespace CosmosDBStudio.ViewModel
         private readonly AccountCommands _accountCommands;
         private readonly DatabaseCommands _databaseCommands;
         private readonly ContainerCommands _containerCommands;
+        private readonly ScriptCommands<CosmosStoredProcedure> _storedProcedureCommands;
+        private readonly ScriptCommands<CosmosUserDefinedFunction> _udfCommands;
+        private readonly ScriptCommands<CosmosTrigger> _triggerCommands;
         private readonly IMessenger _messenger;
         private readonly IAccountDirectory _accountDirectory;
         private readonly IContainerContextFactory _containerContextFactory;
@@ -23,6 +26,9 @@ namespace CosmosDBStudio.ViewModel
             AccountCommands accountCommands,
             DatabaseCommands databaseCommands,
             ContainerCommands containerCommands,
+            ScriptCommands<CosmosStoredProcedure> storedProcedureCommands,
+            ScriptCommands<CosmosUserDefinedFunction> udfCommands,
+            ScriptCommands<CosmosTrigger> triggerCommands,
             IMessenger messenger,
             IAccountDirectory accountDirectory,
             IContainerContextFactory containerContextFactory,
@@ -35,6 +41,9 @@ namespace CosmosDBStudio.ViewModel
             _accountCommands = accountCommands;
             _databaseCommands = databaseCommands;
             _containerCommands = containerCommands;
+            _storedProcedureCommands = storedProcedureCommands;
+            _udfCommands = udfCommands;
+            _triggerCommands = triggerCommands;
             _messenger = messenger;
             _accountDirectory = accountDirectory;
             _containerContextFactory = containerContextFactory;
@@ -130,12 +139,12 @@ namespace CosmosDBStudio.ViewModel
 
         public StoredProceduresFolderViewModel CreateStoredProceduresFolder(ContainerViewModel container)
         {
-            return new StoredProceduresFolderViewModel(container, _accountManager, this);
+            return new StoredProceduresFolderViewModel(container, _accountManager, _storedProcedureCommands, this);
         }
 
         public StoredProcedureViewModel CreateStoredProcedure(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosStoredProcedure storedProcedure)
         {
-            return new StoredProcedureViewModel(container, parent, storedProcedure, _messenger);
+            return new StoredProcedureViewModel(container, parent, storedProcedure, _storedProcedureCommands, _messenger);
         }
 
         public StoredProcedureEditorViewModel CreateStoredProcedureEditor(CosmosStoredProcedure storedProcedure, IContainerContext containerContext)
@@ -145,12 +154,12 @@ namespace CosmosDBStudio.ViewModel
 
         public UserDefinedFunctionsFolderViewModel CreateUserDefinedFunctionsFolder(ContainerViewModel container)
         {
-            return new UserDefinedFunctionsFolderViewModel(container, _accountManager, this);
+            return new UserDefinedFunctionsFolderViewModel(container, _accountManager, _udfCommands, this);
         }
 
         public UserDefinedFunctionViewModel CreateUserDefinedFunction(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosUserDefinedFunction udf)
         {
-            return new UserDefinedFunctionViewModel(container, parent, udf, _messenger);
+            return new UserDefinedFunctionViewModel(container, parent, udf, _udfCommands, _messenger);
         }
 
         public UserDefinedFunctionEditorViewModel CreateUserDefinedFunctionEditor(CosmosUserDefinedFunction udf, IContainerContext containerContext)
@@ -160,12 +169,12 @@ namespace CosmosDBStudio.ViewModel
 
         public TriggersFolderViewModel CreateTriggersFolder(ContainerViewModel container)
         {
-            return new TriggersFolderViewModel(container, _accountManager, this);
+            return new TriggersFolderViewModel(container, _accountManager, _triggerCommands, this);
         }
 
         public TriggerViewModel CreateTrigger(ContainerViewModel container, NonLeafTreeNodeViewModel parent, CosmosTrigger trigger)
         {
-            return new TriggerViewModel(container, parent, trigger, _messenger);
+            return new TriggerViewModel(container, parent, trigger, _triggerCommands, _messenger);
         }
 
         public TriggerEditorViewModel CreateTriggerEditor(CosmosTrigger trigger, IContainerContext containerContext)

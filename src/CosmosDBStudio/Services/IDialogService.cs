@@ -21,5 +21,7 @@ namespace CosmosDBStudio.Services
             Option<int> filterIndex = default,
             Option<string> fileName = default,
             Option<string> initialDirectory = default);
+
+        Option<string> TextPrompt(string prompt, Option<string> initialText = default);
     }
 }

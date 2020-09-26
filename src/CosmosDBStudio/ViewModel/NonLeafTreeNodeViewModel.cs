@@ -75,6 +75,9 @@ namespace CosmosDBStudio.ViewModel
             _children = null;
             OnPropertyChanged(nameof(Children));
         }
+
+        private DelegateCommand? _refreshCommand;
+        public ICommand RefreshCommand => _refreshCommand ??= new DelegateCommand(ReloadChildren);
     }
 
     sealed class PlaceholderTreeNodeViewModel : TreeNodeViewModel

@@ -33,6 +33,8 @@ namespace CosmosDBStudio.ViewModel
             {
                 new CommandViewModel("Create database", databaseCommands.CreateCommand, this),
                 CommandViewModel.Separator(),
+                new CommandViewModel("Refresh", RefreshCommand),
+                CommandViewModel.Separator(),
                 new CommandViewModel("Add account", accountCommands.AddCommand, Parent),
                 new CommandViewModel("Edit account", accountCommands.EditCommand, this),
                 new CommandViewModel("Remove account", accountCommands.RemoveCommand, this),

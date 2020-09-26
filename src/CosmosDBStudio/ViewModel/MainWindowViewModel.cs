@@ -311,7 +311,7 @@ namespace CosmosDBStudio.ViewModel
             }
 
             QuerySheetViewModel.UntitledCounter = workspace.UntitledCounter;
-            CurrentTab = currentVM;
+            CurrentTab = currentVM ?? Tabs.FirstOrDefault();
         }
     }
 }

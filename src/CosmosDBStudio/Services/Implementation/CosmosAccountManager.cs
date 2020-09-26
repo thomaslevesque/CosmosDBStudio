@@ -214,5 +214,38 @@ namespace CosmosDBStudio.Services.Implementation
 
             return triggers.ToArray();
         }
+
+        public Task DeleteStoredProcedureAsync(string accountId, string databaseId, string containerId, CosmosStoredProcedure storedProcedure)
+        {
+            var client = _clientPool.GetClientForAccount(accountId);
+            var container = client.GetContainer(databaseId, containerId);
+            var options = new RequestOptions
+            {
+                IfMatchEtag = storedProcedure.ETag
+            };
+            return container.Scripts.DeleteStoredProcedureAsync(storedProcedure.Id, options);
+        }
+
+        public Task DeleteUserDefindeFunctionAsync(string accountId, string databaseId, string containerId, CosmosUserDefinedFunction udf)
+        {
+            var client = _clientPool.GetClientForAccount(accountId);
+            var container = client.GetContainer(databaseId, containerId);
+            var options = new RequestOptions
+            {
+                IfMatchEtag = udf.ETag
+            };
+            return container.Scripts.DeleteUserDefinedFunctionAsync(udf.Id, options);
+        }
+
+        public Task DeleteTriggerAsync(string accountId, string databaseId, string containerId, CosmosTrigger trigger)
+        {
+            var client = _clientPool.GetClientForAccount(accountId);
+            var container = client.GetContainer(databaseId, containerId);
+            var options = new RequestOptions
+            {
+                IfMatchEtag = trigger.ETag
+            };
+            return container.Scripts.DeleteTriggerAsync(trigger.Id, options);
+        }
     }
 }

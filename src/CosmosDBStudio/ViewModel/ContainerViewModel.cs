@@ -28,6 +28,8 @@ namespace CosmosDBStudio.ViewModel
             {
                 new CommandViewModel("New query sheet", containerCommands.NewQuerySheetCommand, this),
                 CommandViewModel.Separator(),
+                new CommandViewModel("Refresh", RefreshCommand),
+                CommandViewModel.Separator(),
                 new CommandViewModel("Create container", containerCommands.CreateCommand, Database),
                 new CommandViewModel("Edit container", containerCommands.EditCommand, this),
                 new CommandViewModel("Delete container", containerCommands.DeleteCommand, this),

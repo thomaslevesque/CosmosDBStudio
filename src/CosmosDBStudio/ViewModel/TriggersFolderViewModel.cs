@@ -1,4 +1,6 @@
-﻿using CosmosDBStudio.Services;
+﻿using CosmosDBStudio.Commands;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,10 +12,19 @@ namespace CosmosDBStudio.ViewModel
         public TriggersFolderViewModel(
             ContainerViewModel container,
             ICosmosAccountManager accountManager,
+            ScriptCommands<CosmosTrigger> commands,
             IViewModelFactory viewModelFactory)
             : base(container, "Triggers", accountManager, viewModelFactory)
         {
+            Commands = new[]
+            {
+                new CommandViewModel($"New trigger", commands.CreateCommand, this),
+                CommandViewModel.Separator(),
+                new CommandViewModel("Refresh", RefreshCommand)
+            };
         }
+
+        public override IEnumerable<CommandViewModel> Commands { get; }
 
         protected async override Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {

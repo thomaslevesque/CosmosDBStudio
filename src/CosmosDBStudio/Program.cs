@@ -1,5 +1,6 @@
 ﻿using CosmosDBStudio.Commands;
 using CosmosDBStudio.Extensions;
+using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using CosmosDBStudio.Services.Implementation;
 using CosmosDBStudio.ViewModel;
@@ -46,6 +47,9 @@ namespace CosmosDBStudio
             services.AddSingleton<AccountCommands>();
             services.AddSingleton<DatabaseCommands>();
             services.AddSingleton<ContainerCommands>();
+            services.AddSingleton<ScriptCommands<CosmosStoredProcedure>>();
+            services.AddSingleton<ScriptCommands<CosmosUserDefinedFunction>>();
+            services.AddSingleton<ScriptCommands<CosmosTrigger>>();
 
             services.AddSingleton<MainWindowViewModel>();
 

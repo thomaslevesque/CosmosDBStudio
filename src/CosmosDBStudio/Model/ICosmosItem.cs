@@ -2,6 +2,6 @@
 {
     public interface ICosmosItem
     {
-        string Id { get; }
+        string Id { get; set; }
     }
 }

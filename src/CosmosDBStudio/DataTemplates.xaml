@@ -21,4 +21,7 @@
     <DataTemplate DataType="{x:Type vm:AboutViewModel}">
         <v:AboutView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TextPromptViewModel}">
+        <v:TextPromptView />
+    </DataTemplate>
 </ResourceDictionary>

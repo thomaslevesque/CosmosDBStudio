@@ -1,7 +1,9 @@
-﻿using CosmosDBStudio.Messages;
+﻿using CosmosDBStudio.Commands;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
@@ -10,19 +12,30 @@ namespace CosmosDBStudio.ViewModel
     {
     }
 
-    public class ContainerScriptViewModel<TScript> : ContainerScriptViewModel
-        where TScript : ICosmosScript
+    public abstract class ContainerScriptViewModel<TScript> : ContainerScriptViewModel
+        where TScript : ICosmosScript, new()
     {
-        public ContainerScriptViewModel(
+        private readonly ScriptCommands<TScript> _commands;
+
+        protected ContainerScriptViewModel(
             ContainerViewModel container,
             NonLeafTreeNodeViewModel parent,
             TScript script,
+            ScriptCommands<TScript> commands,
             IMessenger messenger)
         {
             Container = container;
             Parent = parent;
             Script = script;
+            _commands = commands;
             Messenger = messenger;
+            Commands = new[]
+            {
+                new CommandViewModel($"Open {Description}", commands.OpenCommand, this),
+                CommandViewModel.Separator(),
+                new CommandViewModel($"Create new {Description}", commands.CreateCommand, parent),
+                new CommandViewModel($"Delete {Description}", commands.DeleteCommand, this),
+            };
         }
 
         public TScript Script { get; }
@@ -32,16 +45,13 @@ namespace CosmosDBStudio.ViewModel
         public override NonLeafTreeNodeViewModel? Parent { get; }
         public ContainerViewModel Container { get; }
 
-        private DelegateCommand? _openCommand;
-        public ICommand OpenCommand => _openCommand ??= new DelegateCommand(Edit);
+        public override IEnumerable<CommandViewModel> Commands { get; }
 
-        private void Edit()
-        {
-            Messenger.Publish(new OpenScriptMessage<TScript>(
-                Container.Database.Account.Id,
-                Container.Database.Id,
-                Container.Id,
-                Script));
-        }
+        public abstract string Description { get; }
+
+        private DelegateCommand? _openCommand;
+        public ICommand OpenCommand => _openCommand ??= _commands.OpenCommand.WithParameter(this);
+
+        public abstract Task DeleteAsync(ICosmosAccountManager accountManager);
     }
 }

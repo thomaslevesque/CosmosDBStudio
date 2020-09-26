@@ -1,5 +1,6 @@
 ﻿using CosmosDBStudio.Dialogs;
 using CosmosDBStudio.View;
+using CosmosDBStudio.ViewModel;
 using Hamlet;
 using Microsoft.Win32;
 using System.ComponentModel;
@@ -153,6 +154,17 @@ namespace CosmosDBStudio.Services.Implementation
             if (picker.ShowDialog() is true)
             {
                 return picker.FileName;
+            }
+
+            return Option.None();
+        }
+
+        public Option<string> TextPrompt(string prompt, Option<string> initialText = default)
+        {
+            var vm = new TextPromptViewModel(prompt, initialText.ValueOrNull());
+            if (ShowDialog(vm) is true)
+            {
+                return vm.Text;
             }
 
             return Option.None();
