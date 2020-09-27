@@ -35,19 +35,17 @@ namespace CosmosDBStudio.Services.Implementation
         {
             var container = _database.GetContainer(containerId);
             var properties = (await container.ReadContainerAsync(cancellationToken: cancellationToken)).Resource;
-            var throughput = await container.ReadThroughputAsync(cancellationToken);
             return new CosmosContainer
             {
                 Id = containerId,
                 PartitionKeyPath = properties.PartitionKeyPath,
                 LargePartitionKey = properties.PartitionKeyDefinitionVersion > PartitionKeyDefinitionVersion.V1,
                 DefaultTTL = properties.DefaultTimeToLive,
-                Throughput = throughput,
                 ETag = properties.ETag
             };
         }
 
-        public async Task<OperationResult> CreateContainerAsync(CosmosContainer container, CancellationToken cancellationToken)
+        public async Task<OperationResult> CreateContainerAsync(CosmosContainer container, int? throughput, CancellationToken cancellationToken)
         {
             var properties = new ContainerProperties(container.Id, container.PartitionKeyPath)
             {
@@ -59,7 +57,7 @@ namespace CosmosDBStudio.Services.Implementation
 
             try
             {
-                var response = await _database.CreateContainerAsync(properties, container.Throughput, cancellationToken: cancellationToken);
+                var response = await _database.CreateContainerAsync(properties, throughput, cancellationToken: cancellationToken);
                 container.ETag = response.Resource.ETag;
                 return OperationResult.Success;
             }
@@ -73,10 +71,6 @@ namespace CosmosDBStudio.Services.Implementation
         {
             var c = _database.GetContainer(container.Id);
             var properties = (await c.ReadContainerAsync(cancellationToken: cancellationToken)).Resource;
-            var throughput = await c.ReadThroughputAsync(cancellationToken);
-
-            if (container.Throughput.HasValue != throughput.HasValue)
-                throw new InvalidOperationException("Cannot change whether throughput is provisioned for an existing container.");
 
             if (container.LargePartitionKey != (properties.PartitionKeyDefinitionVersion > PartitionKeyDefinitionVersion.V1))
                 throw new InvalidOperationException("Cannot change partition key definition version for an existing container.");
@@ -84,7 +78,9 @@ namespace CosmosDBStudio.Services.Implementation
             if (container.PartitionKeyPath != properties.PartitionKeyPath)
                 throw new InvalidOperationException("Cannot change partition key path for an existing container.");
 
-            if (container.DefaultTTL != properties.DefaultTimeToLive)
+            bool somethingChanged = container.DefaultTTL != properties.DefaultTimeToLive;
+
+            if (somethingChanged)
             {
                 properties.DefaultTimeToLive = container.DefaultTTL;
                 try
@@ -100,11 +96,6 @@ namespace CosmosDBStudio.Services.Implementation
                 {
                     return OperationResult.NotFound;
                 }
-            }
-
-            if (container.Throughput.HasValue && container.Throughput != throughput)
-            {
-                await c.ReplaceThroughputAsync(container.Throughput.Value, cancellationToken: cancellationToken);
             }
 
             return OperationResult.Success;

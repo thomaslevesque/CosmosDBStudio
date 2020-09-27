@@ -5,6 +5,7 @@
         Success,
         AlreadyExists,
         EditConflict,
-        NotFound
+        NotFound,
+        Forbidden
     }
 }

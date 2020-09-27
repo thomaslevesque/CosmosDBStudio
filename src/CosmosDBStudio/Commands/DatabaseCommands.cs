@@ -32,18 +32,11 @@ namespace CosmosDBStudio.Commands
 
         private async Task CreateAsync(AccountNodeViewModel accountVm)
         {
-            var dialog = _viewModelFactory.Value.CreateDatabaseEditor();
+            var dialog = _viewModelFactory.Value.CreateDatabaseEditor(null, null);
             if (_dialogService.ShowDialog(dialog) is true)
             {
-                var database = new CosmosDatabase
-                {
-                    Id = dialog.Id,
-                    Throughput = dialog.ProvisionThroughput
-                        ? dialog.Throughput
-                        : default(int?)
-                };
-
-                await accountVm.Context.Databases.CreateDatabaseAsync(database, default);
+                var (database, throughput) = dialog.GetDatabase();
+                await accountVm.Context.Databases.CreateDatabaseAsync(database, throughput, default);
                 _messenger.Publish(new DatabaseCreatedMessage(accountVm.Context, database));
             }
         }
@@ -58,12 +51,14 @@ namespace CosmosDBStudio.Commands
         private async Task EditAsync(DatabaseNodeViewModel databaseVm)
         {
             var context = databaseVm.Context;
-            var database = await context.AccountContext.Databases.GetDatabaseAsync(context.DatabaseId, default);
-            var dialog = _viewModelFactory.Value.CreateDatabaseEditor(database);
+            var database = await context.GetDatabaseAsync(default);
+            var throughput = await context.GetThroughputAsync(default);
+            var dialog = _viewModelFactory.Value.CreateDatabaseEditor(database, throughput);
             if (_dialogService.ShowDialog(dialog) is true)
             {
-                database = dialog.GetDatabase();
-                await context.AccountContext.Databases.UpdateDatabaseAsync(database, default);
+                var (_, newThroughput) = dialog.GetDatabase();
+                if (newThroughput != throughput)
+                    await context.SetThroughputAsync(newThroughput, default);
             }
         }
 
@@ -80,7 +75,7 @@ namespace CosmosDBStudio.Commands
                 return;
 
             var context = databaseVm.Context;
-            var database = await context.AccountContext.Databases.GetDatabaseAsync(context.DatabaseId, default);
+            var database = await context.GetDatabaseAsync(default);
             await context.AccountContext.Databases.DeleteDatabaseAsync(database, default);
             _messenger.Publish(new DatabaseDeletedMessage(context.AccountContext, database));
         }

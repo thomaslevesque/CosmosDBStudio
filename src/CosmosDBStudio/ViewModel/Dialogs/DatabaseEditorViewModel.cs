@@ -8,11 +8,14 @@ namespace CosmosDBStudio.ViewModel
 {
     public class DatabaseEditorViewModel : DialogViewModelBase
     {
-        public DatabaseEditorViewModel(CosmosDatabase? database)
+        private readonly string? _eTag;
+
+        public DatabaseEditorViewModel(CosmosDatabase? database, int? throughput)
         {
             _id = database?.Id ?? string.Empty;
-            _throughput = database?.Throughput ?? 400;
-            _provisionThroughput = (database?.Throughput).HasValue;
+            _eTag = database?.ETag;
+            _throughput = throughput ?? 400;
+            _provisionThroughput = throughput.HasValue;
             IsNew = database is null;
 
             Title = IsNew
@@ -70,15 +73,18 @@ namespace CosmosDBStudio.ViewModel
 
         private bool CanSave() => Validator?.HasError is false;
 
-        public CosmosDatabase GetDatabase()
+        public (CosmosDatabase database, int? throughput) GetDatabase()
         {
-            return new CosmosDatabase
+            var database = new CosmosDatabase
             {
                 Id = Id,
-                Throughput = ProvisionThroughput
-                    ? Throughput
-                    : default(int?)
+                ETag = _eTag
             };
+            int? throughput = ProvisionThroughput
+                ? Throughput
+                : default(int?);
+
+            return (database, throughput);
         }
     }
 }

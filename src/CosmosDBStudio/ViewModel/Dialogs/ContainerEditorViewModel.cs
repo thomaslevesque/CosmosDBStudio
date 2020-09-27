@@ -9,11 +9,14 @@ namespace CosmosDBStudio.ViewModel
 {
     public class ContainerEditorViewModel : DialogViewModelBase
     {
-        public ContainerEditorViewModel(CosmosContainer? container, bool databaseHasProvisionedThroughput)
+        private readonly string? _eTag;
+
+        public ContainerEditorViewModel(CosmosContainer? container, bool databaseHasProvisionedThroughput, int? throughput)
         {
             _id = container?.Id ?? string.Empty;
-            _throughput = container?.Throughput ?? 400;
-            _provisionThroughput = (container?.Throughput).HasValue;
+            _eTag = container?.ETag;
+            _throughput = throughput ?? 400;
+            _provisionThroughput = throughput.HasValue;
             _partitionKeyPath = container?.PartitionKeyPath ?? string.Empty;
             _largePartitionKey = container?.LargePartitionKey ?? false;
             if (container?.DefaultTTL is int defaultTTL)
@@ -143,22 +146,25 @@ namespace CosmosDBStudio.ViewModel
 
         private bool CanSave() => Validator?.HasError is false;
 
-        public CosmosContainer GetContainer()
+        public (CosmosContainer container, int? throughput) GetContainer()
         {
-            return new CosmosContainer
+            var container = new CosmosContainer
             {
                 Id = Id,
+                ETag = _eTag,
                 PartitionKeyPath = PartitionKeyPath,
                 LargePartitionKey = LargePartitionKey,
-                Throughput = ProvisionThroughput
-                    ? Throughput
-                    : default(int?),
                 DefaultTTL = EnableTTL
                     ? DefaultTTL > 0
                         ? DefaultTTL
                         : -1
                     : default(int?)
             };
+            int? throughput = ProvisionThroughput
+                ? Throughput
+                : default(int?);
+
+            return (container, throughput);
         }
     }
 }

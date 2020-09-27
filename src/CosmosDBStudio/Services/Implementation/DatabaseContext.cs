@@ -33,5 +33,23 @@ namespace CosmosDBStudio.Services.Implementation
             var partitionKeyPath = containerResponse.Resource.PartitionKeyPath;
             return new ContainerContext(this, _database, container, partitionKeyPath);
         }
+
+        public Task<CosmosDatabase> GetDatabaseAsync(CancellationToken cancellationToken) =>
+            AccountContext.Databases.GetDatabaseAsync(DatabaseId, cancellationToken);
+
+        public Task<int?> GetThroughputAsync(CancellationToken cancellationToken) =>
+            _database.ReadThroughputAsync(cancellationToken);
+
+        public async Task<OperationResult> SetThroughputAsync(int? throughput, CancellationToken cancellationToken)
+        {
+            int? currentThroughput = await _database.ReadThroughputAsync(cancellationToken);
+            if (throughput.HasValue != currentThroughput.HasValue)
+                return OperationResult.Forbidden;
+
+            if (throughput.HasValue && throughput != currentThroughput)
+                await _database.ReplaceThroughputAsync(throughput.Value, cancellationToken: cancellationToken);
+
+            return OperationResult.Success;
+        }
     }
 }

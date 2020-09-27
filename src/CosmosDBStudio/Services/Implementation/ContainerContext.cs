@@ -1,5 +1,7 @@
 ﻿using CosmosDBStudio.Model;
 using Microsoft.Azure.Cosmos;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CosmosDBStudio.Services.Implementation
 {
@@ -44,5 +46,23 @@ namespace CosmosDBStudio.Services.Implementation
         public IQueryService Query { get; }
 
         public IScriptService Scripts { get; }
+
+        public Task<CosmosContainer> GetContainerAsync(CancellationToken cancellationToken) =>
+            DatabaseContext.Containers.GetContainerAsync(ContainerId, cancellationToken);
+
+        public Task<int?> GetThroughputAsync(CancellationToken cancellationToken) =>
+            _container.ReadThroughputAsync(cancellationToken);
+
+        public async Task<OperationResult> SetThroughputAsync(int? throughput, CancellationToken cancellationToken)
+        {
+            int? currentThroughput = await _container.ReadThroughputAsync(cancellationToken);
+            if (throughput.HasValue != currentThroughput.HasValue)
+                return OperationResult.Forbidden;
+
+            if (throughput.HasValue && throughput != currentThroughput)
+                await _container.ReplaceThroughputAsync(throughput.Value, cancellationToken: cancellationToken);
+
+            return OperationResult.Success;
+        }
     }
 }

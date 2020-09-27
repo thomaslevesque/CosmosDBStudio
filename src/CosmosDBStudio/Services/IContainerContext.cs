@@ -1,4 +1,8 @@
-﻿namespace CosmosDBStudio.Services
+﻿using CosmosDBStudio.Model;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace CosmosDBStudio.Services
 {
     public interface IContainerContext
     {
@@ -13,5 +17,10 @@
         IDocumentService Documents { get; }
         IQueryService Query { get; }
         IScriptService Scripts { get; }
+
+        Task<CosmosContainer> GetContainerAsync(CancellationToken cancellationToken);
+
+        Task<int?> GetThroughputAsync(CancellationToken cancellationToken);
+        Task<OperationResult> SetThroughputAsync(int? throughput, CancellationToken cancellationToken);
     }
 }

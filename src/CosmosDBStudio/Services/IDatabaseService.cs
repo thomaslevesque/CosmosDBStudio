@@ -8,8 +8,7 @@ namespace CosmosDBStudio.Services
     {
         Task<string[]> GetDatabaseNamesAsync(CancellationToken cancellationToken);
         Task<CosmosDatabase> GetDatabaseAsync(string databaseId, CancellationToken cancellationToken);
-        Task<OperationResult> CreateDatabaseAsync(CosmosDatabase database, CancellationToken cancellationToken);
-        Task<OperationResult> UpdateDatabaseAsync(CosmosDatabase database, CancellationToken cancellationToken);
+        Task<OperationResult> CreateDatabaseAsync(CosmosDatabase database, int? throughput, CancellationToken cancellationToken);
         Task<OperationResult> DeleteDatabaseAsync(CosmosDatabase database, CancellationToken cancellationToken);
     }
 }

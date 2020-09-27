@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using CosmosDBStudio.Model;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CosmosDBStudio.Services
@@ -10,6 +11,12 @@ namespace CosmosDBStudio.Services
         string AccountName { get; }
         string DatabaseId { get; }
         IContainerService Containers { get; }
+
         Task<IContainerContext> GetContainerContextAsync(string containerId, CancellationToken cancellationToken);
+
+        Task<CosmosDatabase> GetDatabaseAsync(CancellationToken cancellationToken);
+
+        Task<int?> GetThroughputAsync(CancellationToken cancellationToken);
+        Task<OperationResult> SetThroughputAsync(int? throughput, CancellationToken cancellationToken);
     }
 }

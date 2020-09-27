@@ -31,13 +31,13 @@ namespace CosmosDBStudio.Commands
 
         private async Task CreateAsync(DatabaseNodeViewModel databaseVm)
         {
-            var context = databaseVm.Context;
-            var database = await context.AccountContext.Databases.GetDatabaseAsync(databaseVm.Id, default);
-            var dialog = _viewModelFactory.Value.CreateContainerEditor(null, database.Throughput.HasValue);
+            var dbContext = databaseVm.Context;
+            var databaseThroughput = await dbContext.GetThroughputAsync(default);
+            var dialog = _viewModelFactory.Value.CreateContainerEditor(null, databaseThroughput.HasValue, null);
             if (_dialogService.ShowDialog(dialog) is true)
             {
-                var container = dialog.GetContainer();
-                await databaseVm.Context.Containers.CreateContainerAsync(container, default);
+                var (container, throughput) = dialog.GetContainer();
+                await databaseVm.Context.Containers.CreateContainerAsync(container, throughput, default);
                 _messenger.Publish(new ContainerCreatedMessage(databaseVm.Context, container));
             }
         }
@@ -52,13 +52,15 @@ namespace CosmosDBStudio.Commands
         private async Task EditAsync(ContainerNodeViewModel containerVm)
         {
             var context = containerVm.Context;
-            var database = await context.DatabaseContext.AccountContext.Databases.GetDatabaseAsync(context.DatabaseId, default);
+            var databaseThroughput = await context.DatabaseContext.GetThroughputAsync(default);
             var container = await context.DatabaseContext.Containers.GetContainerAsync(context.ContainerId, default);
-            var dialog = _viewModelFactory.Value.CreateContainerEditor(container, database.Throughput.HasValue);
+            var throughput = await context.GetThroughputAsync(default);
+            var dialog = _viewModelFactory.Value.CreateContainerEditor(container, databaseThroughput.HasValue, throughput);
             if (_dialogService.ShowDialog(dialog) is true)
             {
-                container = dialog.GetContainer();
+                (container, throughput) = dialog.GetContainer();
                 await context.DatabaseContext.Containers.UpdateContainerAsync(container, default);
+                await context.SetThroughputAsync(throughput, default);
             }
         }
 

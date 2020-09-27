@@ -71,7 +71,7 @@ namespace CosmosDBStudio.Services.Implementation
 
             void OnWindowClosing(object? sender, CancelEventArgs e)
             {
-                e.Cancel = !ConfirmClose(null);
+                e.Cancel = !ConfirmClose(window.DialogResult);
             }
 
             void OnCloseRequested(object? sender, bool? dialogResult)
