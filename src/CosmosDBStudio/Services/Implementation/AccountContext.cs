@@ -21,9 +21,9 @@ namespace CosmosDBStudio.Services.Implementation
 
         public IDatabaseService Databases { get; }
 
-        public IDatabaseContext GetDatabaseContext(string databaseId)
+        public IDatabaseContext GetDatabaseContext(CosmosDatabase database)
         {
-            return new DatabaseContext(this, _client.GetDatabase(databaseId));
+            return new DatabaseContext(this, _client.GetDatabase(database.Id));
         }
     }
 }

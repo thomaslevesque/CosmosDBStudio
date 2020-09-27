@@ -12,7 +12,7 @@ namespace CosmosDBStudio.Services
         string DatabaseId { get; }
         IContainerService Containers { get; }
 
-        Task<IContainerContext> GetContainerContextAsync(string containerId, CancellationToken cancellationToken);
+        IContainerContext GetContainerContext(CosmosContainer container, CancellationToken cancellationToken);
 
         Task<CosmosDatabase> GetDatabaseAsync(CancellationToken cancellationToken);
 

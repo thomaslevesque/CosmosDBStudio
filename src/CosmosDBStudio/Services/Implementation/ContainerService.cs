@@ -18,14 +18,21 @@ namespace CosmosDBStudio.Services.Implementation
             _database = database;
         }
 
-        public async Task<string[]> GetContainerNamesAsync(CancellationToken cancellationToken)
+        public async Task<CosmosContainer[]> GetContainersAsync(CancellationToken cancellationToken)
         {
             var iterator = _database.GetContainerQueryIterator<ContainerProperties>();
-            var containers = new List<string>();
+            var containers = new List<CosmosContainer>();
             while (iterator.HasMoreResults)
             {
                 var response = await iterator.ReadNextAsync(cancellationToken);
-                containers.AddRange(response.Select(d => d.Id));
+                containers.AddRange(response.Select(c => new CosmosContainer
+                {
+                    Id = c.Id,
+                    PartitionKeyPath = c.PartitionKeyPath,
+                    LargePartitionKey = c.PartitionKeyDefinitionVersion > PartitionKeyDefinitionVersion.V1,
+                    DefaultTTL = c.DefaultTimeToLive,
+                    ETag = c.ETag
+                }));
             }
 
             return containers.ToArray();

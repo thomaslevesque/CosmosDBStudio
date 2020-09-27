@@ -58,9 +58,9 @@ namespace CosmosDBStudio.ViewModel
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var databases = await Context.Databases.GetDatabaseNamesAsync(default);
+            var databases = await Context.Databases.GetDatabasesAsync(default);
             return databases
-                .Select(id => _viewModelFactory.CreateDatabaseNode(this, id, Context.GetDatabaseContext(id)))
+                .Select(database => _viewModelFactory.CreateDatabaseNode(this, database, Context.GetDatabaseContext(database)))
                 .ToList();
         }
 

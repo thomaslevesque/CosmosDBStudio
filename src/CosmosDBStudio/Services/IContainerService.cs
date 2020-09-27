@@ -6,7 +6,7 @@ namespace CosmosDBStudio.Services
 {
     public interface IContainerService
     {
-        Task<string[]> GetContainerNamesAsync(CancellationToken cancellationToken);
+        Task<CosmosContainer[]> GetContainersAsync(CancellationToken cancellationToken);
         Task<CosmosContainer> GetContainerAsync(string containerId, CancellationToken cancellationToken);
         Task<OperationResult> CreateContainerAsync(CosmosContainer container, int? throughput, CancellationToken cancellationToken);
         Task<OperationResult> UpdateContainerAsync(CosmosContainer container, CancellationToken cancellationToken);

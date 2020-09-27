@@ -1,4 +1,6 @@
-﻿namespace CosmosDBStudio.Services
+﻿using CosmosDBStudio.Model;
+
+namespace CosmosDBStudio.Services
 {
     public interface IAccountContext
     {
@@ -7,6 +9,6 @@
 
         
         IDatabaseService Databases { get; }
-        IDatabaseContext GetDatabaseContext(string databaseId);
+        IDatabaseContext GetDatabaseContext(CosmosDatabase database);
     }
 }

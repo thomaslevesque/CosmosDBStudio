@@ -26,12 +26,9 @@ namespace CosmosDBStudio.Services.Implementation
 
         public IContainerService Containers { get; }
 
-        public async Task<IContainerContext> GetContainerContextAsync(string containerId, CancellationToken cancellationToken)
+        public IContainerContext GetContainerContext(CosmosContainer container, CancellationToken cancellationToken)
         {
-            var container = _database.GetContainer(containerId);
-            var containerResponse = await container.ReadContainerAsync(null, cancellationToken);
-            var partitionKeyPath = containerResponse.Resource.PartitionKeyPath;
-            return new ContainerContext(this, _database, container, partitionKeyPath);
+            return new ContainerContext(this, _database, _database.GetContainer(container.Id), container.PartitionKeyPath);
         }
 
         public Task<CosmosDatabase> GetDatabaseAsync(CancellationToken cancellationToken) =>

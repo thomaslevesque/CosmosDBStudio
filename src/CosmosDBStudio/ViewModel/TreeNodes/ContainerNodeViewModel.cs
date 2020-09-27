@@ -1,4 +1,5 @@
 ﻿using CosmosDBStudio.Commands;
+using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
 using System.Collections.Generic;
@@ -17,13 +18,13 @@ namespace CosmosDBStudio.ViewModel
 
         public ContainerNodeViewModel(
             DatabaseNodeViewModel database,
-            string id,
+            CosmosContainer container,
             IContainerContext context,
             ContainerCommands containerCommands,
             IViewModelFactory viewModelFactory)
         {
             Database = database;
-            Id = id;
+            Id = container.Id;
             Context = context;
             _containerCommands = containerCommands;
             _viewModelFactory = viewModelFactory;

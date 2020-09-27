@@ -10,8 +10,8 @@ namespace CosmosDBStudio.ViewModel
         QueryResultViewModel CreateQueryResult(QueryResult result, IContainerContext context);
         AccountNodeViewModel CreateAccountNode(CosmosAccount account, IAccountContext accountContext, AccountFolderNodeViewModel? parent);
         AccountFolderNodeViewModel CreateAccountFolderNode(CosmosAccountFolder folder, AccountFolderNodeViewModel? parent);
-        DatabaseNodeViewModel CreateDatabaseNode(AccountNodeViewModel account, string id, IDatabaseContext context);
-        ContainerNodeViewModel CreateContainerNode(DatabaseNodeViewModel database, string id, IContainerContext context);
+        DatabaseNodeViewModel CreateDatabaseNode(AccountNodeViewModel account, CosmosDatabase database, IDatabaseContext context);
+        ContainerNodeViewModel CreateContainerNode(DatabaseNodeViewModel database, CosmosContainer container, IContainerContext context);
         AccountsViewModel CreateAccounts();
         NotRunQueryResultViewModel CreateNotRunQueryResult();
         DocumentResultViewModel CreateDocumentResult(JToken document, IContainerContext context);

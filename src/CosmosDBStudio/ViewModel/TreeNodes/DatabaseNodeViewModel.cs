@@ -1,9 +1,8 @@
 ﻿using CosmosDBStudio.Commands;
 using CosmosDBStudio.Messages;
+using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
-using Microsoft.Azure.Cosmos.Linq;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CosmosDBStudio.ViewModel
@@ -14,7 +13,7 @@ namespace CosmosDBStudio.ViewModel
 
         public DatabaseNodeViewModel(
             AccountNodeViewModel account,
-            string id,
+            CosmosDatabase database,
             IDatabaseContext context,
             DatabaseCommands databaseCommands,
             ContainerCommands containerCommands,
@@ -22,7 +21,7 @@ namespace CosmosDBStudio.ViewModel
             IMessenger messenger)
         {
             Account = account;
-            Id = id;
+            Id = database.Id;
             Context = context;
             _viewModelFactory = viewModelFactory;
 
@@ -53,12 +52,12 @@ namespace CosmosDBStudio.ViewModel
 
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
-            var containers = await Context.Containers.GetContainerNamesAsync(default);
+            var containers = await Context.Containers.GetContainersAsync(default);
             var vms = new List<ContainerNodeViewModel>();
-            foreach (var id in containers)
+            foreach (var container in containers)
             {
-                var context = await Context.GetContainerContextAsync(id, default);
-                vms.Add(_viewModelFactory.CreateContainerNode(this, id, context));
+                var context = Context.GetContainerContext(container, default);
+                vms.Add(_viewModelFactory.CreateContainerNode(this, container, context));
             }
             return vms;
         }

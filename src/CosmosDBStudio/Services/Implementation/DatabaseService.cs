@@ -17,14 +17,18 @@ namespace CosmosDBStudio.Services.Implementation
             _client = client;
         }
 
-        public async Task<string[]> GetDatabaseNamesAsync(CancellationToken cancellationToken)
+        public async Task<CosmosDatabase[]> GetDatabasesAsync(CancellationToken cancellationToken)
         {
             var iterator = _client.GetDatabaseQueryIterator<DatabaseProperties>();
-            var databases = new List<string>();
+            var databases = new List<CosmosDatabase>();
             while (iterator.HasMoreResults)
             {
                 var response = await iterator.ReadNextAsync(cancellationToken);
-                databases.AddRange(response.Select(d => d.Id));
+                databases.AddRange(response.Select(d => new CosmosDatabase
+                {
+                    Id = d.Id,
+                    ETag = d.ETag
+                }));
             }
 
             return databases.ToArray();
