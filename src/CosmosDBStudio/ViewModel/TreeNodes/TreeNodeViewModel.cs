@@ -1,6 +1,7 @@
 ﻿using EssentialMVVM;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {
@@ -31,5 +32,10 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public bool HasError => !string.IsNullOrEmpty(Error);
+
+        public ICommand? DefaultCommand => GetDefaultCommand()?.Command;
+        public object? DefaultCommandParameter => GetDefaultCommand()?.CommandParameter;
+
+        private CommandViewModel? GetDefaultCommand() => Commands?.FirstOrDefault(c => c.IsDefault);
     }
 }

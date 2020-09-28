@@ -75,6 +75,7 @@
                         </Setter.Value>
                     </Setter>
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <EventSetter Event="KeyDown" Handler="TreeViewItem_KeyDown" />
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.ContextMenu>

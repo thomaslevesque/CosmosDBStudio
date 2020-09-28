@@ -1,4 +1,5 @@
-﻿using Microsoft.Xaml.Behaviors;
+﻿using CosmosDBStudio.Extensions;
+using Microsoft.Xaml.Behaviors;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -21,15 +22,7 @@ namespace CosmosDBStudio.Behaviors
 
         private void OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            TryExecute(DoubleClickCommand, DoubleClickCommandParameter);
-        }
-
-        private static void TryExecute(ICommand? command, object? parameter)
-        {
-            if (command is null)
-                return;
-            if (command.CanExecute(parameter))
-                command.Execute(parameter);
+            DoubleClickCommand.TryExecute(DoubleClickCommandParameter);
         }
 
         public ICommand? DoubleClickCommand

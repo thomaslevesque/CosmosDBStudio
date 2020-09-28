@@ -30,7 +30,7 @@ namespace CosmosDBStudio.ViewModel
             _viewModelFactory = viewModelFactory;
             Commands = new[]
             {
-                new CommandViewModel("New query sheet", containerCommands.NewQuerySheetCommand, this),
+                new CommandViewModel("New query sheet", containerCommands.NewQuerySheetCommand, this, isDefault: true),
                 CommandViewModel.Separator(),
                 new CommandViewModel("Refresh", RefreshCommand),
                 CommandViewModel.Separator(),

@@ -31,7 +31,7 @@ namespace CosmosDBStudio.ViewModel
             Messenger = messenger;
             Commands = new[]
             {
-                new CommandViewModel($"Open {Description}", commands.OpenCommand, this),
+                new CommandViewModel($"Open {Description}", commands.OpenCommand, this, isDefault: true),
                 CommandViewModel.Separator(),
                 new CommandViewModel($"Create new {Description}", commands.CreateCommand, parent),
                 new CommandViewModel($"Delete {Description}", commands.DeleteCommand, this),

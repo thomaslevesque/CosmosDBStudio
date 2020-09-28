@@ -7,11 +7,12 @@ namespace CosmosDBStudio.ViewModel
     {
         private CommandViewModel() { }
 
-        public CommandViewModel(string text, ICommand command, object? commandParameter = null)
+        public CommandViewModel(string text, ICommand command, object? commandParameter = null, bool isDefault = false)
         {
             _text = text;
             _command = command;
             _commandParameter = commandParameter;
+            _isDefault = isDefault;
         }
 
         private string? _text;
@@ -36,6 +37,13 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public bool IsSeparator => Text is null;
+
+        private bool _isDefault;
+        public bool IsDefault
+        {
+            get => _isDefault;
+            set => Set(ref _isDefault, value);
+        }
 
         public static CommandViewModel Separator() => new CommandViewModel();
     }
