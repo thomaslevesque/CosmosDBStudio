@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="CosmosDBStudio.View.TriggerEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CosmosDBStudio.View"
+             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:cosmos="clr-namespace:Microsoft.Azure.Cosmos.Scripts;assembly=Microsoft.Azure.Cosmos.Client"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding ContainerPath, Mode=OneWay}" />
+        </Grid>
+        <ToolBar Grid.Row="1"
+                    KeyboardNavigation.TabNavigation="Continue"
+                    FocusManager.IsFocusScope="False">
+            <Button Content="{StaticResource fa-save}"
+                    ToolTip="Execute (Ctrl+Enter, F5)"
+                    Style="{StaticResource FontAwesomeButton}"
+                    Command="{Binding SaveCommand}" />
+            <Button Content="{StaticResource fa-undo}"
+                    ToolTip="Execute (Ctrl+Enter, F5)"
+                    Style="{StaticResource FontAwesomeButton}"
+                    Command="{Binding RevertCommand}" />
+            <Separator />
+            <Label VerticalAlignment="Center" Content="Type" />
+            <ComboBox Margin="0,0,3,0" VerticalAlignment="Center"
+                        IsEditable="False" Width="100"
+                        SelectedItem="{Binding Type}">
+                <cosmos:TriggerType>Pre</cosmos:TriggerType>
+                <cosmos:TriggerType>Post</cosmos:TriggerType>
+            </ComboBox>
+            <Label VerticalAlignment="Center" Content="Operation" />
+            <ComboBox Margin="0,0,3,0" VerticalAlignment="Center"
+                        IsEditable="False" Width="100"
+                        SelectedItem="{Binding Operation}">
+                <cosmos:TriggerOperation>All</cosmos:TriggerOperation>
+                <cosmos:TriggerOperation>Create</cosmos:TriggerOperation>
+                <cosmos:TriggerOperation>Update</cosmos:TriggerOperation>
+                <cosmos:TriggerOperation>Delete</cosmos:TriggerOperation>
+                <cosmos:TriggerOperation>Replace</cosmos:TriggerOperation>
+            </ComboBox>
+        </ToolBar>
+        <avalonEdit:TextEditor Grid.Row="2" SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
+            <i:Interaction.Behaviors>
+                <bhv:AvalonTextEditorBehavior UseSearch="True" />
+                <bhv:AvalonTextEditorBindingBehavior
+                    Text="{Binding Text}"
+                    SelectedText="{Binding SelectedText}"
+                    CursorPosition="{Binding CursorPosition}"
+                    Selection="{Binding Selection}" />
+                <bhv:FocusOnLoadBehavior />
+            </i:Interaction.Behaviors>
+        </avalonEdit:TextEditor>
+    </Grid>
+</UserControl>
