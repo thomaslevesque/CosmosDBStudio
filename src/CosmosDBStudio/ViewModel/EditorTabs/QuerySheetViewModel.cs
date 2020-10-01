@@ -2,7 +2,6 @@
 using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
-using CosmosDBStudio.ViewModel.EditorTabs;
 using EssentialMVVM;
 using Hamlet;
 using Newtonsoft.Json;

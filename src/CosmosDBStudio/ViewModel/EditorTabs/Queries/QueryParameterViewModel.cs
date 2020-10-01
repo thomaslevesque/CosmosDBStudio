@@ -1,5 +1,4 @@
-﻿using CosmosDBStudio.ViewModel.EditorTabs;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace CosmosDBStudio.ViewModel
 {

@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
 
-namespace CosmosDBStudio.ViewModel.EditorTabs
+namespace CosmosDBStudio.ViewModel
 {
     public abstract class ParameterViewModelBase<TViewModel> : BindableBase
         where TViewModel : ParameterViewModelBase<TViewModel>

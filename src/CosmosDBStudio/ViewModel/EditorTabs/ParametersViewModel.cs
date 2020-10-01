@@ -2,7 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace CosmosDBStudio.ViewModel.EditorTabs
+namespace CosmosDBStudio.ViewModel
 {
     public class ParametersViewModel<T> : BindableBase
         where T : ParameterViewModelBase<T>, new()
