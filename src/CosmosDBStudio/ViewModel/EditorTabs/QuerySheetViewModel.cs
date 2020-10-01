@@ -1,10 +1,10 @@
 ﻿using CosmosDBStudio.Extensions;
+using CosmosDBStudio.Helpers;
 using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
 using Hamlet;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
@@ -67,7 +67,7 @@ namespace CosmosDBStudio.ViewModel
             Errors = new ViewModelValidator<QuerySheetViewModel>(this);
             Errors.AddValidator(
                 vm => vm.PartitionKey,
-                value => TryParsePartitionKeyValue(value, out _)
+                value => string.IsNullOrEmpty(value) || JsonHelper.TryParseJsonValue(value, out _)
                     ? null
                     : "Invalid partition key value");
 
@@ -197,10 +197,11 @@ namespace CosmosDBStudio.ViewModel
 
             // TODO: options
 
-            if (TryParsePartitionKeyValue(PartitionKey, out Option<object?> partitionKey) &&
-                !string.IsNullOrEmpty(PartitionKey))
+            Option<object?> partitionKey = Option.None();
+            if (!string.IsNullOrEmpty(PartitionKey) && JsonHelper.TryParseJsonValue(PartitionKey, out object? pkValue))
             {
-                PartitionKeyMRU.PushMRU(PartitionKey!, 10);
+                partitionKey = pkValue;
+                PartitionKeyMRU.PushMRU(PartitionKey, 10);
             }
 
             var query = new Query(queryText);
@@ -336,11 +337,10 @@ namespace CosmosDBStudio.ViewModel
             if (containerContext.PartitionKeyPath == "/id")
                 return;
 
+
             object? partitionKey = null;
-            if (TryParsePartitionKeyValue(partitionKeyRawValue, out var partitionKeyOption))
-            {
-                partitionKeyOption.TryGetValue(out partitionKey);
-            }
+            if (!string.IsNullOrEmpty(partitionKeyRawValue))
+                JsonHelper.TryParseJsonValue(partitionKeyRawValue, out partitionKey);
 
             var pathParts = containerContext.PartitionKeyPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
             JObject current = document;
@@ -379,33 +379,6 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
-        private bool TryParsePartitionKeyValue(string? rawValue, out Option<object?> value)
-        {
-            if (string.IsNullOrEmpty(rawValue))
-            {
-                value = Option.None();
-                return true;
-            }
-
-            try
-            {
-                using var tReader = new StringReader(rawValue);
-                using var jReader = new JsonTextReader(tReader)
-                {
-                    DateParseHandling = DateParseHandling.None
-                };
-
-                var token = JValue.ReadFrom(jReader);
-                value = Option.Some(token.ToObject<object?>());
-                return true;
-            }
-            catch
-            {
-                value = Option.None();
-                return false;
-            }
-        }
-
         private QueryParameterViewModel CreateParameter(QuerySheetParameter p)
         {
             var pvm = new QueryParameterViewModel
@@ -435,10 +408,6 @@ namespace CosmosDBStudio.ViewModel
 
         private void SetContainer(ContainerNodeViewModel container)
         {
-            var accountId = container.Database.Account.Id;
-            var databaseId = container.Database.Id;
-            var containerId = container.Id;
-
             _containerContext = container.Context;
             _executeCommand?.RaiseCanExecuteChanged();
             _newDocumentCommand?.RaiseCanExecuteChanged();

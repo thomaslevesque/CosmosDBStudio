@@ -1,4 +1,5 @@
-﻿using EssentialMVVM;
+﻿using CosmosDBStudio.Helpers;
+using EssentialMVVM;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -69,39 +70,12 @@ namespace CosmosDBStudio.ViewModel
             if (IsPlaceholder)
                 return null;
 
-            if (!TryParseParameterValue(rawValue, out _))
+            if (!JsonHelper.TryParseJsonValue(rawValue, out _))
                 return "Invalid JSON value";
 
             return null;
         }
 
-        public bool TryParseParameterValue(out object? value) => TryParseParameterValue(RawValue, out value);
-
-        private static bool TryParseParameterValue(string? rawValue, out object? value)
-        {
-            if (string.IsNullOrEmpty(rawValue))
-            {
-                value = null;
-                return false;
-            }
-
-            try
-            {
-                using var tReader = new StringReader(rawValue);
-                using var jReader = new JsonTextReader(tReader)
-                {
-                    DateParseHandling = DateParseHandling.None
-                };
-
-                var token = JToken.ReadFrom(jReader);
-                value = token.ToObject<object?>();
-                return true;
-            }
-            catch
-            {
-                value = null;
-                return false;
-            }
-        }
+        public bool TryParseParameterValue(out object? value) => JsonHelper.TryParseJsonValue(RawValue, out value);
     }
 }
