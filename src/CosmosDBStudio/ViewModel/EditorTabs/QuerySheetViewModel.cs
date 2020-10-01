@@ -55,7 +55,7 @@ namespace CosmosDBStudio.ViewModel
                 PartitionKeyMRU.Add(mru);
             }
 
-            Parameters = new ObservableCollection<ParameterViewModel>();
+            Parameters = new ObservableCollection<QueryParameterViewModel>();
             foreach (var p in querySheet.Parameters)
             {
                 CreateParameter(p);
@@ -130,7 +130,7 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _partitionKey, value).AndExecute(() => Errors?.Refresh());
         }
 
-        public ObservableCollection<ParameterViewModel> Parameters { get; }
+        public ObservableCollection<QueryParameterViewModel> Parameters { get; }
 
         private QueryResultViewModelBase _result;
         public QueryResultViewModelBase Result
@@ -407,7 +407,7 @@ namespace CosmosDBStudio.ViewModel
 
         private void CreateParameter(QuerySheetParameter p)
         {
-            var pvm = new ParameterViewModel
+            var pvm = new QueryParameterViewModel
             {
                 Name = p.Name,
                 RawValue = p.RawValue,
@@ -422,14 +422,14 @@ namespace CosmosDBStudio.ViewModel
 
         private void AddParameterPlaceholder()
         {
-            var placeholder = new ParameterViewModel { IsPlaceholder = true };
+            var placeholder = new QueryParameterViewModel { IsPlaceholder = true };
             placeholder.Created += OnParameterCreated;
             Parameters.Add(placeholder);
         }
 
         private void OnParameterCreated(object? sender, EventArgs _)
         {
-            if (sender is ParameterViewModel placeholder)
+            if (sender is QueryParameterViewModel placeholder)
             {
                 placeholder.Created -= OnParameterCreated;
                 placeholder.DeleteRequested += OnParameterDeleteRequested;
@@ -439,7 +439,7 @@ namespace CosmosDBStudio.ViewModel
 
         private void OnParameterDeleteRequested(object? sender, EventArgs e)
         {
-            if (sender is ParameterViewModel parameter)
+            if (sender is QueryParameterViewModel parameter)
             {
                 Parameters.Remove(parameter);
             }

@@ -9,12 +9,12 @@ using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
 {
-    public class ParameterViewModel : BindableBase
+    public class QueryParameterViewModel : BindableBase
     {
-        public ParameterViewModel()
+        public QueryParameterViewModel()
         {
             MRU = new ObservableCollection<string>();
-            Errors = new ViewModelValidator<ParameterViewModel>(this);
+            Errors = new ViewModelValidator<QueryParameterViewModel>(this);
             Errors.AddValidator(
                 vm => vm.Name,
                 ValidateName);
@@ -29,7 +29,7 @@ namespace CosmosDBStudio.ViewModel
                 return null;
 
             if (!TryParseParameterValue(rawValue, out _))
-                return "Invalid value";
+                return "Invalid JSON value";
 
             return null;
         }
@@ -48,7 +48,7 @@ namespace CosmosDBStudio.ViewModel
             return null;
         }
 
-        public ViewModelValidator<ParameterViewModel> Errors { get; }
+        public ViewModelValidator<QueryParameterViewModel> Errors { get; }
 
         private string? _name;
         public string? Name
