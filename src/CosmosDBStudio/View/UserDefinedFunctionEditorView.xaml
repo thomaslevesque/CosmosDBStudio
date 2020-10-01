@@ -22,11 +22,11 @@
                     KeyboardNavigation.TabNavigation="Continue"
                     FocusManager.IsFocusScope="False">
             <Button Content="{StaticResource fa-save}"
-                    ToolTip="Execute (Ctrl+Enter, F5)"
+                    ToolTip="Save"
                     Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding SaveCommand}" />
             <Button Content="{StaticResource fa-undo}"
-                    ToolTip="Execute (Ctrl+Enter, F5)"
+                    ToolTip="Revert"
                     Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding RevertCommand}" />
         </ToolBar>

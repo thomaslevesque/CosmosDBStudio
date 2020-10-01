@@ -22,24 +22,24 @@
                     KeyboardNavigation.TabNavigation="Continue"
                     FocusManager.IsFocusScope="False">
             <Button Content="{StaticResource fa-save}"
-                    ToolTip="Execute (Ctrl+Enter, F5)"
+                    ToolTip="Save"
                     Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding SaveCommand}" />
             <Button Content="{StaticResource fa-undo}"
-                    ToolTip="Execute (Ctrl+Enter, F5)"
+                    ToolTip="Revert"
                     Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding RevertCommand}" />
         </ToolBar>
         <avalonEdit:TextEditor Grid.Row="2" SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
-            <i:Interaction.Behaviors>
-                <bhv:AvalonTextEditorBehavior UseSearch="True" />
-                <bhv:AvalonTextEditorBindingBehavior
-                    Text="{Binding Text}"
-                    SelectedText="{Binding SelectedText}"
-                    CursorPosition="{Binding CursorPosition}"
-                    Selection="{Binding Selection}" />
-                <bhv:FocusOnLoadBehavior />
-            </i:Interaction.Behaviors>
-        </avalonEdit:TextEditor>
+                <i:Interaction.Behaviors>
+                    <bhv:AvalonTextEditorBehavior UseSearch="True" />
+                    <bhv:AvalonTextEditorBindingBehavior
+                        Text="{Binding Text}"
+                        SelectedText="{Binding SelectedText}"
+                        CursorPosition="{Binding CursorPosition}"
+                        Selection="{Binding Selection}" />
+                    <bhv:FocusOnLoadBehavior />
+                </i:Interaction.Behaviors>
+            </avalonEdit:TextEditor>
     </Grid>
 </UserControl>
