@@ -91,6 +91,7 @@
                           Visibility="{Binding ShowParameters, Converter={StaticResource boolToVisibility}}" />
             <local:QueryParametersView Grid.Column="1"
                                        MinWidth="250"
+                                       DataContext="{Binding Parameters}"
                                        IsVisibleChanged="ParametersViewVisibleChanged"
                                        Visibility="{Binding ShowParameters, Converter={StaticResource boolToVisibility}}">
                 

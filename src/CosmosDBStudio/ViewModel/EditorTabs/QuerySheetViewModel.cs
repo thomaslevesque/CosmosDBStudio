@@ -2,6 +2,7 @@
 using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
+using CosmosDBStudio.ViewModel.EditorTabs;
 using EssentialMVVM;
 using Hamlet;
 using Newtonsoft.Json;
@@ -55,13 +56,14 @@ namespace CosmosDBStudio.ViewModel
                 PartitionKeyMRU.Add(mru);
             }
 
-            Parameters = new ObservableCollection<QueryParameterViewModel>();
+            Parameters = new ParametersViewModel<QueryParameterViewModel>();
             foreach (var p in querySheet.Parameters)
             {
-                CreateParameter(p);
+                Parameters.AddParameter(CreateParameter(p));
                 ShowParameters = true;
             }
-            AddParameterPlaceholder();
+
+            Parameters.AddPlaceholder();
 
             Errors = new ViewModelValidator<QuerySheetViewModel>(this);
             Errors.AddValidator(
@@ -130,7 +132,7 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _partitionKey, value).AndExecute(() => Errors?.Refresh());
         }
 
-        public ObservableCollection<QueryParameterViewModel> Parameters { get; }
+        public ParametersViewModel<QueryParameterViewModel> Parameters { get; }
 
         private QueryResultViewModelBase _result;
         public QueryResultViewModelBase Result
@@ -158,7 +160,7 @@ namespace CosmosDBStudio.ViewModel
                 PartitionKeyMRU = PartitionKeyMRU.ToList()
             };
 
-            foreach (var p in Parameters)
+            foreach (var p in Parameters.Parameters)
             {
                 if (p.Name is string name)
                 {
@@ -204,7 +206,7 @@ namespace CosmosDBStudio.ViewModel
 
             var query = new Query(queryText);
             query.PartitionKey = partitionKey;
-            foreach (var p in Parameters)
+            foreach (var p in Parameters.Parameters)
             {
                 if (p.IsPlaceholder || p.Errors.HasError)
                     continue;
@@ -224,7 +226,7 @@ namespace CosmosDBStudio.ViewModel
                 if (!Regex.IsMatch(queryText, $@"@\b{nakedName}\b", RegexOptions.Multiline))
                     continue;
 
-                p.TryParseParameterValue(p.RawValue, out object? value);
+                p.TryParseParameterValue(out object? value);
                 query.Parameters[name] = value;
                 p.MRU.PushMRU(p.RawValue!, 10);
             }
@@ -405,7 +407,7 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
-        private void CreateParameter(QuerySheetParameter p)
+        private QueryParameterViewModel CreateParameter(QuerySheetParameter p)
         {
             var pvm = new QueryParameterViewModel
             {
@@ -416,33 +418,7 @@ namespace CosmosDBStudio.ViewModel
             {
                 pvm.MRU.Add(mru);
             }
-            pvm.DeleteRequested += OnParameterDeleteRequested;
-            Parameters.Add(pvm);
-        }
-
-        private void AddParameterPlaceholder()
-        {
-            var placeholder = new QueryParameterViewModel { IsPlaceholder = true };
-            placeholder.Created += OnParameterCreated;
-            Parameters.Add(placeholder);
-        }
-
-        private void OnParameterCreated(object? sender, EventArgs _)
-        {
-            if (sender is QueryParameterViewModel placeholder)
-            {
-                placeholder.Created -= OnParameterCreated;
-                placeholder.DeleteRequested += OnParameterDeleteRequested;
-                AddParameterPlaceholder();
-            }
-        }
-
-        private void OnParameterDeleteRequested(object? sender, EventArgs e)
-        {
-            if (sender is QueryParameterViewModel parameter)
-            {
-                Parameters.Remove(parameter);
-            }
+            return pvm;
         }
 
         private DelegateCommand? _changeContainerCommand;
