@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xaml.Behaviors;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
@@ -11,6 +12,8 @@ namespace CosmosDBStudio.Behaviors
         protected override void OnAttached()
         {
             base.OnAttached();
+            AssociatedObject.Loaded += OnLoaded;
+            AssociatedObject.IsVisibleChanged += OnIsVisibleChanged;
             if (Error is string)
             {
                 AddErrorAdorner();
@@ -20,6 +23,8 @@ namespace CosmosDBStudio.Behaviors
         protected override void OnDetaching()
         {
             RemoveErrorAdorner();
+            AssociatedObject.IsVisibleChanged -= OnIsVisibleChanged;
+            AssociatedObject.Loaded -= OnLoaded;
             base.OnDetaching();
         }
 
@@ -47,7 +52,7 @@ namespace CosmosDBStudio.Behaviors
             if (AssociatedObject is null)
                 return;
 
-            if (string.IsNullOrEmpty(error))
+            if (string.IsNullOrEmpty(error) || !AssociatedObject.IsVisible)
             {
                 RemoveErrorAdorner();
             }
@@ -59,12 +64,25 @@ namespace CosmosDBStudio.Behaviors
             AssociatedObject.ToolTip = error;
         }
 
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            OnErrorChanged(Error);
+        }
+
+        private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            OnErrorChanged(Error);
+        }
+
         private void AddErrorAdorner()
         {
             if (AssociatedObject is null)
                 return;
 
             var adornerLayer = AdornerLayer.GetAdornerLayer(AssociatedObject);
+            if (adornerLayer is null)
+                return;
+
             var adorner = adornerLayer.GetAdorners(AssociatedObject)
                     ?.OfType<ErrorAdorner>()
                     .FirstOrDefault();
@@ -82,6 +100,9 @@ namespace CosmosDBStudio.Behaviors
                 return;
 
             var adornerLayer = AdornerLayer.GetAdornerLayer(AssociatedObject);
+            if (adornerLayer is null)
+                return;
+
             var adorner = adornerLayer.GetAdorners(AssociatedObject)
                     ?.OfType<ErrorAdorner>()
                     .FirstOrDefault();

@@ -2,9 +2,9 @@
 
 namespace CosmosDBStudio.View
 {
-    public partial class StoredProcedureEditorView : UserControl
+    public partial class QueryParametersView : UserControl
     {
-        public StoredProcedureEditorView()
+        public QueryParametersView()
         {
             InitializeComponent();
         }

@@ -103,7 +103,7 @@ namespace CosmosDBStudio.ViewModel
 
 
         private AsyncDelegateCommand? _refreshCommand;
-        public ICommand RefreshCommand => _refreshCommand = new AsyncDelegateCommand(Refresh, CanRefresh);
+        public ICommand RefreshCommand => _refreshCommand ??= new AsyncDelegateCommand(Refresh, CanRefresh);
 
         private async Task Refresh()
         {

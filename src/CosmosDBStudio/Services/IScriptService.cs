@@ -21,5 +21,7 @@ namespace CosmosDBStudio.Services
         Task<OperationResult> DeleteStoredProcedureAsync(CosmosStoredProcedure storedProcedure, CancellationToken cancellationToken);
         Task<OperationResult> DeleteUserDefinedFunctionAsync(CosmosUserDefinedFunction udf, CancellationToken cancellationToken);
         Task<OperationResult> DeleteTriggerAsync(CosmosTrigger trigger, CancellationToken cancellationToken);
+
+        Task<StoredProcedureResult> ExecuteStoredProcedureAsync(CosmosStoredProcedure storedProcedure, object? partitionKey, object?[] parameters, CancellationToken cancellationToken);
     }
 }

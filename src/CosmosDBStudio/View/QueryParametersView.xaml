@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CosmosDBStudio.View.ParametersView"
+﻿<UserControl x:Class="CosmosDBStudio.View.QueryParametersView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -15,9 +15,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="Parameters" FontWeight="Bold" />
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Parameters}" Grid.IsSharedSizeScope="True">
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Parameters}" Grid.IsSharedSizeScope="True" Focusable="False">
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type vm:ParameterViewModel}">
+                <DataTemplate DataType="{x:Type vm:QueryParameterViewModel}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="name" />
@@ -48,11 +48,6 @@
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-            <!--<ItemsControl.ItemContainerStyle>
-                <Style>
-                    <Setter Property="Template"
-                </Style>
-            </ItemsControl.ItemContainerStyle>-->
         </ItemsControl>
     </Grid>
 </UserControl>

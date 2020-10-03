@@ -1,10 +1,10 @@
 ﻿using CosmosDBStudio.Extensions;
+using CosmosDBStudio.Helpers;
 using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
 using Hamlet;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
@@ -55,18 +55,19 @@ namespace CosmosDBStudio.ViewModel
                 PartitionKeyMRU.Add(mru);
             }
 
-            Parameters = new ObservableCollection<ParameterViewModel>();
+            Parameters = new ParametersViewModel<QueryParameterViewModel>();
             foreach (var p in querySheet.Parameters)
             {
-                CreateParameter(p);
+                Parameters.AddParameter(CreateParameter(p));
                 ShowParameters = true;
             }
-            AddParameterPlaceholder();
+
+            Parameters.AddPlaceholder();
 
             Errors = new ViewModelValidator<QuerySheetViewModel>(this);
             Errors.AddValidator(
                 vm => vm.PartitionKey,
-                value => TryParsePartitionKeyValue(value, out _)
+                value => string.IsNullOrEmpty(value) || JsonHelper.TryParseJsonValue(value, out _)
                     ? null
                     : "Invalid partition key value");
 
@@ -130,7 +131,7 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _partitionKey, value).AndExecute(() => Errors?.Refresh());
         }
 
-        public ObservableCollection<ParameterViewModel> Parameters { get; }
+        public ParametersViewModel<QueryParameterViewModel> Parameters { get; }
 
         private QueryResultViewModelBase _result;
         public QueryResultViewModelBase Result
@@ -158,7 +159,7 @@ namespace CosmosDBStudio.ViewModel
                 PartitionKeyMRU = PartitionKeyMRU.ToList()
             };
 
-            foreach (var p in Parameters)
+            foreach (var p in Parameters.Parameters)
             {
                 if (p.Name is string name)
                 {
@@ -196,15 +197,16 @@ namespace CosmosDBStudio.ViewModel
 
             // TODO: options
 
-            if (TryParsePartitionKeyValue(PartitionKey, out Option<object?> partitionKey) &&
-                !string.IsNullOrEmpty(PartitionKey))
+            Option<object?> partitionKey = Option.None();
+            if (!string.IsNullOrEmpty(PartitionKey) && JsonHelper.TryParseJsonValue(PartitionKey, out object? pkValue))
             {
-                PartitionKeyMRU.PushMRU(PartitionKey!, 10);
+                partitionKey = pkValue;
+                PartitionKeyMRU.PushMRU(PartitionKey, 10);
             }
 
             var query = new Query(queryText);
             query.PartitionKey = partitionKey;
-            foreach (var p in Parameters)
+            foreach (var p in Parameters.Parameters)
             {
                 if (p.IsPlaceholder || p.Errors.HasError)
                     continue;
@@ -224,7 +226,7 @@ namespace CosmosDBStudio.ViewModel
                 if (!Regex.IsMatch(queryText, $@"@\b{nakedName}\b", RegexOptions.Multiline))
                     continue;
 
-                p.TryParseParameterValue(p.RawValue, out object? value);
+                p.TryParseValue(out object? value);
                 query.Parameters[name] = value;
                 p.MRU.PushMRU(p.RawValue!, 10);
             }
@@ -335,11 +337,10 @@ namespace CosmosDBStudio.ViewModel
             if (containerContext.PartitionKeyPath == "/id")
                 return;
 
+
             object? partitionKey = null;
-            if (TryParsePartitionKeyValue(partitionKeyRawValue, out var partitionKeyOption))
-            {
-                partitionKeyOption.TryGetValue(out partitionKey);
-            }
+            if (!string.IsNullOrEmpty(partitionKeyRawValue))
+                JsonHelper.TryParseJsonValue(partitionKeyRawValue, out partitionKey);
 
             var pathParts = containerContext.PartitionKeyPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
             JObject current = document;
@@ -378,36 +379,9 @@ namespace CosmosDBStudio.ViewModel
             }
         }
 
-        private bool TryParsePartitionKeyValue(string? rawValue, out Option<object?> value)
+        private QueryParameterViewModel CreateParameter(QuerySheetParameter p)
         {
-            if (string.IsNullOrEmpty(rawValue))
-            {
-                value = Option.None();
-                return true;
-            }
-
-            try
-            {
-                using var tReader = new StringReader(rawValue);
-                using var jReader = new JsonTextReader(tReader)
-                {
-                    DateParseHandling = DateParseHandling.None
-                };
-
-                var token = JValue.ReadFrom(jReader);
-                value = Option.Some(token.ToObject<object?>());
-                return true;
-            }
-            catch
-            {
-                value = Option.None();
-                return false;
-            }
-        }
-
-        private void CreateParameter(QuerySheetParameter p)
-        {
-            var pvm = new ParameterViewModel
+            var pvm = new QueryParameterViewModel
             {
                 Name = p.Name,
                 RawValue = p.RawValue,
@@ -416,33 +390,7 @@ namespace CosmosDBStudio.ViewModel
             {
                 pvm.MRU.Add(mru);
             }
-            pvm.DeleteRequested += OnParameterDeleteRequested;
-            Parameters.Add(pvm);
-        }
-
-        private void AddParameterPlaceholder()
-        {
-            var placeholder = new ParameterViewModel { IsPlaceholder = true };
-            placeholder.Created += OnParameterCreated;
-            Parameters.Add(placeholder);
-        }
-
-        private void OnParameterCreated(object? sender, EventArgs _)
-        {
-            if (sender is ParameterViewModel placeholder)
-            {
-                placeholder.Created -= OnParameterCreated;
-                placeholder.DeleteRequested += OnParameterDeleteRequested;
-                AddParameterPlaceholder();
-            }
-        }
-
-        private void OnParameterDeleteRequested(object? sender, EventArgs e)
-        {
-            if (sender is ParameterViewModel parameter)
-            {
-                Parameters.Remove(parameter);
-            }
+            return pvm;
         }
 
         private DelegateCommand? _changeContainerCommand;
@@ -460,10 +408,6 @@ namespace CosmosDBStudio.ViewModel
 
         private void SetContainer(ContainerNodeViewModel container)
         {
-            var accountId = container.Database.Account.Id;
-            var databaseId = container.Database.Id;
-            var containerId = container.Id;
-
             _containerContext = container.Context;
             _executeCommand?.RaiseCanExecuteChanged();
             _newDocumentCommand?.RaiseCanExecuteChanged();

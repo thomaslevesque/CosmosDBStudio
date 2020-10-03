@@ -89,12 +89,13 @@
             </avalonEdit:TextEditor>
             <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch"
                           Visibility="{Binding ShowParameters, Converter={StaticResource boolToVisibility}}" />
-            <local:ParametersView Grid.Column="1"
-                                  MinWidth="250"
-                                  IsVisibleChanged="ParametersViewVisibleChanged"
-                                  Visibility="{Binding ShowParameters, Converter={StaticResource boolToVisibility}}">
+            <local:QueryParametersView Grid.Column="1"
+                                       MinWidth="250"
+                                       DataContext="{Binding Parameters}"
+                                       IsVisibleChanged="ParametersViewVisibleChanged"
+                                       Visibility="{Binding ShowParameters, Converter={StaticResource boolToVisibility}}">
                 
-            </local:ParametersView>
+            </local:QueryParametersView>
         </Grid>
         <GridSplitter Grid.Row="3" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />
         <local:QueryResultsView Grid.Row="4" DataContext="{Binding Result}" />
