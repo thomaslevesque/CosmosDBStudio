@@ -44,9 +44,7 @@
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="editorColumn" Width="*" />
-                <ColumnDefinition x:Name="parametersColumn"
-                                  Width="{markup:Switch ShowExecutionPanel, TrueValue=300, FalseValue=0}"
-                                  MinWidth="{markup:Switch ShowExecutionPanel, TrueValue=200, FalseValue=0}" />
+                <ColumnDefinition x:Name="parametersColumn" Width="0" />
             </Grid.ColumnDefinitions>
             <avalonEdit:TextEditor SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
@@ -62,9 +60,9 @@
             <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch"
                           Visibility="{Binding ShowExecutionPanel, Converter={StaticResource boolToVisibility}}" />
             <local:StoredProcedureParametersView Grid.Column="1"
-                                                 MinWidth="250"
-                                                 Visibility="{Binding DataContext.ShowExecutionPanel, ElementName=self, Converter={StaticResource boolToVisibility}}"
+                                                 IsVisibleChanged="ParametersViewVisibleChanged"
                                                  DataContext="{Binding Parameters}"
+                                                 Visibility="{Binding DataContext.ShowExecutionPanel, ElementName=self, Converter={StaticResource boolToVisibility}}"
                                                  ExecuteCommand="{Binding DataContext.ExecuteCommand, ElementName=self}" />
         </Grid>
         <GridSplitter Grid.Row="2" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />

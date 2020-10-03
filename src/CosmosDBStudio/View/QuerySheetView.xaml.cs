@@ -12,10 +12,16 @@ namespace CosmosDBStudio.View
 
         private void ParametersViewVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            editorColumn.Width = new GridLength(1, GridUnitType.Star);
             if (e.NewValue is false)
             {
-                editorColumn.Width = new GridLength(1, GridUnitType.Star);
-                parametersColumn.Width = GridLength.Auto;
+                parametersColumn.MinWidth = 0;
+                parametersColumn.Width = new GridLength(0);
+            }
+            else
+            {
+                parametersColumn.Width = new GridLength(300);
+                parametersColumn.MinWidth = 200;
             }
         }
     }
