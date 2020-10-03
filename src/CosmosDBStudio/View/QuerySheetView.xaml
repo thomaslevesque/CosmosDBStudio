@@ -7,6 +7,7 @@
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:markup="clr-namespace:CosmosDBStudio.Markup"
              x:Name="self"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -71,7 +72,7 @@
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="editorColumn" Width="*" />
-                <ColumnDefinition x:Name="parametersColumn" Width="Auto" />
+                <ColumnDefinition x:Name="parametersColumn" Width="0" />
             </Grid.ColumnDefinitions>
             <avalonEdit:TextEditor Grid.Column="0" SyntaxHighlighting="TSQL" FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
@@ -91,9 +92,8 @@
             <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch"
                           Visibility="{Binding ShowParameters, Converter={StaticResource boolToVisibility}}" />
             <local:QueryParametersView Grid.Column="1"
-                                       MinWidth="250"
-                                       DataContext="{Binding Parameters}"
                                        IsVisibleChanged="ParametersViewVisibleChanged"
+                                       DataContext="{Binding Parameters}"
                                        Visibility="{Binding DataContext.ShowParameters, ElementName=self, Converter={StaticResource boolToVisibility}}">
                 
             </local:QueryParametersView>
