@@ -20,8 +20,8 @@ namespace CosmosDBStudio.ViewModel
         DocumentEditorViewModel CreateDocumentEditor(JObject document, bool isNew, IContainerContext context);
         AccountEditorViewModel CreateAccountEditor(CosmosAccount? account = null);
         ContainerPickerViewModel CreateContainerPicker();
-        DatabaseEditorViewModel CreateDatabaseEditor(CosmosDatabase? database, int? throughput);
-        ContainerEditorViewModel CreateContainerEditor(CosmosContainer? container, bool databaseHasProvisionedThroughput, int? throughput);
+        DatabaseEditorViewModel CreateDatabaseEditor(CosmosDatabase? database, int? throughput, bool isServerlessAccount);
+        ContainerEditorViewModel CreateContainerEditor(CosmosContainer? container, int? throughput, bool databaseHasProvisionedThroughput, bool isServerlessAccount);
         StoredProceduresFolderNodeViewModel CreateStoredProceduresFolderNode(IContainerContext context, NonLeafTreeNodeViewModel parent);
         StoredProcedureNodeViewModel CreateStoredProcedureNode(CosmosStoredProcedure storedProcedure, IContainerContext context, NonLeafTreeNodeViewModel parent);
         UserDefinedFunctionsFolderNodeViewModel CreateUserDefinedFunctionsFolderNode(IContainerContext context, NonLeafTreeNodeViewModel parent);

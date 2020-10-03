@@ -53,6 +53,14 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="fieldCheckboxStyle" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource fieldStyle}">
+        <Setter Property="Margin" Value="7,5,3,5" />
+    </Style>
+
+    <Style x:Key="fieldRadioButtonStyle" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource fieldStyle}">
+        <Setter Property="Margin" Value="7,5,3,5" />
+    </Style>
+
     <Style x:Key="CommandMenuItemStyle" TargetType="{x:Type MenuItem}">
         <Setter Property="Header" Value="{Binding Text}" />
         <Setter Property="Command" Value="{Binding Command}" />

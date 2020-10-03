@@ -11,14 +11,15 @@ namespace CosmosDBStudio.ViewModel
     {
         private readonly string? _eTag;
 
-        public ContainerEditorViewModel(CosmosContainer? container, bool databaseHasProvisionedThroughput, int? throughput)
+        public ContainerEditorViewModel(CosmosContainer? container, int? throughput, bool databaseHasProvisionedThroughput, bool isServerlessAccount)
         {
             _id = container?.Id ?? string.Empty;
             _eTag = container?.ETag;
-            _throughput = throughput ?? 400;
+            _throughput = isServerlessAccount ? 0 : throughput ?? 400;
             _provisionThroughput = throughput.HasValue;
             _partitionKeyPath = container?.PartitionKeyPath ?? string.Empty;
             _largePartitionKey = container?.LargePartitionKey ?? false;
+            IsServerlessAccount = isServerlessAccount;
             if (container?.DefaultTTL is int defaultTTL)
             {
                 _enableTTL = true;
@@ -34,7 +35,12 @@ namespace CosmosDBStudio.ViewModel
 
             IsNew = container is null;
 
-            if (databaseHasProvisionedThroughput)
+            if (isServerlessAccount)
+            {
+                _provisionThroughput = false;
+                CanChangeProvisionThroughput = false;
+            }
+            else  if (databaseHasProvisionedThroughput)
             {
                 CanChangeProvisionThroughput = IsNew;
             }
@@ -135,6 +141,8 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public bool CanChangeProvisionThroughput { get; }
+
+        public bool IsServerlessAccount { get; }
 
         private readonly DelegateCommand _saveCommand;
         public ICommand SaveCommand => _saveCommand;

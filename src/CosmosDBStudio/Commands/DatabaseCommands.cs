@@ -1,5 +1,4 @@
 ﻿using CosmosDBStudio.Messages;
-using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using CosmosDBStudio.ViewModel;
 using EssentialMVVM;
@@ -32,7 +31,7 @@ namespace CosmosDBStudio.Commands
 
         private async Task CreateAsync(AccountNodeViewModel accountVm)
         {
-            var dialog = _viewModelFactory.Value.CreateDatabaseEditor(null, null);
+            var dialog = _viewModelFactory.Value.CreateDatabaseEditor(null, null, accountVm.Context.IsServerless);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 var (database, throughput) = dialog.GetDatabase();
@@ -53,7 +52,7 @@ namespace CosmosDBStudio.Commands
             var context = databaseVm.Context;
             var database = await context.GetDatabaseAsync(default);
             var throughput = await context.GetThroughputAsync(default);
-            var dialog = _viewModelFactory.Value.CreateDatabaseEditor(database, throughput);
+            var dialog = _viewModelFactory.Value.CreateDatabaseEditor(database, throughput, context.AccountContext.IsServerless);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 var (_, newThroughput) = dialog.GetDatabase();

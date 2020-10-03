@@ -33,7 +33,7 @@ namespace CosmosDBStudio.Commands
         {
             var dbContext = databaseVm.Context;
             var databaseThroughput = await dbContext.GetThroughputAsync(default);
-            var dialog = _viewModelFactory.Value.CreateContainerEditor(null, databaseThroughput.HasValue, null);
+            var dialog = _viewModelFactory.Value.CreateContainerEditor(null, null, databaseThroughput.HasValue, dbContext.AccountContext.IsServerless);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 var (container, throughput) = dialog.GetContainer();
@@ -55,7 +55,7 @@ namespace CosmosDBStudio.Commands
             var databaseThroughput = await context.DatabaseContext.GetThroughputAsync(default);
             var container = await context.DatabaseContext.Containers.GetContainerAsync(context.ContainerId, default);
             var throughput = await context.GetThroughputAsync(default);
-            var dialog = _viewModelFactory.Value.CreateContainerEditor(container, databaseThroughput.HasValue, throughput);
+            var dialog = _viewModelFactory.Value.CreateContainerEditor(container, throughput, databaseThroughput.HasValue, context.DatabaseContext.AccountContext.IsServerless);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 (container, throughput) = dialog.GetContainer();

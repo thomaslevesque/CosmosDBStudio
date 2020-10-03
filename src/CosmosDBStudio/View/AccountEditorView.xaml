@@ -15,6 +15,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -23,7 +24,7 @@
         <Label Grid.Row="0" Grid.Column="0" Content="Name" Style="{StaticResource labelStyle}" />
         <Label Grid.Row="1" Grid.Column="0" Content="Endpoint" Style="{StaticResource labelStyle}" />
         <Label Grid.Row="2" Grid.Column="0" Content="Key" Style="{StaticResource labelStyle}" />
-        <Label Grid.Row="3" Grid.Column="0" Content="Folder" Style="{StaticResource labelStyle}" />
+        <Label Grid.Row="4" Grid.Column="0" Content="Folder" Style="{StaticResource labelStyle}" />
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource fieldTextBoxStyle}">
             <i:Interaction.Behaviors>
                 <bhv:ErrorBehavior Error="{Binding Validator[Name]}" />
@@ -39,7 +40,10 @@
                 <bhv:ErrorBehavior Error="{Binding Validator[Key]}" />
             </i:Interaction.Behaviors>
         </TextBox>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Folder}" Style="{StaticResource fieldTextBoxStyle}">
+        <CheckBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Serverless"
+                  IsChecked="{Binding IsServerless}"
+                  Style="{StaticResource fieldCheckboxStyle}" />
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Folder}" Style="{StaticResource fieldTextBoxStyle}">
             <i:Interaction.Behaviors>
                 <bhv:ErrorBehavior Error="{Binding Validator[Folder]}" />
             </i:Interaction.Behaviors>

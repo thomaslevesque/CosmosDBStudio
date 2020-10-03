@@ -21,8 +21,8 @@
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Content="Id" Style="{StaticResource labelStyle}" />
         <CheckBox Grid.Row="1" Grid.Column="0" Content="Provision throughput" IsChecked="{Binding ProvisionThroughput}"
-                  IsEnabled="{Binding IsNew}"
-                  Style="{StaticResource labelStyle}" />
+                  IsEnabled="{Binding CanProvisionThroughput}"
+                  Style="{StaticResource fieldCheckboxStyle}" />
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged, Delay=300}"
                  HorizontalAlignment="Left" Width="200"
                  IsReadOnly="{Binding IsEditing}"
@@ -31,15 +31,19 @@
                 <bhv:ErrorBehavior Error="{Binding Validator[Id]}" />
             </i:Interaction.Behaviors>
         </TextBox>
-        <xctk:IntegerUpDown Grid.Row="1" Grid.Column="1"    
-                            HorizontalAlignment="Left" Width="100"
-                            IsEnabled="{Binding ProvisionThroughput}"
-                            Value="{Binding Throughput}"
-                            Minimum="400" Maximum="100000" AllowSpin="True" AllowTextInput="True" Increment="100"
-                            Style="{StaticResource fieldStyle}">
-            <i:Interaction.Behaviors>
-                <bhv:ErrorBehavior Error="{Binding Validator[Throughput]}" />
-            </i:Interaction.Behaviors>
-        </xctk:IntegerUpDown>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+            <xctk:IntegerUpDown HorizontalAlignment="Left"
+                                Width="100"
+                                IsEnabled="{Binding ProvisionThroughput}"
+                                Value="{Binding Throughput}"
+                                Minimum="400" Maximum="100000" AllowSpin="True" AllowTextInput="True" Increment="100"
+                                Style="{StaticResource fieldStyle}">
+                <i:Interaction.Behaviors>
+                    <bhv:ErrorBehavior Error="{Binding Validator[Throughput]}" />
+                </i:Interaction.Behaviors>
+            </xctk:IntegerUpDown>
+            <Label Content="(serverless)" Style="{StaticResource labelStyle}"
+                   Visibility="{Binding IsServerlessAccount, Converter={StaticResource boolToVisibility}}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
