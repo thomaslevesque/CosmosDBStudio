@@ -1,4 +1,6 @@
 ﻿using CosmosDBStudio.Model;
+using Microsoft.Azure.Cosmos;
+using System;
 
 namespace CosmosDBStudio.Services.Implementation
 {
@@ -13,8 +15,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public IAccountContext Create(CosmosAccount account)
         {
-            var client = _clientPool.GetClientForAccount(account);
-            return new AccountContext(account, client);
+            return new AccountContext(account, new Lazy<CosmosClient>(() => _clientPool.GetClientForAccount(account)));
         }
     }
 }
