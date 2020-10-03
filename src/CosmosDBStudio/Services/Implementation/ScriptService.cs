@@ -1,11 +1,12 @@
 ﻿using CosmosDBStudio.Model;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Scripts;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -96,6 +97,46 @@ namespace CosmosDBStudio.Services.Implementation
 
         private static UserDefinedFunctionProperties GetProps(CosmosUserDefinedFunction udf) =>
             new UserDefinedFunctionProperties { Id = udf.Id, Body = udf.Body };
+
+        public async Task<StoredProcedureResult> ExecuteStoredProcedureAsync(CosmosStoredProcedure storedProcedure, object? partitionKey, object?[] parameters, CancellationToken cancellationToken)
+        {
+            var result = new StoredProcedureResult();
+            var stopwatch = new Stopwatch();
+            try
+            {
+                stopwatch.Start();
+                var response = await _container.Scripts.ExecuteStoredProcedureAsync<JToken>(
+                    storedProcedure.Id,
+                    PartitionKeyHelper.Create(partitionKey),
+                    parameters,
+                    new StoredProcedureRequestOptions { EnableScriptLogging = true },
+                    cancellationToken);
+                stopwatch.Stop();
+
+                result.Body = response.Resource;
+                result.ScriptLog = response.ScriptLog ?? string.Empty;
+                result.RequestCharge = response.RequestCharge;
+                result.StatusCode = response.StatusCode;
+            }
+            catch(CosmosException ex)
+            {
+                result.Error = ex;
+                result.StatusCode = ex.StatusCode;
+                var scriptLog = ex.Headers["x-ms-documentdb-script-log-results"] ?? string.Empty;
+                result.ScriptLog = Uri.UnescapeDataString(scriptLog);
+            }
+            catch(Exception ex)
+            {
+                result.Error = ex;
+            }
+            finally
+            {
+                stopwatch.Stop();
+            }
+
+            result.TimeElapsed = stopwatch.Elapsed;
+            return result;
+        }
 
         private static async Task<TScript[]> GetScripts<TScript, TProperties>(
             Func<FeedIterator<TProperties>> getIterator,

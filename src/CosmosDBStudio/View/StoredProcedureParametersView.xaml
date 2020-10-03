@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="CosmosDBStudio.View.StoredProcedureParametersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CosmosDBStudio.View"
+             xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             mc:Ignorable="d" 
+             x:Name="self"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <Label Content="Partition key" FontWeight="Bold" />
+            <ComboBox IsEditable="True"
+                      Margin="5,0,5,0"
+                      d:ItemsSource="{Binding PartitionKeyMRU}"
+                      Text="{Binding PartitionKeyRawValue, UpdateSourceTrigger=LostFocus}">
+                <i:Interaction.Behaviors>
+                    <bhv:ErrorBehavior Error="{Binding Errors[PartitionKeyRawValue]}" />
+                </i:Interaction.Behaviors>
+            </ComboBox>
+            <Label Content="Parameters" FontWeight="Bold" />
+            <ItemsControl ItemsSource="{Binding Parameters}" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:QueryParameterViewModel}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox IsEditable="True"
+                                      Margin="5,0,5,0"
+                                      ItemsSource="{Binding MRU}"
+                                      Text="{Binding RawValue, UpdateSourceTrigger=LostFocus}">
+                                <i:Interaction.Behaviors>
+                                    <bhv:ErrorBehavior Error="{Binding Errors[RawValue]}" />
+                                </i:Interaction.Behaviors>
+                            </ComboBox>
+                            <Button Grid.Column="2"
+                                Margin="3,0,3,0"
+                                Style="{StaticResource FontAwesomeButton}"
+                                Content="{StaticResource fa-trash-alt}"
+                                Command="{Binding DeleteCommand}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button HorizontalAlignment="Right"
+                    Margin="5"
+                    Content="Execute"
+                    Command="{Binding ExecuteCommand, ElementName=self}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

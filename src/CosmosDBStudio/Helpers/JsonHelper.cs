@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Hamlet;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 
@@ -31,6 +32,13 @@ namespace CosmosDBStudio.Helpers
                 value = null;
                 return false;
             }
+        }
+
+        public static Option<object?> TryParseJsonValue(string? rawJson)
+        {
+            return TryParseJsonValue(rawJson, out var value)
+                ? Option.Some(value)
+                : Option.None();
         }
     }
 }

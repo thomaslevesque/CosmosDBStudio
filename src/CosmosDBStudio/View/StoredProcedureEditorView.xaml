@@ -7,13 +7,20 @@
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:markup="clr-namespace:CosmosDBStudio.Markup"
+             x:Name="self"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <GridLength x:Key="starLength">*</GridLength>
+        <GridLength x:Key="zeroLength">0</GridLength>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="{markup:Switch HasResult, TrueValue={StaticResource starLength}, FalseValue={StaticResource zeroLength}}" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding ContainerPath, Mode=OneWay}" />
@@ -29,8 +36,19 @@
                     ToolTip="Revert"
                     Style="{StaticResource FontAwesomeButton}"
                     Command="{Binding RevertCommand}" />
+            <ToggleButton Content="{StaticResource fa-play}"
+                    ToolTip="Show execution panel"
+                    Style="{StaticResource FontAwesomeButton}"
+                    IsChecked="{Binding ShowExecutionPanel}" />
         </ToolBar>
-        <avalonEdit:TextEditor Grid.Row="2" SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="editorColumn" Width="*" />
+                <ColumnDefinition x:Name="parametersColumn"
+                                  Width="{markup:Switch ShowExecutionPanel, TrueValue=300, FalseValue=0}"
+                                  MinWidth="{markup:Switch ShowExecutionPanel, TrueValue=200, FalseValue=0}" />
+            </Grid.ColumnDefinitions>
+            <avalonEdit:TextEditor SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
                     <bhv:AvalonTextEditorBehavior UseSearch="True" />
                     <bhv:AvalonTextEditorBindingBehavior
@@ -41,5 +59,15 @@
                     <bhv:FocusOnLoadBehavior />
                 </i:Interaction.Behaviors>
             </avalonEdit:TextEditor>
+            <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch"
+                          Visibility="{Binding ShowExecutionPanel, Converter={StaticResource boolToVisibility}}" />
+            <local:StoredProcedureParametersView Grid.Column="1"
+                                                 MinWidth="250"
+                                                 Visibility="{Binding DataContext.ShowExecutionPanel, ElementName=self, Converter={StaticResource boolToVisibility}}"
+                                                 DataContext="{Binding Parameters}"
+                                                 ExecuteCommand="{Binding DataContext.ExecuteCommand, ElementName=self}" />
+        </Grid>
+        <GridSplitter Grid.Row="2" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />
+        <local:StoredProcedureResultView Grid.Row="3" DataContext="{Binding Result}" />
     </Grid>
 </UserControl>

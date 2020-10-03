@@ -226,7 +226,7 @@ namespace CosmosDBStudio.ViewModel
                 if (!Regex.IsMatch(queryText, $@"@\b{nakedName}\b", RegexOptions.Multiline))
                     continue;
 
-                p.TryParseParameterValue(out object? value);
+                p.TryParseValue(out object? value);
                 query.Parameters[name] = value;
                 p.MRU.PushMRU(p.RawValue!, 10);
             }

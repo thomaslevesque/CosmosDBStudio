@@ -15,7 +15,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="Parameters" FontWeight="Bold" />
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Parameters}" Grid.IsSharedSizeScope="True">
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Parameters}" Grid.IsSharedSizeScope="True" Focusable="False">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:QueryParameterViewModel}">
                     <Grid>
@@ -48,11 +48,6 @@
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-            <!--<ItemsControl.ItemContainerStyle>
-                <Style>
-                    <Setter Property="Template"
-                </Style>
-            </ItemsControl.ItemContainerStyle>-->
         </ItemsControl>
     </Grid>
 </UserControl>

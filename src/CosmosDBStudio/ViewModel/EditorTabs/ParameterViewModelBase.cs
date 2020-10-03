@@ -1,5 +1,6 @@
 ﻿using CosmosDBStudio.Helpers;
 using EssentialMVVM;
+using Hamlet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -76,6 +77,6 @@ namespace CosmosDBStudio.ViewModel
             return null;
         }
 
-        public bool TryParseParameterValue(out object? value) => JsonHelper.TryParseJsonValue(RawValue, out value);
+        public bool TryParseValue(out object? value) => JsonHelper.TryParseJsonValue(RawValue, out value);
     }
 }
