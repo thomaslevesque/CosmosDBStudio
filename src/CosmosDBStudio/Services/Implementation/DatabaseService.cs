@@ -1,5 +1,6 @@
 ﻿using CosmosDBStudio.Model;
 using Microsoft.Azure.Cosmos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,16 +11,16 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class DatabaseService : IDatabaseService
     {
-        private readonly CosmosClient _client;
+        private readonly Lazy<CosmosClient> _client;
 
-        public DatabaseService(CosmosClient client)
+        public DatabaseService(Lazy<CosmosClient> client)
         {
             _client = client;
         }
 
         public async Task<CosmosDatabase[]> GetDatabasesAsync(CancellationToken cancellationToken)
         {
-            var iterator = _client.GetDatabaseQueryIterator<DatabaseProperties>();
+            var iterator = _client.Value.GetDatabaseQueryIterator<DatabaseProperties>();
             var databases = new List<CosmosDatabase>();
             while (iterator.HasMoreResults)
             {
@@ -36,7 +37,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public async Task<CosmosDatabase> GetDatabaseAsync(string databaseId, CancellationToken cancellationToken)
         {
-            var database = _client.GetDatabase(databaseId);
+            var database = _client.Value.GetDatabase(databaseId);
             var response = await database.ReadAsync(cancellationToken: cancellationToken);
 
             return new CosmosDatabase
@@ -50,7 +51,7 @@ namespace CosmosDBStudio.Services.Implementation
         {
             try
             {
-                var response = await _client.CreateDatabaseAsync(database.Id, throughput, cancellationToken: cancellationToken);
+                var response = await _client.Value.CreateDatabaseAsync(database.Id, throughput, cancellationToken: cancellationToken);
                 database.ETag = response.Resource.ETag;
                 return OperationResult.Success;
             }
@@ -62,7 +63,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public async Task<OperationResult> DeleteDatabaseAsync(CosmosDatabase database, CancellationToken cancellationToken)
         {
-            var db = _client.GetDatabase(database.Id);
+            var db = _client.Value.GetDatabase(database.Id);
             try
             {
                 await db.DeleteAsync(new RequestOptions { IfMatchEtag = database.ETag }, cancellationToken);

@@ -1,14 +1,15 @@
 ﻿using CosmosDBStudio.Model;
 using Microsoft.Azure.Cosmos;
+using System;
 
 namespace CosmosDBStudio.Services.Implementation
 {
     public class AccountContext : IAccountContext
     {
         private readonly CosmosAccount _account;
-        private readonly CosmosClient _client;
+        private readonly Lazy<CosmosClient> _client;
 
-        public AccountContext(CosmosAccount account, CosmosClient client)
+        public AccountContext(CosmosAccount account, Lazy<CosmosClient> client)
         {
             _account = account;
             _client = client;
@@ -23,7 +24,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public IDatabaseContext GetDatabaseContext(CosmosDatabase database)
         {
-            return new DatabaseContext(this, _client.GetDatabase(database.Id));
+            return new DatabaseContext(this, _client.Value.GetDatabase(database.Id));
         }
     }
 }
