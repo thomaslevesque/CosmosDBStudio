@@ -2,7 +2,9 @@
 using CosmosDBStudio.Services;
 using CosmosDBStudio.ViewModel;
 using EssentialMVVM;
+using Microsoft.Azure.Cosmos;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -35,8 +37,15 @@ namespace CosmosDBStudio.Commands
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 var (database, throughput) = dialog.GetDatabase();
-                await accountVm.Context.Databases.CreateDatabaseAsync(database, throughput, default);
-                _messenger.Publish(new DatabaseCreatedMessage(accountVm.Context, database));
+                try
+                {
+                    await accountVm.Context.Databases.CreateDatabaseAsync(database, throughput, default);
+                    _messenger.Publish(new DatabaseCreatedMessage(accountVm.Context, database));
+                }
+                catch(CosmosException ex) when (throughput.HasValue && ex.StatusCode == HttpStatusCode.BadRequest && ex.Message.Contains("serverless", StringComparison.OrdinalIgnoreCase))
+                {
+                    _dialogService.ShowError("Failed to create database with provisioned throughput, because the account seems to be serverless. If this is a serverless account, please specify it in the account configuration.");
+                }
             }
         }
 
@@ -51,7 +60,16 @@ namespace CosmosDBStudio.Commands
         {
             var context = databaseVm.Context;
             var database = await context.GetDatabaseAsync(default);
-            var throughput = await context.GetThroughputAsync(default);
+            int? throughput;
+            try
+            {
+                throughput = await context.GetThroughputAsync(default);
+            }
+            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.BadRequest && ex.Message.Contains("serverless", StringComparison.OrdinalIgnoreCase))
+            {
+                _dialogService.ShowError("Failed to read database throughput, because the account seems to be serverless. If this is a serverless account, please specify it in the account configuration.");
+                return;
+            }
             var dialog = _viewModelFactory.Value.CreateDatabaseEditor(database, throughput, context.AccountContext.IsServerless);
             if (_dialogService.ShowDialog(dialog) is true)
             {
