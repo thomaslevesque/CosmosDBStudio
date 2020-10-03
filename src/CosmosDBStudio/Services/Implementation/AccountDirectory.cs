@@ -100,6 +100,7 @@ namespace CosmosDBStudio.Services.Implementation
                 existing.Endpoint = account.Endpoint;
                 existing.Name = account.Name;
                 existing.Key = account.Key;
+                existing.IsServerless = account.IsServerless;
                 existing.Folder = account.Folder;
             }
         }

@@ -10,13 +10,15 @@ namespace CosmosDBStudio.ViewModel
     {
         private readonly string? _eTag;
 
-        public DatabaseEditorViewModel(CosmosDatabase? database, int? throughput)
+        public DatabaseEditorViewModel(CosmosDatabase? database, int? throughput, bool isServerlessAccount)
         {
             _id = database?.Id ?? string.Empty;
             _eTag = database?.ETag;
-            _throughput = throughput ?? 400;
+            _throughput = isServerlessAccount ? 0 : throughput ?? 400;
             _provisionThroughput = throughput.HasValue;
             IsNew = database is null;
+            CanProvisionThroughput = IsNew && !isServerlessAccount;
+            IsServerlessAccount = isServerlessAccount;
 
             Title = IsNew
                 ? "Add database"
@@ -62,6 +64,10 @@ namespace CosmosDBStudio.ViewModel
                 .AndExecute(() => Validator?.Refresh())
                 .AndRaiseCanExecuteChanged(_saveCommand);
         }
+
+        public bool IsServerlessAccount { get; }
+
+        public bool CanProvisionThroughput { get; }
 
         private readonly DelegateCommand _saveCommand;
         public ICommand SaveCommand => _saveCommand;

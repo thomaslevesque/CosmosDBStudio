@@ -2,7 +2,9 @@
 using CosmosDBStudio.Services;
 using CosmosDBStudio.ViewModel;
 using EssentialMVVM;
+using Microsoft.Azure.Cosmos;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -32,8 +34,17 @@ namespace CosmosDBStudio.Commands
         private async Task CreateAsync(DatabaseNodeViewModel databaseVm)
         {
             var dbContext = databaseVm.Context;
-            var databaseThroughput = await dbContext.GetThroughputAsync(default);
-            var dialog = _viewModelFactory.Value.CreateContainerEditor(null, databaseThroughput.HasValue, null);
+            int? databaseThroughput;
+            try
+            {
+                databaseThroughput = await dbContext.GetThroughputAsync(default);
+            }
+            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.BadRequest && ex.Message.Contains("serverless", StringComparison.OrdinalIgnoreCase))
+            {
+                _dialogService.ShowError("Failed to read database throughput, because the account seems to be serverless. If this is a serverless account, please specify it in the account configuration.");
+                return;
+            }
+            var dialog = _viewModelFactory.Value.CreateContainerEditor(null, null, databaseThroughput.HasValue, dbContext.AccountContext.IsServerless);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 var (container, throughput) = dialog.GetContainer();
@@ -52,10 +63,19 @@ namespace CosmosDBStudio.Commands
         private async Task EditAsync(ContainerNodeViewModel containerVm)
         {
             var context = containerVm.Context;
-            var databaseThroughput = await context.DatabaseContext.GetThroughputAsync(default);
+            int? databaseThroughput;
+            try
+            {
+                databaseThroughput = await context.DatabaseContext.GetThroughputAsync(default);
+            }
+            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.BadRequest && ex.Message.Contains("serverless", StringComparison.OrdinalIgnoreCase))
+            {
+                _dialogService.ShowError("Failed to read database throughput, because the account seems to be serverless. If this is a serverless account, please specify it in the account configuration.");
+                return;
+            }
             var container = await context.DatabaseContext.Containers.GetContainerAsync(context.ContainerId, default);
             var throughput = await context.GetThroughputAsync(default);
-            var dialog = _viewModelFactory.Value.CreateContainerEditor(container, databaseThroughput.HasValue, throughput);
+            var dialog = _viewModelFactory.Value.CreateContainerEditor(container, throughput, databaseThroughput.HasValue, context.DatabaseContext.AccountContext.IsServerless);
             if (_dialogService.ShowDialog(dialog) is true)
             {
                 (container, throughput) = dialog.GetContainer();

@@ -50,8 +50,12 @@ namespace CosmosDBStudio.Services.Implementation
         public Task<CosmosContainer> GetContainerAsync(CancellationToken cancellationToken) =>
             DatabaseContext.Containers.GetContainerAsync(ContainerId, cancellationToken);
 
-        public Task<int?> GetThroughputAsync(CancellationToken cancellationToken) =>
-            _container.ReadThroughputAsync(cancellationToken);
+        public Task<int?> GetThroughputAsync(CancellationToken cancellationToken)
+        {
+            if (DatabaseContext.AccountContext.IsServerless)
+                return Task.FromResult(default(int?));
+            return _container.ReadThroughputAsync(cancellationToken);
+        }
 
         public async Task<OperationResult> SetThroughputAsync(int? throughput, CancellationToken cancellationToken)
         {

@@ -15,6 +15,7 @@ namespace CosmosDBStudio.ViewModel
             _name = account?.Name ?? string.Empty;
             _endpoint = account?.Endpoint ?? string.Empty;
             _key = account?.Key ?? string.Empty;
+            _isServerless = account?.IsServerless ?? false;
             _folder = account?.Folder ?? string.Empty;
 
             if (account is null && clipboardService.TryGetText(out string copiedText))
@@ -123,6 +124,14 @@ namespace CosmosDBStudio.ViewModel
                 .AndExecute(() => Validator?.Refresh())
                 .AndRaiseCanExecuteChanged(_saveCommand);
         }
+
+        private bool _isServerless;
+        public bool IsServerless
+        {
+            get => _isServerless;
+            set => Set(ref _isServerless, value);
+        }
+
 
         private string _folder;
         public string Folder

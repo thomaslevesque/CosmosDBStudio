@@ -30,14 +30,14 @@
         <CheckBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Partition key is larger than 100 bytes"
                   IsChecked="{Binding LargePartitionKey}"
                   IsEnabled="{Binding IsNew}"
-                  Style="{StaticResource labelStyle}" />
+                  Style="{StaticResource fieldCheckboxStyle}" />
         <CheckBox Grid.Row="3" Grid.Column="0" Content="Enable time to live"
                   IsChecked="{Binding EnableTTL}"
-                  Style="{StaticResource labelStyle}" />
+                  Style="{StaticResource fieldCheckboxStyle}" />
         <CheckBox Grid.Row="4" Grid.Column="0" Content="Provision throughput"
                   IsChecked="{Binding ProvisionThroughput}"
                   IsEnabled="{Binding CanChangeProvisionThroughput}"
-                  Style="{StaticResource labelStyle}" />
+                  Style="{StaticResource fieldCheckboxStyle}" />
 
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged, Delay=300}"
                  HorizontalAlignment="Left" Width="200"
@@ -57,8 +57,8 @@
         </TextBox>
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center"
                     IsEnabled="{Binding EnableTTL}">
-            <RadioButton Content="No default TTL" IsChecked="{Binding HasDefaultTTL, Converter={StaticResource not}}" Style="{StaticResource fieldStyle}" />
-            <RadioButton Content="Default TTL in seconds" Style="{StaticResource fieldStyle}" />
+            <RadioButton Content="No default TTL" IsChecked="{Binding HasDefaultTTL, Converter={StaticResource not}}" Style="{StaticResource fieldRadioButtonStyle}" />
+            <RadioButton Content="Default TTL in seconds" Style="{StaticResource fieldRadioButtonStyle}" />
             <xctk:IntegerUpDown Style="{StaticResource fieldStyle}" Width="100"
                                 Value="{Binding DefaultTTL}"
                                 Minimum="1"
@@ -68,16 +68,20 @@
                 </i:Interaction.Behaviors>
             </xctk:IntegerUpDown>
         </StackPanel>
-        <xctk:IntegerUpDown Grid.Row="4" Grid.Column="1"
-                            HorizontalAlignment="Left" Width="100"
-                            IsEnabled="{Binding ProvisionThroughput}"
-                            Value="{Binding Throughput}"
-                            Minimum="400" Maximum="100000" AllowSpin="True" AllowTextInput="True" Increment="100"
-                            Style="{StaticResource fieldStyle}">
-            <i:Interaction.Behaviors>
-                <bhv:ErrorBehavior Error="{Binding Validator[Throughput]}" />
-            </i:Interaction.Behaviors>
-        </xctk:IntegerUpDown>
+        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+            <xctk:IntegerUpDown HorizontalAlignment="Left"
+                                Width="100"
+                                IsEnabled="{Binding ProvisionThroughput}"
+                                Value="{Binding Throughput}"
+                                Minimum="400" Maximum="100000" AllowSpin="True" AllowTextInput="True" Increment="100"
+                                Style="{StaticResource fieldStyle}">
+                <i:Interaction.Behaviors>
+                    <bhv:ErrorBehavior Error="{Binding Validator[Throughput]}" />
+                </i:Interaction.Behaviors>
+            </xctk:IntegerUpDown>
+            <Label Content="(serverless)" Style="{StaticResource labelStyle}"
+                   Visibility="{Binding IsServerlessAccount, Converter={StaticResource boolToVisibility}}"/>
+        </StackPanel>
 
     </Grid>
 </UserControl>

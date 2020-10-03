@@ -51,6 +51,7 @@ namespace CosmosDBStudio.Commands
                     Name = dialog.Name,
                     Endpoint = dialog.Endpoint,
                     Key = dialog.Key,
+                    IsServerless = dialog.IsServerless,
                     Folder = dialog.Folder.Trim('/')
                 };
                 _accountDirectory.Add(newAccount);
@@ -85,6 +86,7 @@ namespace CosmosDBStudio.Commands
                 account.Name = dialog.Name;
                 account.Endpoint = dialog.Endpoint;
                 account.Key = dialog.Key;
+                account.IsServerless = dialog.IsServerless;
                 account.Folder = dialog.Folder.Trim('/');
                 _accountDirectory.Update(account);
                 _accountDirectory.Save();

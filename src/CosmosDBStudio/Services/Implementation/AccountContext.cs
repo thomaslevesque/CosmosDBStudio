@@ -20,6 +20,8 @@ namespace CosmosDBStudio.Services.Implementation
 
         public string AccountName => _account.Name;
 
+        public bool IsServerless => _account.IsServerless;
+
         public IDatabaseService Databases { get; }
 
         public IDatabaseContext GetDatabaseContext(CosmosDatabase database)

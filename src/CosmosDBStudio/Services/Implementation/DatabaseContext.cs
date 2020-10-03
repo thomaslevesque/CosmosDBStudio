@@ -34,8 +34,12 @@ namespace CosmosDBStudio.Services.Implementation
         public Task<CosmosDatabase> GetDatabaseAsync(CancellationToken cancellationToken) =>
             AccountContext.Databases.GetDatabaseAsync(DatabaseId, cancellationToken);
 
-        public Task<int?> GetThroughputAsync(CancellationToken cancellationToken) =>
-            _database.ReadThroughputAsync(cancellationToken);
+        public Task<int?> GetThroughputAsync(CancellationToken cancellationToken)
+        {
+            if (AccountContext.IsServerless)
+                return Task.FromResult(default(int?));
+            return _database.ReadThroughputAsync(cancellationToken);
+        }
 
         public async Task<OperationResult> SetThroughputAsync(int? throughput, CancellationToken cancellationToken)
         {
