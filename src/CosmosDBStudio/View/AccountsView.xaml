@@ -8,13 +8,11 @@
              xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="300">
     <Grid>
-
-        <TreeView ItemsSource="{Binding RootNodes}">
-            <TreeView.Resources>
+        <controls:AccountExplorerTreeView ItemsSource="{Binding RootNodes}">
+            <controls:AccountExplorerTreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type vm:AccountFolderNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
@@ -25,35 +23,19 @@
                     <controls:TreeNodeControl Icon="/Images/database.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ContainerNodeViewModel}" ItemsSource="{Binding Children}">
-                    <controls:TreeNodeControl Icon="/Images/container.png" Content="{Binding Text}">
-                        <i:Interaction.Behaviors>
-                            <bhv:MouseCommandsBehavior DoubleClickCommand="{Binding NewQuerySheetCommand}" />
-                        </i:Interaction.Behaviors>
-                    </controls:TreeNodeControl>
+                    <controls:TreeNodeControl Icon="/Images/container.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ScriptFolderNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:StoredProcedureNodeViewModel}">
-                    <controls:TreeNodeControl Icon="/Images/stored-procedure.png" Content="{Binding Text}">
-                        <i:Interaction.Behaviors>
-                            <bhv:MouseCommandsBehavior DoubleClickCommand="{Binding OpenCommand}" />
-                        </i:Interaction.Behaviors>
-                    </controls:TreeNodeControl>
+                    <controls:TreeNodeControl Icon="/Images/stored-procedure.png" Content="{Binding Text}" />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserDefinedFunctionNodeViewModel}">
-                    <controls:TreeNodeControl Icon="/Images/user-defined-function.png" Content="{Binding Text}">
-                        <i:Interaction.Behaviors>
-                            <bhv:MouseCommandsBehavior DoubleClickCommand="{Binding OpenCommand}" />
-                        </i:Interaction.Behaviors>
-                    </controls:TreeNodeControl>
+                    <controls:TreeNodeControl Icon="/Images/user-defined-function.png" Content="{Binding Text}" />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:TriggerNodeViewModel}">
-                    <controls:TreeNodeControl Icon="/Images/trigger.png" Content="{Binding Text}">
-                        <i:Interaction.Behaviors>
-                            <bhv:MouseCommandsBehavior DoubleClickCommand="{Binding OpenCommand}" />
-                        </i:Interaction.Behaviors>
-                    </controls:TreeNodeControl>
+                    <controls:TreeNodeControl Icon="/Images/trigger.png" Content="{Binding Text}" />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:PlaceholderTreeNodeViewModel}">
                     <TextBlock Text="{Binding Text}" />
@@ -65,9 +47,9 @@
                         <Hyperlink Command="{Binding RetryCommand}">Retry</Hyperlink>
                     </TextBlock>
                 </DataTemplate>
-            </TreeView.Resources>
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="TreeViewItem">
+            </controls:AccountExplorerTreeView.Resources>
+            <controls:AccountExplorerTreeView.ItemContainerStyle>
+                <Style TargetType="controls:AccountExplorerTreeViewItem">
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu ItemsSource="{Binding Commands}"
@@ -75,18 +57,16 @@
                         </Setter.Value>
                     </Setter>
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                    <EventSetter Event="KeyDown" Handler="TreeViewItem_KeyDown" />
                 </Style>
-            </TreeView.ItemContainerStyle>
-            <TreeView.ContextMenu>
+            </controls:AccountExplorerTreeView.ItemContainerStyle>
+            <controls:AccountExplorerTreeView.ContextMenu>
                 <ContextMenu ItemsSource="{Binding Commands}"
                              ItemContainerStyle="{StaticResource CommandMenuItemStyle}"/>
-            </TreeView.ContextMenu>
+            </controls:AccountExplorerTreeView.ContextMenu>
             <i:Interaction.Behaviors>
                 <bhv:TreeViewSelectedItemBindingBehavior
                     SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}" />
             </i:Interaction.Behaviors>
-        </TreeView>
-
+        </controls:AccountExplorerTreeView>
     </Grid>
 </UserControl>
