@@ -1,11 +1,7 @@
 ﻿using CosmosDBStudio.Helpers;
 using EssentialMVVM;
-using Hamlet;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows.Input;
 
 namespace CosmosDBStudio.ViewModel
@@ -62,6 +58,7 @@ namespace CosmosDBStudio.ViewModel
 
             Errors?.Refresh();
             _deleteCommand?.RaiseCanExecuteChanged();
+            OnChanged();
         }
 
         protected virtual bool HasData() => !string.IsNullOrEmpty(RawValue);
@@ -78,5 +75,12 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public bool TryParseValue(out object? value) => JsonHelper.TryParseJsonValue(RawValue, out value);
+
+        public event EventHandler? Changed;
+
+        protected virtual void OnChanged()
+        {
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
