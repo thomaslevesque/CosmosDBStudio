@@ -8,6 +8,7 @@ using Hamlet;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -48,7 +49,7 @@ namespace CosmosDBStudio.ViewModel
             _text = querySheet.Text;
             _result = _viewModelFactory.CreateNotRunQueryResult();
 
-            PartitionKey = querySheet.PartitionKey;
+            _partitionKey = querySheet.PartitionKey;
             PartitionKeyMRU = new ObservableCollection<string>();
             foreach (var mru in querySheet.PartitionKeyMRU)
             {
@@ -63,6 +64,7 @@ namespace CosmosDBStudio.ViewModel
             }
 
             Parameters.AddPlaceholder();
+            Parameters.Changed += OnParametersChanged;
 
             Errors = new ViewModelValidator<QuerySheetViewModel>(this);
             Errors.AddValidator(
@@ -128,7 +130,9 @@ namespace CosmosDBStudio.ViewModel
         public string? PartitionKey
         {
             get => _partitionKey;
-            set => Set(ref _partitionKey, value).AndExecute(() => Errors?.Refresh());
+            set => Set(ref _partitionKey, value)
+                .AndExecute(() => Errors?.Refresh())
+                .AndExecute(() => SetHasChanges(true));
         }
 
         public ParametersViewModel<QueryParameterViewModel> Parameters { get; }
@@ -470,5 +474,10 @@ namespace CosmosDBStudio.ViewModel
         }
 
         public string FileFilter => QuerySheet.FileFilter;
+
+        private void OnParametersChanged(object? sender, EventArgs e)
+        {
+            SetHasChanges(true);
+        }
     }
 }

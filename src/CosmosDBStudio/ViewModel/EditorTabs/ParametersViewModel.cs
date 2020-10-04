@@ -18,6 +18,15 @@ namespace CosmosDBStudio.ViewModel
         {
             parameter.DeleteRequested += OnParameterDeleteRequested;
             Parameters.Add(parameter);
+            if (parameter.IsPlaceholder)
+            {
+                parameter.Created += OnParameterCreated;
+            }
+            else
+            {
+                parameter.DeleteRequested += OnParameterDeleteRequested;
+                parameter.Changed += OnParameterChanged;
+            }
         }
 
         public void AddPlaceholder()
@@ -27,13 +36,27 @@ namespace CosmosDBStudio.ViewModel
             Parameters.Add(placeholder);
         }
 
+        public event EventHandler? Changed;
+
+        private void OnChanged()
+        {
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnParameterChanged(object? sender, EventArgs e)
+        {
+            OnChanged();
+        }
+
         private void OnParameterCreated(object? sender, EventArgs _)
         {
-            if (sender is T placeholder)
+            if (sender is T parameter)
             {
-                placeholder.Created -= OnParameterCreated;
-                placeholder.DeleteRequested += OnParameterDeleteRequested;
+                parameter.Created -= OnParameterCreated;
+                parameter.DeleteRequested += OnParameterDeleteRequested;
+                parameter.Changed += OnParameterChanged;
                 AddPlaceholder();
+                OnChanged();
             }
         }
 
@@ -41,7 +64,10 @@ namespace CosmosDBStudio.ViewModel
         {
             if (sender is T parameter)
             {
+                parameter.DeleteRequested -= OnParameterDeleteRequested;
+                parameter.Changed -= OnParameterChanged;
                 Parameters.Remove(parameter);
+                OnChanged();
             }
         }
     }
