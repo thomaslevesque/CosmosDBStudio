@@ -53,7 +53,7 @@
                                 Command="{Binding DeleteCommand}" />
                     </ToolBar>
                     <avalonEdit:TextEditor
-                                       SyntaxHighlighting="JavaScript"
+                                       SyntaxHighlighting="JSON"
                                        FontFamily="{StaticResource CodeFont}"
                                        IsReadOnly="True">
                         <i:Interaction.Behaviors>
@@ -66,7 +66,7 @@
             </Grid>
         </TabItem>
         <TabItem Header="Raw">
-            <avalonEdit:TextEditor SyntaxHighlighting="JavaScript" IsReadOnly="True"
+            <avalonEdit:TextEditor SyntaxHighlighting="JSON" IsReadOnly="True"
                                    FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
                     <bhv:AvalonTextEditorBehavior UseSearch="True" />

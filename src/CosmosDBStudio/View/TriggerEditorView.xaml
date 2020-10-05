@@ -48,7 +48,7 @@
                 <cosmos:TriggerOperation>Replace</cosmos:TriggerOperation>
             </ComboBox>
         </ToolBar>
-        <avalonEdit:TextEditor Grid.Row="2" SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
+        <avalonEdit:TextEditor Grid.Row="2" SyntaxHighlighting="CosmosJS" FontFamily="{StaticResource CodeFont}">
             <i:Interaction.Behaviors>
                 <bhv:AvalonTextEditorBehavior UseSearch="True" />
                 <bhv:AvalonTextEditorBindingBehavior

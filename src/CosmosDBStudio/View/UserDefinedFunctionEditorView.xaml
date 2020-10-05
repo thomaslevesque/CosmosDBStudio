@@ -31,7 +31,7 @@
                     Command="{Binding RevertCommand}" />
         </ToolBar>
         <Grid Grid.Row="2">
-            <avalonEdit:TextEditor SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
+            <avalonEdit:TextEditor SyntaxHighlighting="CosmosJS" FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
                     <bhv:AvalonTextEditorBehavior UseSearch="True" />
                     <bhv:AvalonTextEditorBindingBehavior

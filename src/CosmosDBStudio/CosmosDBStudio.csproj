@@ -32,6 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="SyntaxHighlighting\*.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\fa-solid-900.ttf" />
   </ItemGroup>
 
