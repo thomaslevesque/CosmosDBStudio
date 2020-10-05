@@ -15,15 +15,17 @@ namespace CosmosDBStudio.View.Controls
 
         protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
         {
-            if (TryExecuteDefaultCommand())
-                e.Handled = true;
+            var clickedTreeViewItem = (e.OriginalSource as UIElement)?.GetAncestorOrSelf<AccountExplorerTreeViewItem>();
+            if (clickedTreeViewItem != this)
+                return;
+
+            e.Handled = TryExecuteDefaultCommand();
             base.OnMouseDoubleClick(e);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && TryExecuteDefaultCommand())
-                e.Handled = true;
+            e.Handled = e.Key == Key.Enter && TryExecuteDefaultCommand();
             base.OnKeyDown(e);
         }
 
