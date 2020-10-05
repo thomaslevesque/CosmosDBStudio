@@ -1,4 +1,5 @@
-﻿using CosmosDBStudio.ViewModel;
+﻿using CosmosDBStudio.SyntaxHighlighting;
+using CosmosDBStudio.ViewModel;
 using System.Windows;
 
 namespace CosmosDBStudio
@@ -9,6 +10,7 @@ namespace CosmosDBStudio
 
         public App(MainWindowViewModel mainWindowViewModel)
         {
+            CosmosSyntax.Init();
             InitializeComponent();
             _mainWindowViewModel = mainWindowViewModel;
         }

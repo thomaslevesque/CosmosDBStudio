@@ -46,7 +46,7 @@
                 <ColumnDefinition x:Name="editorColumn" Width="*" />
                 <ColumnDefinition x:Name="parametersColumn" Width="0" />
             </Grid.ColumnDefinitions>
-            <avalonEdit:TextEditor SyntaxHighlighting="JavaScript" FontFamily="{StaticResource CodeFont}">
+            <avalonEdit:TextEditor SyntaxHighlighting="CosmosJS" FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
                     <bhv:AvalonTextEditorBehavior UseSearch="True" />
                     <bhv:AvalonTextEditorBindingBehavior

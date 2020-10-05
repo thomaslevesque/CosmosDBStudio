@@ -15,7 +15,7 @@
     </UserControl.Resources>
     <TabControl SelectedIndex="{Binding SelectedTab, Mode=TwoWay, Converter={StaticResource enumConverter}}">
         <TabItem Header="Raw">
-            <avalonEdit:TextEditor SyntaxHighlighting="JavaScript" IsReadOnly="True"
+            <avalonEdit:TextEditor SyntaxHighlighting="JSON" IsReadOnly="True"
                                    FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
                     <bhv:AvalonTextEditorBehavior UseSearch="True" />

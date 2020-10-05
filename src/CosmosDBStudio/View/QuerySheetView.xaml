@@ -74,7 +74,7 @@
                 <ColumnDefinition x:Name="editorColumn" Width="*" />
                 <ColumnDefinition x:Name="parametersColumn" Width="0" />
             </Grid.ColumnDefinitions>
-            <avalonEdit:TextEditor Grid.Column="0" SyntaxHighlighting="TSQL" FontFamily="{StaticResource CodeFont}">
+            <avalonEdit:TextEditor Grid.Column="0" SyntaxHighlighting="CosmosSQL" FontFamily="{StaticResource CodeFont}">
                 <i:Interaction.Behaviors>
                     <bhv:AvalonTextEditorBehavior UseSearch="True" />
                     <bhv:AvalonTextEditorBindingBehavior
