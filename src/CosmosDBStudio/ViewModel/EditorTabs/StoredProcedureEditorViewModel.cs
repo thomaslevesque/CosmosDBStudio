@@ -63,8 +63,11 @@ namespace CosmosDBStudio.ViewModel
                 if (p.Errors.HasError)
                     return;
 
-                p.TryParseValue(out var value);
-                parameters.Add(value);
+                if (p.TryParseValue(out var value))
+                {
+                    parameters.Add(value);
+                    p.MRU.PushMRU(p.RawValue!, 10);
+                }
             }
 
             StoredProcedureResult? result;

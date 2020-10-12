@@ -15,7 +15,7 @@
             <Label Content="Partition key" FontWeight="Bold" />
             <ComboBox IsEditable="True"
                       Margin="5,0,5,0"
-                      d:ItemsSource="{Binding PartitionKeyMRU}"
+                      ItemsSource="{Binding PartitionKeyMRU}"
                       Text="{Binding PartitionKeyRawValue, UpdateSourceTrigger=LostFocus}">
                 <i:Interaction.Behaviors>
                     <bhv:ErrorBehavior Error="{Binding Errors[PartitionKeyRawValue]}" />
