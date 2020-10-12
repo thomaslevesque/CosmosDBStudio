@@ -1,5 +1,6 @@
 ﻿using CosmosDBStudio.Model;
 using EssentialMVVM;
+using Newtonsoft.Json;
 
 namespace CosmosDBStudio.ViewModel.EditorTabs
 {
@@ -7,7 +8,7 @@ namespace CosmosDBStudio.ViewModel.EditorTabs
     {
         public StoredProcedureResultViewModel(StoredProcedureResult result)
         {
-            Text = result.Body?.ToString() ?? string.Empty;
+            Text = result.Body?.ToString(Formatting.Indented) ?? string.Empty;
             ScriptLog = result.ScriptLog;
             Error = result.Error?.Message ?? string.Empty;
             if (result.Error != null)
