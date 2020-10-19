@@ -74,9 +74,22 @@ namespace CosmosDBStudio.ViewModel
             set => Set(ref _selectedItem, value)
                 .AndExecute(() =>
                 {
-                    var container = SelectedItem as ContainerNodeViewModel;
+                    var container = GetSelectedContainer();
                     _messenger.Publish(new ExplorerSelectedContainerChangedMessage(container));
                 });
+        }
+
+        private ContainerNodeViewModel? GetSelectedContainer()
+        {
+            var node = SelectedItem as TreeNodeViewModel;
+            while (node != null)
+            {
+                if (node is ContainerNodeViewModel vm)
+                    return vm;
+                node = node.Parent;
+            }
+
+            return null;
         }
 
         private void ReloadAccounts()
