@@ -8,7 +8,6 @@ using Hamlet;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -43,7 +42,7 @@ namespace CosmosDBStudio.ViewModel
             _dialogService = dialogService;
             _messenger = messenger;
             _filePath = path;
-            Title = string.IsNullOrEmpty(path)
+            _title = string.IsNullOrEmpty(path)
                 ? "Untitled " + (++UntitledCounter)
                 : Path.GetFileNameWithoutExtension(path);
             _text = querySheet.Text;
@@ -79,7 +78,8 @@ namespace CosmosDBStudio.ViewModel
 
         public ViewModelValidator<QuerySheetViewModel> Errors { get; }
 
-        public override string Title { get; }
+        private string _title;
+        public override string Title => _title;
 
         public override string Description => "query sheet";
 
@@ -87,7 +87,7 @@ namespace CosmosDBStudio.ViewModel
         public string? FilePath
         {
             get => _filePath;
-            set => Set(ref _filePath, value).AndNotifyPropertyChanged(nameof(Title));
+            set => Set(ref _filePath, value);
         }
 
         private string _text;
@@ -470,6 +470,8 @@ namespace CosmosDBStudio.ViewModel
             var querySheet = GetQuerySheet();
             _queryPersistenceService.Save(querySheet, path);
             FilePath = path;
+            _title = Path.GetFileNameWithoutExtension(path);
+            OnPropertyChanged(nameof(Title));
             SetHasChanges(false);
         }
 
