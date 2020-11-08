@@ -6,7 +6,6 @@ using CosmosDBStudio.Services.Implementation;
 using CosmosDBStudio.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Windows.Threading;
 
 namespace CosmosDBStudio
 {
@@ -37,7 +36,7 @@ namespace CosmosDBStudio
             services.AddSingleton<IViewModelFactory>(ViewModelFactoryProxy.Create);
             services.AddSingleton<IMessenger, Messenger>();
             services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton(sp => new Lazy<Dispatcher>(() => sp.GetRequiredService<App>().Dispatcher));
+            services.AddSingleton(sp => sp.GetRequiredService<App>().Dispatcher);
             services.AddSingleton<IUIDispatcher, UIDispatcher>();
             services.AddSingleton<IClipboardService, ClipboardService>();
 
