@@ -10,8 +10,8 @@ namespace CosmosDBStudio.ViewModel
 {
     public class AccountNodeViewModel : NonLeafTreeNodeViewModel
     {
-        public readonly CosmosAccount Account;
         private readonly IViewModelFactory _viewModelFactory;
+        private readonly IClientPool _clientPool;
 
         public AccountNodeViewModel(
             CosmosAccount account,
@@ -20,12 +20,14 @@ namespace CosmosDBStudio.ViewModel
             AccountCommands accountCommands,
             DatabaseCommands databaseCommands,
             IViewModelFactory viewModelFactory,
-            IMessenger messenger)
+            IMessenger messenger,
+            IClientPool clientPool)
         {
-            Account = account;
+            Id = account.Id;
             Context = context;
             Parent = parent;
             _viewModelFactory = viewModelFactory;
+            _clientPool = clientPool;
             _name = account.Name;
 
             Commands = new[]
@@ -39,11 +41,12 @@ namespace CosmosDBStudio.ViewModel
                 new CommandViewModel("Remove account", accountCommands.RemoveCommand, this),
             };
 
+            messenger.Subscribe(this).To<AccountEditedMessage>((vm, message) => vm.OnAccountEdited(message));
             messenger.Subscribe(this).To<DatabaseCreatedMessage>((vm, message) => vm.OnDatabaseCreated(message));
             messenger.Subscribe(this).To<DatabaseDeletedMessage>((vm, message) => vm.OnDatabaseDeleted(message));
         }
 
-        public string Id => Account.Id;
+        public string Id { get; }
 
         private string _name;
         public string Name
@@ -67,6 +70,19 @@ namespace CosmosDBStudio.ViewModel
         public override IEnumerable<CommandViewModel> Commands { get; }
 
         public IAccountContext Context { get; }
+
+        private void OnAccountEdited(AccountEditedMessage message)
+        {
+            if (message.Account.Id != Id)
+                return;
+
+            Name = message.Account.Name;
+            if (message.CredentialsChanged)
+            {
+                _clientPool.RemoveClientForAccount(message.Account);
+                ReloadChildren();
+            }
+        }
 
         private void OnDatabaseCreated(DatabaseCreatedMessage message)
         {

@@ -1,5 +1,6 @@
 ﻿using CosmosDBStudio.Model;
 using Microsoft.Azure.Cosmos;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,25 +8,24 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class ContainerContext : IContainerContext
     {
-        private readonly Container _container;
-        private readonly Database _database;
+        private readonly Func<Container> _containerGetter;
 
         public ContainerContext(
             IDatabaseContext databaseContext,
-            Database database,
-            Container container,
+            string containerId,
+            Func<Container> containerGetter,
             string partitionKeyPath)
         {
             DatabaseContext = databaseContext;
-            _database = database;
-            _container = container;
+            ContainerId = containerId;
+            _containerGetter = containerGetter;
             PartitionKeyPath = partitionKeyPath;
             PartitionKeyJsonPath = string.IsNullOrEmpty(partitionKeyPath)
                 ? null
                 : "$" + partitionKeyPath.Replace('/', '.');
-            Documents = new DocumentService(container);
-            Query = new QueryService(container);
-            Scripts = new ScriptService(container);
+            Documents = new DocumentService(containerGetter);
+            Query = new QueryService(containerGetter);
+            Scripts = new ScriptService(containerGetter);
         }
 
         public IDatabaseContext DatabaseContext { get; }
@@ -34,9 +34,9 @@ namespace CosmosDBStudio.Services.Implementation
 
         public string AccountName => DatabaseContext.AccountName;
 
-        public string DatabaseId => _database.Id;
+        public string DatabaseId => DatabaseContext.DatabaseId;
 
-        public string ContainerId => _container.Id;
+        public string ContainerId { get; }
 
         public string? PartitionKeyPath { get; }
         public string? PartitionKeyJsonPath { get; }
@@ -52,19 +52,21 @@ namespace CosmosDBStudio.Services.Implementation
 
         public Task<int?> GetThroughputAsync(CancellationToken cancellationToken)
         {
+            var container = _containerGetter();
             if (DatabaseContext.AccountContext.IsServerless)
                 return Task.FromResult(default(int?));
-            return _container.ReadThroughputAsync(cancellationToken);
+            return container.ReadThroughputAsync(cancellationToken);
         }
 
         public async Task<OperationResult> SetThroughputAsync(int? throughput, CancellationToken cancellationToken)
         {
-            int? currentThroughput = await _container.ReadThroughputAsync(cancellationToken);
+            var container = _containerGetter();
+            int? currentThroughput = await container.ReadThroughputAsync(cancellationToken);
             if (throughput.HasValue != currentThroughput.HasValue)
                 return OperationResult.Forbidden;
 
             if (throughput.HasValue && throughput != currentThroughput)
-                await _container.ReplaceThroughputAsync(throughput.Value, cancellationToken: cancellationToken);
+                await container.ReplaceThroughputAsync(throughput.Value, cancellationToken: cancellationToken);
 
             return OperationResult.Success;
         }

@@ -12,18 +12,18 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class QueryService : IQueryService
     {
-        private readonly Container _container;
+        private readonly Func<Container> _containerGetter;
 
-        public QueryService(Container container)
+        public QueryService(Func<Container> containerGetter)
         {
-            _container = container;
+            _containerGetter = containerGetter;
         }
 
         public async Task<QueryResult> ExecuteAsync(Query query, string? continuationToken, CancellationToken cancellationToken)
         {
             var queryDefinition = CreateQueryDefinition(query);
             var requestOptions = CreateRequestOptions(query);
-            var iterator = _container.GetItemQueryIterator<JToken>(queryDefinition, continuationToken, requestOptions);
+            var iterator = _containerGetter().GetItemQueryIterator<JToken>(queryDefinition, continuationToken, requestOptions);
             var result = new QueryResult(query);
             var stopwatch = new Stopwatch();
             List<string>? warnings = null;

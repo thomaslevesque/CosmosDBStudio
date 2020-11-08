@@ -7,13 +7,13 @@ namespace CosmosDBStudio.Services.Implementation
     public class AccountContext : IAccountContext
     {
         private readonly CosmosAccount _account;
-        private readonly Lazy<CosmosClient> _client;
+        private readonly Func<CosmosClient> _clientGetter;
 
-        public AccountContext(CosmosAccount account, Lazy<CosmosClient> client)
+        public AccountContext(CosmosAccount account, Func<CosmosClient> clientGetter)
         {
             _account = account;
-            _client = client;
-            Databases = new DatabaseService(client);
+            _clientGetter = clientGetter;
+            Databases = new DatabaseService(clientGetter);
         }
 
         public string AccountId => _account.Id;
@@ -26,7 +26,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public IDatabaseContext GetDatabaseContext(CosmosDatabase database)
         {
-            return new DatabaseContext(this, _client.Value.GetDatabase(database.Id));
+            return new DatabaseContext(this, database.Id, () => _clientGetter().GetDatabase(database.Id));
         }
     }
 }

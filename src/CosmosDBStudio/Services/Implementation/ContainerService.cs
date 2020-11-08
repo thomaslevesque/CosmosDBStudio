@@ -11,16 +11,16 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class ContainerService : IContainerService
     {
-        private readonly Database _database;
+        private readonly Func<Database> _databaseGetter;
 
-        public ContainerService(Database database)
+        public ContainerService(Func<Database> databaseGetter)
         {
-            _database = database;
+            _databaseGetter = databaseGetter;
         }
 
         public async Task<CosmosContainer[]> GetContainersAsync(CancellationToken cancellationToken)
         {
-            var iterator = _database.GetContainerQueryIterator<ContainerProperties>();
+            var iterator = _databaseGetter().GetContainerQueryIterator<ContainerProperties>();
             var containers = new List<CosmosContainer>();
             while (iterator.HasMoreResults)
             {
@@ -40,7 +40,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public async Task<CosmosContainer> GetContainerAsync(string containerId, CancellationToken cancellationToken)
         {
-            var container = _database.GetContainer(containerId);
+            var container = _databaseGetter().GetContainer(containerId);
             var properties = (await container.ReadContainerAsync(cancellationToken: cancellationToken)).Resource;
             return new CosmosContainer
             {
@@ -64,7 +64,7 @@ namespace CosmosDBStudio.Services.Implementation
 
             try
             {
-                var response = await _database.CreateContainerAsync(properties, throughput, cancellationToken: cancellationToken);
+                var response = await _databaseGetter().CreateContainerAsync(properties, throughput, cancellationToken: cancellationToken);
                 container.ETag = response.Resource.ETag;
                 return OperationResult.Success;
             }
@@ -76,7 +76,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public async Task<OperationResult> UpdateContainerAsync(CosmosContainer container, CancellationToken cancellationToken)
         {
-            var c = _database.GetContainer(container.Id);
+            var c = _databaseGetter().GetContainer(container.Id);
             var properties = (await c.ReadContainerAsync(cancellationToken: cancellationToken)).Resource;
 
             if (container.LargePartitionKey != (properties.PartitionKeyDefinitionVersion > PartitionKeyDefinitionVersion.V1))
@@ -112,7 +112,7 @@ namespace CosmosDBStudio.Services.Implementation
         {
             try
             {
-                var c = _database.GetContainer(container.Id);
+                var c = _databaseGetter().GetContainer(container.Id);
                 await c.DeleteContainerAsync(new ContainerRequestOptions { IfMatchEtag = container.ETag }, cancellationToken);
                 return OperationResult.Success;
             }

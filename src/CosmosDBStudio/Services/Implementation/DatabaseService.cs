@@ -11,16 +11,16 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class DatabaseService : IDatabaseService
     {
-        private readonly Lazy<CosmosClient> _client;
+        private readonly Func<CosmosClient> _clientGetter;
 
-        public DatabaseService(Lazy<CosmosClient> client)
+        public DatabaseService(Func<CosmosClient> clientGetter)
         {
-            _client = client;
+            _clientGetter = clientGetter;
         }
 
         public async Task<CosmosDatabase[]> GetDatabasesAsync(CancellationToken cancellationToken)
         {
-            var iterator = _client.Value.GetDatabaseQueryIterator<DatabaseProperties>();
+            var iterator = _clientGetter().GetDatabaseQueryIterator<DatabaseProperties>();
             var databases = new List<CosmosDatabase>();
             while (iterator.HasMoreResults)
             {
@@ -37,7 +37,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public async Task<CosmosDatabase> GetDatabaseAsync(string databaseId, CancellationToken cancellationToken)
         {
-            var database = _client.Value.GetDatabase(databaseId);
+            var database = _clientGetter().GetDatabase(databaseId);
             var response = await database.ReadAsync(cancellationToken: cancellationToken);
 
             return new CosmosDatabase
@@ -51,7 +51,7 @@ namespace CosmosDBStudio.Services.Implementation
         {
             try
             {
-                var response = await _client.Value.CreateDatabaseAsync(database.Id, throughput, cancellationToken: cancellationToken);
+                var response = await _clientGetter().CreateDatabaseAsync(database.Id, throughput, cancellationToken: cancellationToken);
                 database.ETag = response.Resource.ETag;
                 return OperationResult.Success;
             }
@@ -63,7 +63,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public async Task<OperationResult> DeleteDatabaseAsync(CosmosDatabase database, CancellationToken cancellationToken)
         {
-            var db = _client.Value.GetDatabase(database.Id);
+            var db = _clientGetter().GetDatabase(database.Id);
             try
             {
                 await db.DeleteAsync(new RequestOptions { IfMatchEtag = database.ETag }, cancellationToken);

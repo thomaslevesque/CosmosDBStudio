@@ -12,5 +12,6 @@ namespace CosmosDBStudio.Messages
 
         public CosmosAccount Account { get; }
         public CosmosAccount OldAccount { get; }
+        public bool CredentialsChanged => Account.Endpoint != OldAccount.Endpoint || Account.Key != OldAccount.Key;
     }
 }

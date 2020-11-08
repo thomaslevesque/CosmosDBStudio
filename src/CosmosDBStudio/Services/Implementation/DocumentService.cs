@@ -1,6 +1,7 @@
 ﻿using Hamlet;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,18 +10,18 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class DocumentService : IDocumentService
     {
-        private readonly Container _container;
+        private readonly Func<Container> _containerGetter;
 
-        public DocumentService(Container container)
+        public DocumentService(Func<Container> containerGetter)
         {
-            _container = container;
+            _containerGetter = containerGetter;
         }
 
         public async Task<JObject?> GetAsync(string id, Option<object?> partitionKey, CancellationToken cancellationToken)
         {
             try
             {
-                var response = await _container.ReadItemAsync<JObject>(
+                var response = await _containerGetter().ReadItemAsync<JObject>(
                     id,
                     PartitionKeyHelper.Create(partitionKey) ?? PartitionKey.None,
                     null,
@@ -36,7 +37,7 @@ namespace CosmosDBStudio.Services.Implementation
 
         public async Task<JObject> CreateAsync(JObject document, Option<object?> partitionKey, CancellationToken cancellationToken)
         {
-            var response = await _container.CreateItemAsync(
+            var response = await _containerGetter().CreateItemAsync(
                 document,
                 PartitionKeyHelper.Create(partitionKey),
                 null,
@@ -51,7 +52,7 @@ namespace CosmosDBStudio.Services.Implementation
                 .IfMatch(eTag)
                 .Build();
 
-            var response = await _container.ReplaceItemAsync(
+            var response = await _containerGetter().ReplaceItemAsync(
                 document,
                 id,
                 PartitionKeyHelper.Create(partitionKey),
@@ -67,7 +68,7 @@ namespace CosmosDBStudio.Services.Implementation
                 .IfMatch(eTag)
                 .Build();
 
-            await _container.DeleteItemAsync<JObject>(
+            await _containerGetter().DeleteItemAsync<JObject>(
                 id,
                 PartitionKeyHelper.Create(partitionKey) ?? PartitionKey.None,
                 options,

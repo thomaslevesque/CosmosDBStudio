@@ -14,48 +14,48 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class ScriptService : IScriptService
     {
-        private readonly Container _container;
+        private readonly Func<Container> _containerGetter;
 
-        public ScriptService(Container container)
+        public ScriptService(Func<Container> containerGetter)
         {
-            _container = container;
+            _containerGetter = containerGetter;
         }
 
         public Task<CosmosStoredProcedure[]> GetStoredProceduresAsync(CancellationToken cancellationToken) =>
-            GetScripts(() => _container.Scripts.GetStoredProcedureQueryIterator<StoredProcedureProperties>(), MakeScript, cancellationToken);
+            GetScripts(() => _containerGetter().Scripts.GetStoredProcedureQueryIterator<StoredProcedureProperties>(), MakeScript, cancellationToken);
 
         public Task<CosmosUserDefinedFunction[]> GetUserDefinedFunctionsAsync(CancellationToken cancellationToken) =>
-            GetScripts(() => _container.Scripts.GetUserDefinedFunctionQueryIterator<UserDefinedFunctionProperties>(), MakeScript, cancellationToken);
+            GetScripts(() => _containerGetter().Scripts.GetUserDefinedFunctionQueryIterator<UserDefinedFunctionProperties>(), MakeScript, cancellationToken);
 
         public Task<CosmosTrigger[]> GetTriggersAsync(CancellationToken cancellationToken) =>
-            GetScripts(() => _container.Scripts.GetTriggerQueryIterator<TriggerProperties>(), MakeScript, cancellationToken);
+            GetScripts(() => _containerGetter().Scripts.GetTriggerQueryIterator<TriggerProperties>(), MakeScript, cancellationToken);
 
         public Task<OperationResult> CreateStoredProcedureAsync(CosmosStoredProcedure storedProcedure, CancellationToken cancellationToken) =>
-            CreateScript(storedProcedure, GetProps, _container.Scripts.CreateStoredProcedureAsync, cancellationToken);
+            CreateScript(storedProcedure, GetProps, _containerGetter().Scripts.CreateStoredProcedureAsync, cancellationToken);
 
         public Task<OperationResult> CreateTriggerAsync(CosmosTrigger trigger, CancellationToken cancellationToken) =>
-            CreateScript(trigger, GetProps, _container.Scripts.CreateTriggerAsync, cancellationToken);
+            CreateScript(trigger, GetProps, _containerGetter().Scripts.CreateTriggerAsync, cancellationToken);
 
         public Task<OperationResult> CreateUserDefinedFunctionAsync(CosmosUserDefinedFunction udf, CancellationToken cancellationToken) =>
-            CreateScript(udf, GetProps, _container.Scripts.CreateUserDefinedFunctionAsync, cancellationToken);
+            CreateScript(udf, GetProps, _containerGetter().Scripts.CreateUserDefinedFunctionAsync, cancellationToken);
 
         public Task<OperationResult> ReplaceStoredProcedureAsync(CosmosStoredProcedure storedProcedure, CancellationToken cancellationToken) =>
-            ReplaceScript(storedProcedure, GetProps, _container.Scripts.ReplaceStoredProcedureAsync, cancellationToken);
+            ReplaceScript(storedProcedure, GetProps, _containerGetter().Scripts.ReplaceStoredProcedureAsync, cancellationToken);
 
         public Task<OperationResult> ReplaceTriggerAsync(CosmosTrigger trigger, CancellationToken cancellationToken) =>
-            ReplaceScript(trigger, GetProps, _container.Scripts.ReplaceTriggerAsync, cancellationToken);
+            ReplaceScript(trigger, GetProps, _containerGetter().Scripts.ReplaceTriggerAsync, cancellationToken);
 
         public Task<OperationResult> ReplaceUserDefinedFunctionAsync(CosmosUserDefinedFunction udf, CancellationToken cancellationToken) =>
-            ReplaceScript(udf, GetProps, _container.Scripts.ReplaceUserDefinedFunctionAsync, cancellationToken);
+            ReplaceScript(udf, GetProps, _containerGetter().Scripts.ReplaceUserDefinedFunctionAsync, cancellationToken);
 
         public Task<OperationResult> DeleteStoredProcedureAsync(CosmosStoredProcedure storedProcedure, CancellationToken cancellationToken) =>
-            DeleteScript(storedProcedure, _container.Scripts.DeleteStoredProcedureAsync, cancellationToken);
+            DeleteScript(storedProcedure, _containerGetter().Scripts.DeleteStoredProcedureAsync, cancellationToken);
 
         public Task<OperationResult> DeleteUserDefinedFunctionAsync(CosmosUserDefinedFunction udf, CancellationToken cancellationToken) =>
-            DeleteScript(udf, _container.Scripts.DeleteUserDefinedFunctionAsync, cancellationToken);
+            DeleteScript(udf, _containerGetter().Scripts.DeleteUserDefinedFunctionAsync, cancellationToken);
 
         public Task<OperationResult> DeleteTriggerAsync(CosmosTrigger trigger, CancellationToken cancellationToken) =>
-            DeleteScript(trigger, _container.Scripts.DeleteTriggerAsync, cancellationToken);
+            DeleteScript(trigger, _containerGetter().Scripts.DeleteTriggerAsync, cancellationToken);
 
         private static CosmosStoredProcedure MakeScript(StoredProcedureProperties props) =>
             new CosmosStoredProcedure
@@ -105,7 +105,7 @@ namespace CosmosDBStudio.Services.Implementation
             try
             {
                 stopwatch.Start();
-                var response = await _container.Scripts.ExecuteStoredProcedureAsync<JToken>(
+                var response = await _containerGetter().Scripts.ExecuteStoredProcedureAsync<JToken>(
                     storedProcedure.Id,
                     PartitionKeyHelper.Create(partitionKey),
                     parameters,
