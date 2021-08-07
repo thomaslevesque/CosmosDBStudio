@@ -10,10 +10,20 @@ namespace CosmosDBStudio.Services.Implementation
 {
     public class QueryPersistenceService : IQueryPersistenceService
     {
-        public QuerySheet Load(string path)
+        public QuerySheet? Load(string path)
         {
-            string json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<QuerySheet>(json);
+            if (File.Exists(path))
+            {
+                try
+                {
+                    string json = File.ReadAllText(path);
+                    return JsonConvert.DeserializeObject<QuerySheet>(json);
+                }
+                catch (FileNotFoundException) { }
+                catch (DirectoryNotFoundException) { }
+            }
+
+            return null;
         }
 
         public IList<string> LoadMruList()
@@ -85,8 +95,13 @@ namespace CosmosDBStudio.Services.Implementation
             var path = Path.Combine(GetWorkspacePath(false), "workspace.json");
             if (File.Exists(path))
             {
-                string json = File.ReadAllText(path);
-                return JsonConvert.DeserializeObject<Workspace>(json);
+                try
+                {
+                    string json = File.ReadAllText(path);
+                    return JsonConvert.DeserializeObject<Workspace>(json);
+                }
+                catch (FileNotFoundException) { }
+                catch (DirectoryNotFoundException) { }
             }
 
             return new Workspace();
