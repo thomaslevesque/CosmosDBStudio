@@ -27,7 +27,7 @@ The app is available [on the Windows Store](https://www.microsoft.com/en-us/p/co
 ### Sideloading
 
 1. Download the package from the [release page](https://github.com/thomaslevesque/CosmosDBStudio/releases/latest).
-2. If it's the first time you install the application, you will need rust the app certificate:
+2. If it's the first time you install the application, you will need to trust the app certificate:
     1. Open the *Properties* dialog for the package file.
     2. Go to the *Digital signatures* tab.
     3. Select the signature from the list and click *Details*.
