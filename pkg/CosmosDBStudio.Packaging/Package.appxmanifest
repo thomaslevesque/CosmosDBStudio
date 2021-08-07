@@ -9,7 +9,7 @@
   <Identity
     Name="20269ThomasLevesque.CosmosDBStudio"
     Publisher="CN=BD404AD9-7DBE-4AD8-AD10-DF2AC49893CF"
-    Version="1.1.0.0" />
+    Version="1.1.1.0" />
 
   <Properties>
     <DisplayName>Cosmos DB Studio</DisplayName>

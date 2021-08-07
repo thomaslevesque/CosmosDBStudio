@@ -206,6 +206,9 @@ namespace CosmosDBStudio.ViewModel
             }
 
             var querySheet = _queryPersistenceService.Load(path);
+            if (querySheet is null)
+                return;
+
             var vm = _viewModelFactory.CreateQuerySheet(
                 querySheet,
                 path,
@@ -270,6 +273,8 @@ namespace CosmosDBStudio.ViewModel
                 }
 
                 var querySheet = _queryPersistenceService.Load(path);
+                if (querySheet is null)
+                    continue;
                 var vm = _viewModelFactory.CreateQuerySheet(
                     querySheet,
                     sheet.SavedPath,
