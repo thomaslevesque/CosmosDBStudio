@@ -31,7 +31,8 @@ namespace CosmosDBStudio.Services.Implementation
             try
             {
                 string json = File.ReadAllText(GetMruListFilePath());
-                return JsonConvert.DeserializeObject<IList<string>>(json);
+                return JsonConvert.DeserializeObject<IList<string>>(json)
+                    ?? new List<string>();
             }
             catch (FileNotFoundException)
             {
@@ -73,7 +74,7 @@ namespace CosmosDBStudio.Services.Implementation
 
             // Cleanup old temporary query sheets
             var oldTmpFiles = Directory.EnumerateFiles(workspaceDir, "*.tmp")
-                .Except(workspace.QuerySheets.Select(s => s.TempPath))
+                .Except(workspace.QuerySheets.Select(s => s.TempPath ?? string.Empty))
                 .ToList();
             
             foreach (var oldTmpFile in oldTmpFiles)
@@ -98,7 +99,9 @@ namespace CosmosDBStudio.Services.Implementation
                 try
                 {
                     string json = File.ReadAllText(path);
-                    return JsonConvert.DeserializeObject<Workspace>(json);
+                    var workspace = JsonConvert.DeserializeObject<Workspace>(json);
+                    if (workspace is not null)
+                        return workspace;
                 }
                 catch (FileNotFoundException) { }
                 catch (DirectoryNotFoundException) { }

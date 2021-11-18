@@ -53,22 +53,21 @@ namespace CosmosDBStudio.ViewModel
                 return;
             }
 
-            object tmp;
-            if (builder.TryGetValue("AccountEndpoint", out tmp) && tmp is string)
-                _endpoint = (string)tmp;
-            if (builder.TryGetValue("AccountKey", out tmp) && tmp is string)
-                _key = (string)tmp;
+            if (builder.TryGetValue("AccountEndpoint", out var tmp) && tmp is string endpoint)
+                _endpoint = endpoint;
+            if (builder.TryGetValue("AccountKey", out tmp) && tmp is string key)
+                _key = key;
             SetNameFromEndpoint();
         }
 
-        private static string? ValidateName(string name)
+        private static string ValidateName(string name)
         {
             return string.IsNullOrEmpty(name)
                     ? "A name must be specified"
-                    : null;
+                    : string.Empty;
         }
 
-        private static string? ValidateEndpoint(string endpoint)
+        private static string ValidateEndpoint(string endpoint)
         {
             if (string.IsNullOrEmpty(endpoint))
                 return "The account endpoint must be specified";
@@ -76,10 +75,10 @@ namespace CosmosDBStudio.ViewModel
             if (!Uri.TryCreate(endpoint, UriKind.Absolute, out _))
                 return "The specified account endpoint is not a valid URI";
 
-            return null;
+            return string.Empty;
         }
 
-        private static string? ValidateKey(string key)
+        private static string ValidateKey(string key)
         {
             if (string.IsNullOrEmpty(key))
                 return "The account key must be specified";
@@ -87,7 +86,7 @@ namespace CosmosDBStudio.ViewModel
             try
             {
                 Convert.FromBase64String(key);
-                return null;
+                return string.Empty;
             }
             catch
             {

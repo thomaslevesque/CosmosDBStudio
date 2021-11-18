@@ -9,10 +9,10 @@ namespace CosmosDBStudio.ViewModel
             Errors.AddValidator(vm => vm.Name, ValidateName);
         }
 
-        private string? ValidateName(string? name)
+        private string ValidateName(string? name)
         {
             if (IsPlaceholder)
-                return null;
+                return string.Empty;
 
             if (string.IsNullOrEmpty(name))
                 return "Name must be set";
@@ -20,7 +20,7 @@ namespace CosmosDBStudio.ViewModel
             if (!Regex.IsMatch(name, @"^@?[a-zA-Z_][a-zA-Z0-9_]*$"))
                 return "Invalid characters in name";
 
-            return null;
+            return string.Empty;
         }
 
         private string? _name;

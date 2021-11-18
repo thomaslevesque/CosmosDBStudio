@@ -3,21 +3,21 @@ using EssentialMVVM;
 using System;
 using System.Diagnostics;
 using System.Windows.Input;
+using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio.ViewModel
 {
     public class AboutViewModel : DialogViewModelBase
     {
-        public AboutViewModel()
+        public AboutViewModel(IApplication application)
         {
             AddOkButton();
             try
             {
-                var package = Windows.ApplicationModel.Package.Current;
-                ProductName = package.DisplayName;
-                var v = package.Id.Version;
-                Version = $"{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
-                Author = package.PublisherDisplayName;
+                var info = application.GetVersionInfo();
+                ProductName = info.ProductName;
+                Version = info.Version;
+                Author = info.Author;
             }
             catch(InvalidOperationException)
             {

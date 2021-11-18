@@ -23,7 +23,7 @@ namespace CosmosDBStudio.ViewModel
                 {
                     HasId = true;
                     FirstColumnTitle = "id";
-                    DisplayValue = Id = idToken.Value<string>();
+                    DisplayValue = Id = idToken.Value<string>()!;
                 }
                 else
                 {

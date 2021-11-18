@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace CosmosDBStudio.Services.Implementation
 {
-    class AccountDirectory : IAccountDirectory
+    public class AccountDirectory : IAccountDirectory
     {
         private Dictionary<string, CosmosAccount> _accounts = new Dictionary<string, CosmosAccount>();
 
@@ -110,7 +110,8 @@ namespace CosmosDBStudio.Services.Implementation
             try
             {
                 var json = File.ReadAllText(GetAccountsFilePath());
-                var accounts = JsonConvert.DeserializeObject<CosmosAccount[]>(json);
+                var accounts = JsonConvert.DeserializeObject<CosmosAccount[]>(json)
+                    ?? Array.Empty<CosmosAccount>();
                 _accounts = accounts.ToDictionary(c => c.Id);
                 return;
             }

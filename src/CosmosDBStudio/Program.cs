@@ -52,6 +52,7 @@ namespace CosmosDBStudio
             services.AddSingleton<MainWindowViewModel>();
 
             services.AddSingleton<App>();
+            services.AddSingleton<IApplication>(sp => sp.GetRequiredService<App>());
         }
     }
 }

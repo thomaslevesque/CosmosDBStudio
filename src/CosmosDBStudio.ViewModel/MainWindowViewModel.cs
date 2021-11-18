@@ -1,11 +1,11 @@
-﻿using CosmosDBStudio.Commands;
+﻿using System;
+using CosmosDBStudio.Commands;
 using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using EssentialMVVM;
 using Hamlet;
 using Linq.Extras;
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +15,7 @@ namespace CosmosDBStudio.ViewModel
 {
     public class MainWindowViewModel : BindableBase
     {
+        private readonly Lazy<IApplication> _application;
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IMessenger _messenger;
         private readonly IDialogService _dialogService;
@@ -22,12 +23,14 @@ namespace CosmosDBStudio.ViewModel
         private readonly AccountCommands _accountCommands;
 
         public MainWindowViewModel(
+            Lazy<IApplication> application,
             IViewModelFactory viewModelFactory,
             IMessenger messenger,
             IDialogService dialogService,
             IQueryPersistenceService queryPersistenceService,
             AccountCommands accountCommands)
         {
+            _application = application;
             _viewModelFactory = viewModelFactory;
             _messenger = messenger;
             _dialogService = dialogService;
@@ -132,13 +135,13 @@ namespace CosmosDBStudio.ViewModel
         private DelegateCommand<string>? _openQuerySheetCommand;
         public ICommand OpenQuerySheetCommand => _openQuerySheetCommand ??= new DelegateCommand<string>(OpenQuerySheet);
 
-        public DelegateCommand? _quitCommand;
+        private DelegateCommand? _quitCommand;
         public ICommand QuitCommand => _quitCommand ??= new DelegateCommand(Quit);
 
         private void Quit()
         {
             SaveWorkspace();
-            App.Current.Quit();
+            _application.Value.Quit();
         }
 
         private DelegateCommand? _aboutCommand;
@@ -146,7 +149,7 @@ namespace CosmosDBStudio.ViewModel
 
         private void About()
         {
-            var vm = new AboutViewModel();
+            var vm = new AboutViewModel(_application.Value);
             _dialogService.ShowDialog(vm);
         }
 

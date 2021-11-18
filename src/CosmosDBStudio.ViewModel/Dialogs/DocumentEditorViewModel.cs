@@ -55,7 +55,7 @@ namespace CosmosDBStudio.ViewModel
                 Title = "Edit document";
             }
 
-            _id = document["id"].Value<string>();
+            _id = document["id"]!.Value<string>()!;
             _eTag = document["_etag"]?.Value<string>();
             _text = document.ToString(Formatting.Indented);
             _isJsonValid = true;
@@ -170,7 +170,7 @@ namespace CosmosDBStudio.ViewModel
                     StatusText = "Successfully updated";
                 }
 
-                _id = result["id"].Value<string>();
+                _id = result["id"]!.Value<string>()!;
                 _eTag = result["_etag"]?.Value<string?>();
                 _text = result.ToString(Formatting.Indented);
                 _isNew = false;

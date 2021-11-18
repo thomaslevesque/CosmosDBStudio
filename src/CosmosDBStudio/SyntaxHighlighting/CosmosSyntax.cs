@@ -20,7 +20,7 @@ namespace CosmosDBStudio.SyntaxHighlighting
                     continue;
 
                 var syntaxName = match.Groups["syntaxName"].Value;
-                using var stream = assembly.GetManifestResourceStream(resourceName);
+                using var stream = assembly.GetManifestResourceStream(resourceName)!;
                 using var reader = XmlReader.Create(stream);
                 var definition = HighlightingLoader.Load(reader, HighlightingManager.Instance);
                 HighlightingManager.Instance.RegisterHighlighting(syntaxName, Array.Empty<string>(), definition);

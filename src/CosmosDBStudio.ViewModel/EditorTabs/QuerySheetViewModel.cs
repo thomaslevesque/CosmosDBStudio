@@ -69,7 +69,7 @@ namespace CosmosDBStudio.ViewModel
             Errors.AddValidator(
                 vm => vm.PartitionKey,
                 value => string.IsNullOrEmpty(value) || JsonHelper.TryParseJsonValue(value, out _)
-                    ? null
+                    ? string.Empty
                     : "Invalid partition key value");
 
             _messenger.Subscribe(this).To<ExplorerSelectedContainerChangedMessage>(
