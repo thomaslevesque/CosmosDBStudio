@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="EssentialMVVM" Version="1.0.2" />
+        <PackageReference Include="Linq.Extras" Version="4.0.0" />
+        <PackageReference Include="Castle.Core" Version="4.4.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\CosmosDBStudio.Model\CosmosDBStudio.Model.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -63,15 +63,15 @@ namespace CosmosDBStudio.ViewModel
 
         protected virtual bool HasData() => !string.IsNullOrEmpty(RawValue);
 
-        private string? ValidateValue(string? rawValue)
+        private string ValidateValue(string? rawValue)
         {
             if (IsPlaceholder)
-                return null;
+                return string.Empty;
 
             if (!JsonHelper.TryParseJsonValue(rawValue, out _))
                 return "Invalid JSON value";
 
-            return null;
+            return string.Empty;
         }
 
         public bool TryParseValue(out object? value) => JsonHelper.TryParseJsonValue(RawValue, out value);

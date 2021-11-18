@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CosmosDBStudio.Services.Implementation
 {
-    class Messenger : IMessenger
+    public class Messenger : IMessenger
     {
         private readonly LinkedList<IWeakHandler> _weakHandlers = new LinkedList<IWeakHandler>();
 

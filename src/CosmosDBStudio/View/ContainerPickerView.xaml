@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:CosmosDBStudio.View"
              xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
-             xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel"
+             xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel;assembly=CosmosDBStudio.ViewModel"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              Width="300"

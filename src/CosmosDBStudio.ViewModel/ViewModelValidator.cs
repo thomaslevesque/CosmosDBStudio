@@ -11,19 +11,19 @@ namespace CosmosDBStudio.ViewModel
     public class ViewModelValidator<TViewModel> : BindableBase, IDataErrorInfo
     {
         private readonly Dictionary<string, Func<TViewModel, object?>> _getters;
-        private readonly Dictionary<string, Func<object?, string?>> _validators;
+        private readonly Dictionary<string, Func<object?, string>> _validators;
         private readonly TViewModel _viewModel;
 
         public ViewModelValidator(TViewModel viewModel)
         {
             _getters = new Dictionary<string, Func<TViewModel, object?>>();
-            _validators = new Dictionary<string, Func<object?, string?>>();
+            _validators = new Dictionary<string, Func<object?, string>>();
             _viewModel = viewModel;
         }
 
         public void AddValidator<TProperty>(
             Expression<Func<TViewModel, TProperty>> property,
-            Func<TProperty, string?> validator)
+            Func<TProperty, string> validator)
         {
             var propertyName = GetPropertyName(property);
             var getter = property.Compile();
@@ -31,7 +31,7 @@ namespace CosmosDBStudio.ViewModel
             _validators.Add(propertyName, value => validator((TProperty)value!));
         }
 
-        public string? this[string columnName]
+        public string this[string columnName]
         {
             get
             {
@@ -41,11 +41,11 @@ namespace CosmosDBStudio.ViewModel
                     return validator(value);
                 }
 
-                return null;
+                return string.Empty;
             }
         }
 
-        public string? Error
+        public string Error
         {
             get
             {
@@ -58,7 +58,7 @@ namespace CosmosDBStudio.ViewModel
                     builder.AppendLine($"{propertyName}: {error}");
                 }
 
-                return builder?.ToString();
+                return builder?.ToString() ?? string.Empty;
             }
         }
 

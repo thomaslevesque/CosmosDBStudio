@@ -6,7 +6,7 @@ namespace CosmosDBStudio.Helpers
     {
         private static readonly char[] ForbiddenCharactersInId = @"/\#?".ToCharArray();
 
-        public static string? ValidateId(string id, string? idNameInMessage = null)
+        public static string ValidateId(string id, string? idNameInMessage = null)
         {
             idNameInMessage ??= "id";
 
@@ -24,12 +24,12 @@ namespace CosmosDBStudio.Helpers
                 return $"The {idNameInMessage} must not start or end with space";
             }
 
-            return null;
+            return string.Empty;
         }
 
         public static string? ValidateThroughput(int? throughput) => ValidateThroughput(throughput ?? 0, throughput.HasValue);
 
-        public static string? ValidateThroughput(int throughput, bool isThroughputProvisioned)
+        public static string ValidateThroughput(int throughput, bool isThroughputProvisioned)
         {
             if (isThroughputProvisioned)
             {
@@ -37,12 +37,12 @@ namespace CosmosDBStudio.Helpers
                     return "Throughput cannot be less than 400";
             }
 
-            return null;
+            return string.Empty;
         }
 
-        public static string? ValidateDefaultTTL(int? defaultTTL) => ValidateDefaultTTL(defaultTTL ?? 0, defaultTTL.HasValue);
+        public static string ValidateDefaultTTL(int? defaultTTL) => ValidateDefaultTTL(defaultTTL ?? 0, defaultTTL.HasValue);
 
-        public static string? ValidateDefaultTTL(int defaultTTL, bool hasDefaultTTL)
+        public static string ValidateDefaultTTL(int defaultTTL, bool hasDefaultTTL)
         {
             if (hasDefaultTTL)
             {
@@ -50,10 +50,10 @@ namespace CosmosDBStudio.Helpers
                     return "Default TTL must be at least 1 second";
             }
 
-            return null;
+            return string.Empty;
         }
 
-        public static string? ValidatePartitionKeyPath(string? partitionKeyPath)
+        public static string ValidatePartitionKeyPath(string? partitionKeyPath)
         {
             if (string.IsNullOrEmpty(partitionKeyPath))
                 return "The partition key must be specified";
@@ -64,7 +64,7 @@ namespace CosmosDBStudio.Helpers
             if (!partitionKeyPath.StartsWith('/'))
                 return "The partition key must start with '/'";
 
-            return null;
+            return string.Empty;
         }
     }
 }

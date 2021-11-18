@@ -118,7 +118,7 @@ namespace CosmosDBStudio.ViewModel
             Errors.AddValidator(vm => vm.PartitionKeyRawValue, ValidatePartitionKey);
         }
 
-        private static string? ValidatePartitionKey(string? rawValue)
+        private static string ValidatePartitionKey(string? rawValue)
         {
             if (string.IsNullOrEmpty(rawValue))
                 return "Partition key must be specified";
@@ -126,7 +126,7 @@ namespace CosmosDBStudio.ViewModel
             if (!JsonHelper.TryParseJsonValue(rawValue, out _))
                 return "Invalid JSON value";
 
-            return null;
+            return string.Empty;
         }
 
         public ViewModelValidator<StoredProcedureParametersViewModel> Errors { get; }

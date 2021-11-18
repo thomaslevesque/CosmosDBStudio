@@ -1,6 +1,7 @@
 bin/
 obj/
 .vs/
+.idea/
 _ReSharper.Caches/
 *.user
 

@@ -1,10 +1,11 @@
 ﻿using CosmosDBStudio.SyntaxHighlighting;
 using CosmosDBStudio.ViewModel;
 using System.Windows;
+using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio
 {
-    public partial class App
+    public partial class App : IApplication
     {
         private readonly MainWindowViewModel _mainWindowViewModel;
 
@@ -31,6 +32,13 @@ namespace CosmosDBStudio
         {
             IsShuttingDown = true;
             Shutdown();
+        }
+
+        public ApplicationVersionInfo GetVersionInfo()
+        {
+            var package = global::Windows.ApplicationModel.Package.Current;
+            var v = package.Id.Version;
+            return new ApplicationVersionInfo(package.DisplayName, $"{v.Major}.{v.Minor}.{v.Build}.{v.Revision}", package.PublisherDisplayName);
         }
     }
 }

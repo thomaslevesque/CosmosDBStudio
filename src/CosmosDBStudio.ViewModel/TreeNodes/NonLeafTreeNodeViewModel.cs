@@ -80,7 +80,7 @@ namespace CosmosDBStudio.ViewModel
         public ICommand RefreshCommand => _refreshCommand ??= new DelegateCommand(ReloadChildren);
     }
 
-    sealed class PlaceholderTreeNodeViewModel : TreeNodeViewModel
+    public sealed class PlaceholderTreeNodeViewModel : TreeNodeViewModel
     {
         public PlaceholderTreeNodeViewModel(NonLeafTreeNodeViewModel parent)
         {
@@ -91,7 +91,7 @@ namespace CosmosDBStudio.ViewModel
         public override NonLeafTreeNodeViewModel? Parent { get; }
     }
 
-    sealed class ErrorTreeNodeViewModel : TreeNodeViewModel
+    public sealed class ErrorTreeNodeViewModel : TreeNodeViewModel
     {
         public ErrorTreeNodeViewModel(NonLeafTreeNodeViewModel parent, Exception exception)
         {
