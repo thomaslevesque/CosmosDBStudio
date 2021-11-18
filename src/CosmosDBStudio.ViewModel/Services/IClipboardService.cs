@@ -1,4 +1,4 @@
-﻿namespace CosmosDBStudio.Services
+﻿namespace CosmosDBStudio.ViewModel.Services
 {
     public interface IClipboardService
     {

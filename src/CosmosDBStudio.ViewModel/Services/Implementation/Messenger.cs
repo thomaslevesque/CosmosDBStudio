@@ -1,9 +1,10 @@
-﻿using CosmosDBStudio.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.Util.Extensions;
 
-namespace CosmosDBStudio.Services.Implementation
+namespace CosmosDBStudio.ViewModel.Services.Implementation
 {
     public class Messenger : IMessenger
     {

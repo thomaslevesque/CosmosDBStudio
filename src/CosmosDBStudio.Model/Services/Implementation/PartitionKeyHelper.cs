@@ -1,8 +1,8 @@
-﻿using Hamlet;
+﻿using System;
+using Hamlet;
 using Microsoft.Azure.Cosmos;
-using System;
 
-namespace CosmosDBStudio.Services.Implementation
+namespace CosmosDBStudio.Model.Services.Implementation
 {
     public static class PartitionKeyHelper
     {

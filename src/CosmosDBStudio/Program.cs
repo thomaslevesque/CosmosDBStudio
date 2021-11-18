@@ -1,11 +1,16 @@
-﻿using CosmosDBStudio.Commands;
-using CosmosDBStudio.Extensions;
+﻿using CosmosDBStudio.Extensions;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Services;
 using CosmosDBStudio.Services.Implementation;
 using CosmosDBStudio.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.Model.Services.Implementation;
+using CosmosDBStudio.Util.Extensions;
+using CosmosDBStudio.ViewModel.Commands;
+using CosmosDBStudio.ViewModel.Services;
+using CosmosDBStudio.ViewModel.Services.Implementation;
 
 namespace CosmosDBStudio
 {

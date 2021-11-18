@@ -1,6 +1,6 @@
 ﻿using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs.Queries
 {
     public abstract class ResultItemViewModel : BindableBase
     {

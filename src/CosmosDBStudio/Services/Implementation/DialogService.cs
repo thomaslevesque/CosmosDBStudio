@@ -1,11 +1,12 @@
-﻿using CosmosDBStudio.Dialogs;
-using CosmosDBStudio.View;
+﻿using CosmosDBStudio.View;
 using CosmosDBStudio.ViewModel;
 using Hamlet;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
+using CosmosDBStudio.ViewModel.Dialogs;
+using CosmosDBStudio.ViewModel.Services;
 
 namespace CosmosDBStudio.Services.Implementation
 {

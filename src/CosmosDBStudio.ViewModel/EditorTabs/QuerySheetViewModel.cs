@@ -1,20 +1,23 @@
-﻿using CosmosDBStudio.Extensions;
-using CosmosDBStudio.Helpers;
-using CosmosDBStudio.Messages;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using EssentialMVVM;
-using Hamlet;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.Util.Extensions;
+using CosmosDBStudio.Util.Helpers;
+using CosmosDBStudio.ViewModel.EditorTabs.Queries;
+using CosmosDBStudio.ViewModel.Messages;
+using CosmosDBStudio.ViewModel.Services;
+using CosmosDBStudio.ViewModel.TreeNodes;
+using EssentialMVVM;
+using Hamlet;
+using Newtonsoft.Json.Linq;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs
 {
     public class QuerySheetViewModel : TabViewModelBase, ISaveable
     {

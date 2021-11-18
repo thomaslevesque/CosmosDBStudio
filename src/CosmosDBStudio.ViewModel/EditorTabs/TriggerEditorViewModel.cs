@@ -1,9 +1,9 @@
-﻿using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
+﻿using System.Threading.Tasks;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
 using Microsoft.Azure.Cosmos.Scripts;
-using System.Threading.Tasks;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs
 {
     public class TriggerEditorViewModel : ScriptEditorViewModelBase<CosmosTrigger>
     {

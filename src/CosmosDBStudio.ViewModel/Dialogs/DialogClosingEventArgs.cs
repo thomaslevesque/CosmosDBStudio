@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace CosmosDBStudio.Dialogs
+namespace CosmosDBStudio.ViewModel.Dialogs
 {
     public class DialogClosingEventArgs : CancelEventArgs
     {

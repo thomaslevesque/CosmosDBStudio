@@ -1,9 +1,9 @@
-﻿using EssentialMVVM;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.TreeNodes
 {
     public abstract class TreeNodeViewModel : BindableBase
     {

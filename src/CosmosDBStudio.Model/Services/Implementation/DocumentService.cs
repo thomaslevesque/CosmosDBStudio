@@ -1,12 +1,12 @@
-﻿using Hamlet;
-using Microsoft.Azure.Cosmos;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Hamlet;
+using Microsoft.Azure.Cosmos;
+using Newtonsoft.Json.Linq;
 
-namespace CosmosDBStudio.Services.Implementation
+namespace CosmosDBStudio.Model.Services.Implementation
 {
     public class DocumentService : IDocumentService
     {

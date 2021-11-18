@@ -1,12 +1,12 @@
-﻿using CosmosDBStudio.Commands;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using EssentialMVVM;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Commands;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.TreeNodes
 {
     public class ContainerNodeViewModel : NonLeafTreeNodeViewModel
     {

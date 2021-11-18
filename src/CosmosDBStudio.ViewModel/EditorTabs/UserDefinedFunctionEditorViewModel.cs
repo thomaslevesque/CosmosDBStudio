@@ -1,8 +1,8 @@
-﻿using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs
 {
     public class UserDefinedFunctionEditorViewModel : ScriptEditorViewModelBase<CosmosUserDefinedFunction>
     {

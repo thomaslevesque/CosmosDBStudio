@@ -1,11 +1,10 @@
-﻿using CosmosDBStudio.Dialogs;
-using CosmosDBStudio.Helpers;
-using CosmosDBStudio.Model;
-using EssentialMVVM;
-using System;
+﻿using System;
 using System.Windows.Input;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Helpers;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.Dialogs
 {
     public class ContainerEditorViewModel : DialogViewModelBase
     {

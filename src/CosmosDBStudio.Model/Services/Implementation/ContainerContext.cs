@@ -1,10 +1,9 @@
-﻿using CosmosDBStudio.Model;
-using Microsoft.Azure.Cosmos;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos;
 
-namespace CosmosDBStudio.Services.Implementation
+namespace CosmosDBStudio.Model.Services.Implementation
 {
     public class ContainerContext : IContainerContext
     {

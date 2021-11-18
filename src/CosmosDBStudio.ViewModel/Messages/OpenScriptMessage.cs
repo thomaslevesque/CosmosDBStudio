@@ -1,6 +1,6 @@
-﻿using CosmosDBStudio.Services;
+﻿using CosmosDBStudio.Model.Services;
 
-namespace CosmosDBStudio.Messages
+namespace CosmosDBStudio.ViewModel.Messages
 {
     public class OpenScriptMessage<TScript>
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace CosmosDBStudio.Extensions
+namespace CosmosDBStudio.Util.Extensions
 {
     public static class ObservableCollectionExtensions
     {

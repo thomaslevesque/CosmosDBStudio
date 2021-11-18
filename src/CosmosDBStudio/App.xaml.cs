@@ -1,6 +1,7 @@
 ﻿using CosmosDBStudio.SyntaxHighlighting;
 using CosmosDBStudio.ViewModel;
 using System.Windows;
+using CosmosDBStudio.Model.Services;
 using CosmosDBStudio.Services;
 
 namespace CosmosDBStudio

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CosmosDBStudio.Dialogs
+namespace CosmosDBStudio.ViewModel.Dialogs
 {
     public interface IDialogViewModel
     {

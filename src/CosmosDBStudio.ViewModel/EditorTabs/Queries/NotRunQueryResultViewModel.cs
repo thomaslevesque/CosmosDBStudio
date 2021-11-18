@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs.Queries
 {
     public class NotRunQueryResultViewModel : QueryResultViewModelBase
     {

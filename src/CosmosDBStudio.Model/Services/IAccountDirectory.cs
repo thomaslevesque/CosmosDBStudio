@@ -1,7 +1,6 @@
-﻿using CosmosDBStudio.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace CosmosDBStudio.Services
+namespace CosmosDBStudio.Model.Services
 {
     public interface IAccountDirectory
     {

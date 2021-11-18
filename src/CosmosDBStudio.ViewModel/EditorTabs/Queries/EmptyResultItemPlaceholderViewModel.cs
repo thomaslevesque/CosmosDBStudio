@@ -1,4 +1,4 @@
-﻿namespace CosmosDBStudio.ViewModel
+﻿namespace CosmosDBStudio.ViewModel.EditorTabs.Queries
 {
     public class EmptyResultItemPlaceholderViewModel : ResultItemViewModel
     {

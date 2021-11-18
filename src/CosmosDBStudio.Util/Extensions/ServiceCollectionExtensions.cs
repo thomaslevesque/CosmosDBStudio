@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace CosmosDBStudio.Extensions
+namespace CosmosDBStudio.Util.Extensions
 {
     public static class ServiceCollectionExtensions
     {

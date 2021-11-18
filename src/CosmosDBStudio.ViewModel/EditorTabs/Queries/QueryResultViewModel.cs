@@ -1,18 +1,19 @@
-﻿using CosmosDBStudio.Messages;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using EssentialMVVM;
-using Hamlet;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Messages;
+using CosmosDBStudio.ViewModel.Services;
+using EssentialMVVM;
+using Hamlet;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs.Queries
 {
     public class QueryResultViewModel : QueryResultViewModelBase
     {

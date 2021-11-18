@@ -1,8 +1,7 @@
-﻿using CosmosDBStudio.Model;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace CosmosDBStudio.Services
+namespace CosmosDBStudio.Model.Services
 {
     public interface IDatabaseService
     {

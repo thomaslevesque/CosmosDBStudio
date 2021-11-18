@@ -1,7 +1,7 @@
 ﻿using Hamlet;
 using Microsoft.Azure.Cosmos;
 
-namespace CosmosDBStudio.Services.Implementation
+namespace CosmosDBStudio.Model.Services.Implementation
 {
     public class QueryRequestOptionsBuilder
         : RequestOptionsBuilderBase<IQueryRequestOptionsBuilder, QueryRequestOptions>,

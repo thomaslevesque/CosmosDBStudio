@@ -1,6 +1,6 @@
-﻿using CosmosDBStudio.Services;
+﻿using CosmosDBStudio.Model.Services;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.TreeNodes
 {
     public abstract class ScriptFolderNodeViewModel : NonLeafTreeNodeViewModel
     {

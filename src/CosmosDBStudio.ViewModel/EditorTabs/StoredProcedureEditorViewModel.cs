@@ -1,17 +1,16 @@
-﻿using CosmosDBStudio.Extensions;
-using CosmosDBStudio.Helpers;
-using CosmosDBStudio.Messages;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using CosmosDBStudio.ViewModel.EditorTabs;
-using EssentialMVVM;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.Util.Extensions;
+using CosmosDBStudio.Util.Helpers;
+using CosmosDBStudio.ViewModel.Messages;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs
 {
     public class StoredProcedureEditorViewModel : ScriptEditorViewModelBase<CosmosStoredProcedure>
     {

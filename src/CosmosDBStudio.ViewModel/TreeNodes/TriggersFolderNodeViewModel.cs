@@ -1,11 +1,11 @@
-﻿using CosmosDBStudio.Commands;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Commands;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.TreeNodes
 {
     public class TriggersFolderNodeViewModel : ScriptFolderNodeViewModel
     {

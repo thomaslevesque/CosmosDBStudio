@@ -1,4 +1,4 @@
-﻿namespace CosmosDBStudio.Services;
+﻿namespace CosmosDBStudio.Model.Services;
 
 public interface IApplication
 {

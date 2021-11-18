@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs.Queries
 {
     public class QueryParameterViewModel : ParameterViewModelBase<QueryParameterViewModel>
     {

@@ -1,4 +1,4 @@
-﻿namespace CosmosDBStudio.Messages
+﻿namespace CosmosDBStudio.ViewModel.Messages
 {
     public class SetStatusBarMessage
     {

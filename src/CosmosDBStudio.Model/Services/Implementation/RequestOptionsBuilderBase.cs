@@ -1,6 +1,6 @@
 ﻿using Microsoft.Azure.Cosmos;
 
-namespace CosmosDBStudio.Services.Implementation
+namespace CosmosDBStudio.Model.Services.Implementation
 {
     public abstract class RequestOptionsBuilderBase<TBuilder, TOptions>
         : IRequestOptionsBuilder<TBuilder, TOptions>

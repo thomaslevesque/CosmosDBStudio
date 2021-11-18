@@ -1,9 +1,9 @@
-﻿using Hamlet;
-using Newtonsoft.Json.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Hamlet;
+using Newtonsoft.Json.Linq;
 
-namespace CosmosDBStudio.Services
+namespace CosmosDBStudio.Model.Services
 {
     public interface IDocumentService
     {

@@ -1,12 +1,12 @@
-﻿using CosmosDBStudio.Dialogs;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using EssentialMVVM;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.TreeNodes;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.Dialogs
 {
     public class ContainerPickerViewModel : DialogViewModelBase
     {

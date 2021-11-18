@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace CosmosDBStudio.Services
+namespace CosmosDBStudio.ViewModel.Services
 {
     public interface IUIDispatcher
     {

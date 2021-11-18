@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel;assembly=CosmosDBStudio.ViewModel"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:queries="clr-namespace:CosmosDBStudio.ViewModel.EditorTabs.Queries;assembly=CosmosDBStudio.ViewModel"
              mc:Ignorable="d" 
              x:Name="self"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -24,7 +25,7 @@
             <Label Content="Parameters" FontWeight="Bold" />
             <ItemsControl ItemsSource="{Binding Parameters}" Focusable="False">
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:QueryParameterViewModel}">
+                    <DataTemplate DataType="{x:Type queries:QueryParameterViewModel}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />

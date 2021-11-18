@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel;assembly=CosmosDBStudio.ViewModel"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:queries="clr-namespace:CosmosDBStudio.ViewModel.EditorTabs.Queries;assembly=CosmosDBStudio.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -17,7 +18,7 @@
         <Label Grid.Row="0" Content="Parameters" FontWeight="Bold" />
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Parameters}" Grid.IsSharedSizeScope="True" Focusable="False">
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type vm:QueryParameterViewModel}">
+                <DataTemplate DataType="{x:Type queries:QueryParameterViewModel}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="name" />

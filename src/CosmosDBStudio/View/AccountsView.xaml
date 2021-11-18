@@ -8,39 +8,40 @@
              xmlns:controls="clr-namespace:CosmosDBStudio.View.Controls"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:bhv="clr-namespace:CosmosDBStudio.Behaviors"
+             xmlns:treeNodes="clr-namespace:CosmosDBStudio.ViewModel.TreeNodes;assembly=CosmosDBStudio.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="300">
     <Grid>
         <controls:AccountExplorerTreeView ItemsSource="{Binding RootNodes}">
             <controls:AccountExplorerTreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type vm:AccountFolderNodeViewModel}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type treeNodes:AccountFolderNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vm:AccountNodeViewModel}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type treeNodes:AccountNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/account.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vm:DatabaseNodeViewModel}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type treeNodes:DatabaseNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/database.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vm:ContainerNodeViewModel}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type treeNodes:ContainerNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/container.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vm:ScriptFolderNodeViewModel}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type treeNodes:ScriptFolderNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
                 </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type vm:StoredProcedureNodeViewModel}">
+                <DataTemplate DataType="{x:Type treeNodes:StoredProcedureNodeViewModel}">
                     <controls:TreeNodeControl Icon="/Images/stored-procedure.png" Content="{Binding Text}" />
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:UserDefinedFunctionNodeViewModel}">
+                <DataTemplate DataType="{x:Type treeNodes:UserDefinedFunctionNodeViewModel}">
                     <controls:TreeNodeControl Icon="/Images/user-defined-function.png" Content="{Binding Text}" />
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:TriggerNodeViewModel}">
+                <DataTemplate DataType="{x:Type treeNodes:TriggerNodeViewModel}">
                     <controls:TreeNodeControl Icon="/Images/trigger.png" Content="{Binding Text}" />
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:PlaceholderTreeNodeViewModel}">
+                <DataTemplate DataType="{x:Type treeNodes:PlaceholderTreeNodeViewModel}">
                     <TextBlock Text="{Binding Text}" />
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:ErrorTreeNodeViewModel}">
+                <DataTemplate DataType="{x:Type treeNodes:ErrorTreeNodeViewModel}">
                     <TextBlock>
                         <Run Text="{Binding Text, Mode=OneWay}" Foreground="Red" />
                         <LineBreak />

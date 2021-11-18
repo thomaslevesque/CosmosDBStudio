@@ -1,8 +1,8 @@
-﻿using EssentialMVVM;
-using System;
+﻿using System;
 using System.Windows.Input;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs
 {
     public abstract class TabViewModelBase : BindableBase
     {

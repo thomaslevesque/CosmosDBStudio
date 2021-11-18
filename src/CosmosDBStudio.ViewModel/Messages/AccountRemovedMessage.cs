@@ -1,6 +1,6 @@
 ﻿using CosmosDBStudio.Model;
 
-namespace CosmosDBStudio.Messages
+namespace CosmosDBStudio.ViewModel.Messages
 {
     public class AccountRemovedMessage
     {

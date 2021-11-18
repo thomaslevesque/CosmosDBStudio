@@ -1,16 +1,16 @@
-﻿using CosmosDBStudio.Dialogs;
-using CosmosDBStudio.Extensions;
-using CosmosDBStudio.Services;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.Util.Extensions;
+using CosmosDBStudio.ViewModel.Services;
 using EssentialMVVM;
 using Hamlet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.Dialogs
 {
     public class DocumentEditorViewModel : DialogViewModelBase, ISizableDialog
     {

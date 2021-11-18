@@ -1,9 +1,9 @@
-﻿using EssentialMVVM;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.Dialogs
+namespace CosmosDBStudio.ViewModel.Dialogs
 {
     public class DialogViewModelBase : BindableBase, IDialogViewModel
     {

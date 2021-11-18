@@ -1,7 +1,7 @@
 ﻿using Hamlet;
 using Newtonsoft.Json.Linq;
 
-namespace CosmosDBStudio.Extensions
+namespace CosmosDBStudio.Util.Extensions
 {
     public static class JTokenExtensions
     {

@@ -1,10 +1,10 @@
-﻿using CosmosDBStudio.Helpers;
-using EssentialMVVM;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CosmosDBStudio.Util.Helpers;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs
 {
     public abstract class ParameterViewModelBase<TViewModel> : BindableBase
         where TViewModel : ParameterViewModelBase<TViewModel>

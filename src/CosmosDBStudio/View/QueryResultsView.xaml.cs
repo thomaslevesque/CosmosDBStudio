@@ -1,6 +1,7 @@
 ﻿using CosmosDBStudio.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
+using CosmosDBStudio.ViewModel.EditorTabs.Queries;
 
 namespace CosmosDBStudio.View
 {

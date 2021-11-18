@@ -1,10 +1,10 @@
-﻿using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using EssentialMVVM;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs
 {
     public abstract class ScriptEditorViewModelBase<TScript> : TabViewModelBase
         where TScript : ICosmosScript

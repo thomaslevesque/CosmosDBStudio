@@ -1,9 +1,9 @@
-﻿using CosmosDBStudio.Commands;
+﻿using System.Threading.Tasks;
 using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using System.Threading.Tasks;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Commands;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.TreeNodes
 {
     public class UserDefinedFunctionNodeViewModel : ScriptNodeViewModel<CosmosUserDefinedFunction>
     {

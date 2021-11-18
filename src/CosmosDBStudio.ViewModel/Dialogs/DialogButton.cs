@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace CosmosDBStudio.Dialogs
+namespace CosmosDBStudio.ViewModel.Dialogs
 {
     public class DialogButton
     {

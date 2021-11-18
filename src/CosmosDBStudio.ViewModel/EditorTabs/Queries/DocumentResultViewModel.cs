@@ -1,12 +1,12 @@
-﻿using CosmosDBStudio.Extensions;
-using CosmosDBStudio.Services;
+﻿using System;
+using System.Linq;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.Util.Extensions;
 using Hamlet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs.Queries
 {
     public class DocumentResultViewModel : ResultItemViewModel
     {

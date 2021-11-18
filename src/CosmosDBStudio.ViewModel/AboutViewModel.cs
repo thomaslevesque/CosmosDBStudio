@@ -1,9 +1,9 @@
-﻿using CosmosDBStudio.Dialogs;
-using EssentialMVVM;
+﻿using EssentialMVVM;
 using System;
 using System.Diagnostics;
 using System.Windows.Input;
-using CosmosDBStudio.Services;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Dialogs;
 
 namespace CosmosDBStudio.ViewModel
 {

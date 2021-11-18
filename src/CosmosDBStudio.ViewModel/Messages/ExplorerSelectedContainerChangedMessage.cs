@@ -1,6 +1,6 @@
-﻿using CosmosDBStudio.ViewModel;
+﻿using CosmosDBStudio.ViewModel.TreeNodes;
 
-namespace CosmosDBStudio.Messages
+namespace CosmosDBStudio.ViewModel.Messages
 {
     public class ExplorerSelectedContainerChangedMessage
     {

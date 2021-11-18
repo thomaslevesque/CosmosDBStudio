@@ -1,6 +1,4 @@
-﻿using CosmosDBStudio.Model;
-
-namespace CosmosDBStudio.Services.Implementation
+﻿namespace CosmosDBStudio.Model.Services.Implementation
 {
     public class AccountContextFactory : IAccountContextFactory
     {

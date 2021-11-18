@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CosmosDBStudio.Extensions
+namespace CosmosDBStudio.Util.Extensions
 {
     public static class LinkedListExtensions
     {

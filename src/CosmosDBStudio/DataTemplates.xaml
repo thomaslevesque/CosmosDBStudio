@@ -2,26 +2,27 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:CosmosDBStudio"
                     xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel;assembly=CosmosDBStudio.ViewModel"
-                    xmlns:v="clr-namespace:CosmosDBStudio.View">
-    <DataTemplate DataType="{x:Type vm:AccountEditorViewModel}">
+                    xmlns:v="clr-namespace:CosmosDBStudio.View"
+                    xmlns:dialogs="clr-namespace:CosmosDBStudio.ViewModel.Dialogs;assembly=CosmosDBStudio.ViewModel">
+    <DataTemplate DataType="{x:Type dialogs:AccountEditorViewModel}">
         <v:AccountEditorView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:DocumentEditorViewModel}">
+    <DataTemplate DataType="{x:Type dialogs:DocumentEditorViewModel}">
         <v:DocumentEditorView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:ContainerPickerViewModel}">
+    <DataTemplate DataType="{x:Type dialogs:ContainerPickerViewModel}">
         <v:ContainerPickerView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:DatabaseEditorViewModel}">
+    <DataTemplate DataType="{x:Type dialogs:DatabaseEditorViewModel}">
         <v:DatabaseEditorView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:ContainerEditorViewModel}">
+    <DataTemplate DataType="{x:Type dialogs:ContainerEditorViewModel}">
         <v:ContainerEditorView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:AboutViewModel}">
         <v:AboutView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:TextPromptViewModel}">
+    <DataTemplate DataType="{x:Type dialogs:TextPromptViewModel}">
         <v:TextPromptView />
     </DataTemplate>
 </ResourceDictionary>

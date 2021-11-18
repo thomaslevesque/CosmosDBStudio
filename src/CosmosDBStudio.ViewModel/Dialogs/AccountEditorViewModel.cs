@@ -1,12 +1,11 @@
-﻿using CosmosDBStudio.Dialogs;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using EssentialMVVM;
-using System;
+﻿using System;
 using System.Data.Common;
 using System.Windows.Input;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.ViewModel.Services;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.Dialogs
 {
     public class AccountEditorViewModel : DialogViewModelBase
     {

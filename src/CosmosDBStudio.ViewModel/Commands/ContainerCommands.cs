@@ -1,14 +1,15 @@
-﻿using CosmosDBStudio.Messages;
-using CosmosDBStudio.Services;
-using CosmosDBStudio.ViewModel;
-using EssentialMVVM;
-using Microsoft.Azure.Cosmos;
-using System;
+﻿using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Messages;
+using CosmosDBStudio.ViewModel.Services;
+using CosmosDBStudio.ViewModel.TreeNodes;
+using EssentialMVVM;
+using Microsoft.Azure.Cosmos;
 
-namespace CosmosDBStudio.Commands
+namespace CosmosDBStudio.ViewModel.Commands
 {
     public class ContainerCommands
     {

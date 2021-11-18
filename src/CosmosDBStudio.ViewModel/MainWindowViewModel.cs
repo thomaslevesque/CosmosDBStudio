@@ -1,8 +1,5 @@
 ﻿using System;
-using CosmosDBStudio.Commands;
-using CosmosDBStudio.Messages;
 using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
 using EssentialMVVM;
 using Hamlet;
 using Linq.Extras;
@@ -10,6 +7,11 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Commands;
+using CosmosDBStudio.ViewModel.EditorTabs;
+using CosmosDBStudio.ViewModel.Messages;
+using CosmosDBStudio.ViewModel.Services;
 
 namespace CosmosDBStudio.ViewModel
 {

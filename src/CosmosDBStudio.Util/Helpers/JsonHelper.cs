@@ -1,9 +1,9 @@
-﻿using Hamlet;
+﻿using System.IO;
+using Hamlet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.IO;
 
-namespace CosmosDBStudio.Helpers
+namespace CosmosDBStudio.Util.Helpers
 {
     public class JsonHelper
     {

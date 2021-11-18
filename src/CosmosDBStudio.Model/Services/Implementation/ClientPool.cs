@@ -1,9 +1,8 @@
-﻿using CosmosDBStudio.Model;
-using Microsoft.Azure.Cosmos;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
+using Microsoft.Azure.Cosmos;
 
-namespace CosmosDBStudio.Services.Implementation
+namespace CosmosDBStudio.Model.Services.Implementation
 {
     public class ClientPool : IClientPool
     {

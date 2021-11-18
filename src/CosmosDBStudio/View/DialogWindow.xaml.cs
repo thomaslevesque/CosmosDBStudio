@@ -1,6 +1,6 @@
-﻿using CosmosDBStudio.Dialogs;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using CosmosDBStudio.ViewModel.Dialogs;
 
 namespace CosmosDBStudio.View
 {

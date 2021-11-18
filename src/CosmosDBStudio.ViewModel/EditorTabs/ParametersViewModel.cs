@@ -1,8 +1,8 @@
-﻿using EssentialMVVM;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.EditorTabs
 {
     public class ParametersViewModel<T> : BindableBase
         where T : ParameterViewModelBase<T>, new()

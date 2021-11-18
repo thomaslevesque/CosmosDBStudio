@@ -1,12 +1,13 @@
-﻿using CosmosDBStudio.Messages;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using CosmosDBStudio.ViewModel;
-using EssentialMVVM;
-using System;
+﻿using System;
 using System.Windows.Input;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Messages;
+using CosmosDBStudio.ViewModel.Services;
+using CosmosDBStudio.ViewModel.TreeNodes;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.Commands
+namespace CosmosDBStudio.ViewModel.Commands
 {
     public class AccountCommands
     {

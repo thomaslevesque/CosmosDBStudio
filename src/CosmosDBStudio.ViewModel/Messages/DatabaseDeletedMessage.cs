@@ -1,7 +1,7 @@
 ﻿using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
+using CosmosDBStudio.Model.Services;
 
-namespace CosmosDBStudio.Messages
+namespace CosmosDBStudio.ViewModel.Messages
 {
     public class DatabaseDeletedMessage
     {

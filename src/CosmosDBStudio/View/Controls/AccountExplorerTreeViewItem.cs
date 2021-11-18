@@ -3,6 +3,7 @@ using CosmosDBStudio.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CosmosDBStudio.ViewModel.TreeNodes;
 
 namespace CosmosDBStudio.View.Controls
 {

@@ -1,7 +1,7 @@
-﻿using CosmosDBStudio.Dialogs;
+﻿using CosmosDBStudio.ViewModel.Dialogs;
 using Hamlet;
 
-namespace CosmosDBStudio.Services
+namespace CosmosDBStudio.ViewModel.Services
 {
     public interface IDialogService
     {

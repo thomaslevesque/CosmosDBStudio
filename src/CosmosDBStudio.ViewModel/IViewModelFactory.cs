@@ -1,5 +1,9 @@
 ﻿using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Dialogs;
+using CosmosDBStudio.ViewModel.EditorTabs;
+using CosmosDBStudio.ViewModel.EditorTabs.Queries;
+using CosmosDBStudio.ViewModel.TreeNodes;
 using Newtonsoft.Json.Linq;
 
 namespace CosmosDBStudio.ViewModel

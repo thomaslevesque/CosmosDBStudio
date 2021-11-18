@@ -1,7 +1,7 @@
-﻿using EssentialMVVM;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.Commands
+namespace CosmosDBStudio.ViewModel.Commands
 {
     public static class CommandExtensions
     {

@@ -1,11 +1,11 @@
-﻿using CosmosDBStudio.Commands;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Commands;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.TreeNodes
 {
     public class AccountFolderNodeViewModel : NonLeafTreeNodeViewModel
     {

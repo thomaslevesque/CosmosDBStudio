@@ -1,7 +1,7 @@
 ﻿using Hamlet;
 using Microsoft.Azure.Cosmos;
 
-namespace CosmosDBStudio.Services
+namespace CosmosDBStudio.Model.Services
 {
     public interface IRequestOptionsBuilder<TBuilder, TOptions>
         where TBuilder : IRequestOptionsBuilder<TBuilder, TOptions>

@@ -1,16 +1,15 @@
-﻿using CosmosDBStudio.Model;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Scripts;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Scripts;
+using Newtonsoft.Json.Linq;
 
-namespace CosmosDBStudio.Services.Implementation
+namespace CosmosDBStudio.Model.Services.Implementation
 {
     public class ScriptService : IScriptService
     {

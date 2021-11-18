@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace CosmosDBStudio.Helpers
+namespace CosmosDBStudio.Model.Helpers
 {
     public static class CosmosHelper
     {

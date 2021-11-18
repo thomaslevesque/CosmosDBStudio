@@ -1,8 +1,7 @@
-﻿using CosmosDBStudio.Dialogs;
+﻿using System.Windows.Input;
 using EssentialMVVM;
-using System.Windows.Input;
 
-namespace CosmosDBStudio.ViewModel
+namespace CosmosDBStudio.ViewModel.Dialogs
 {
     public class TextPromptViewModel : DialogViewModelBase
     {

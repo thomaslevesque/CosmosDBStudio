@@ -1,12 +1,13 @@
-﻿using CosmosDBStudio.Commands;
-using CosmosDBStudio.Messages;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
+﻿using CosmosDBStudio.Model;
 using EssentialMVVM;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Commands;
+using CosmosDBStudio.ViewModel.Messages;
+using CosmosDBStudio.ViewModel.TreeNodes;
 
 namespace CosmosDBStudio.ViewModel
 {

@@ -1,13 +1,14 @@
-﻿using CosmosDBStudio.Messages;
-using CosmosDBStudio.Model;
-using CosmosDBStudio.Services;
-using CosmosDBStudio.ViewModel;
-using EssentialMVVM;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CosmosDBStudio.Model;
+using CosmosDBStudio.Model.Services;
+using CosmosDBStudio.ViewModel.Messages;
+using CosmosDBStudio.ViewModel.Services;
+using CosmosDBStudio.ViewModel.TreeNodes;
+using EssentialMVVM;
 
-namespace CosmosDBStudio.Commands
+namespace CosmosDBStudio.ViewModel.Commands
 {
     public class ScriptCommands<TScript>
         where TScript : ICosmosScript, new()
