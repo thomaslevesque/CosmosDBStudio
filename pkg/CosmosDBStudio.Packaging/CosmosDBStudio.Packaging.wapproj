@@ -36,11 +36,11 @@
   <PropertyGroup>
     <ProjectGuid>411d9b5f-7842-4721-98c0-8f002d06d1ed</ProjectGuid>
     <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <EntryPointProjectUniqueName>..\..\src\CosmosDBStudio\CosmosDBStudio.csproj</EntryPointProjectUniqueName>
-    <PackageCertificateThumbprint>C5F9977AC9BD1013CAEBA9257E105D29A0F53C1B</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>7B369B2CB685CADD4C2573B9399DEAD43B579E23</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
