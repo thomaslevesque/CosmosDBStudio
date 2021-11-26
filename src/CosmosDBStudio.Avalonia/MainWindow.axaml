@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:v="clr-namespace:CosmosDBStudio.Avalonia.View"
+        xmlns:editorTabs="clr-namespace:CosmosDBStudio.ViewModel.EditorTabs;assembly=CosmosDBStudio.ViewModel"
+        xmlns:converters="clr-namespace:CosmosDBStudio.Avalonia.Converters"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CosmosDBStudio.Avalonia.MainWindow"
+        Title="Cosmos DB Studio"
+        Height="800" Width="1200">
+    <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="200,*">
+        
+        <Menu Grid.ColumnSpan="2">
+            <MenuItem Header="_File"></MenuItem>
+            <MenuItem Header="_Help"></MenuItem>
+        </Menu>
+        
+        <v:AccountsView Grid.Row="1" Grid.Column="0" DataContext="{Binding Accounts}" />
+        
+        <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="5" />
+        
+        <TabControl Grid.Row="1" Grid.Column="1"
+                    Items="{Binding Tabs}"
+                    SelectedItem="{Binding CurrentTab}">
+            <TabControl.Styles>
+                <Style Selector="TabItem">
+                    <Setter Property="FontSize" Value="14" />
+                </Style>
+            </TabControl.Styles>
+            <TabControl.DataTemplates>
+                <DataTemplate DataType="{x:Type editorTabs:QuerySheetViewModel}">
+                    <v:QuerySheetView />
+                </DataTemplate>
+            </TabControl.DataTemplates>
+            <TabControl.ItemTemplate>
+                <DataTemplate DataType="editorTabs:TabViewModelBase">
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right"
+                                Classes="closeTab"
+                                Command="{Binding CloseCommand}"
+                                ToolTip.Tip="Close" />
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0}{1}">
+                                    <Binding Path="Title" Mode="OneWay" />
+                                    <Binding Path="HasChanges">
+                                        <Binding.Converter>
+                                            <converters:SwitchConverter TrueValue="*" FalseValue="" FallbackValue="" />
+                                        </Binding.Converter>
+                                    </Binding>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </DockPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+        </TabControl>
+    </Grid>
+</Window>

@@ -1,0 +1,20 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:CosmosDBStudio.Avalonia.View.Controls">
+    <Style Selector="local|TreeNodeControl">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Padding" Value="3,0,0,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:TreeNodeControl">
+                    <DockPanel>
+                        <Image DockPanel.Dock="Left" Width="16" Height="16"
+                               Source="{TemplateBinding Icon}"
+                               RenderOptions.BitmapInterpolationMode="HighQuality" />
+                        <ContentPresenter Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" />
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</Styles>

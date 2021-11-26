@@ -1,0 +1,22 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" Width="420" d:DesignHeight="150"
+        x:Class="CosmosDBStudio.Avalonia.Services.Implementation.MessageBox"
+        SizeToContent="Height" CanResize="False">
+    <Grid RowDefinitions="*,50">
+        <TextBlock x:Name="txtContent" Margin="10,30" />
+        <Border Grid.Row="1" Background="#E0E0E0">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Height="30"
+                        Margin="5">
+                <Button x:Name="btnOK" IsVisible="False" Margin="5,0,0,0" Click="BtnOK_OnClick">OK</Button>
+                <Button x:Name="btnYes" IsVisible="False" Margin="5,0,0,0" Click="BtnYes_OnClick">Yes</Button>
+                <Button x:Name="btnNo" IsVisible="False" Margin="5,0,0,0" Click="BtnNo_OnClick">No</Button>
+                <Button x:Name="btnCancel" IsVisible="False" Margin="5,0,0,0" Click="BtnCancel_OnClick">Cancel</Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
