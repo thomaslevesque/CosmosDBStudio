@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CosmosDBStudio.Avalonia.View.AboutView"
+             Width="300" Height="250">
+    <Grid>
+        <StackPanel Margin="10">
+            <Image Source="/Images/logo.png" Stretch="None" HorizontalAlignment="Left" />
+            <TextBlock Text="{Binding ProductName, Mode=OneTime}" d:Text="Cosmos DB Studio"
+                       FontSize="24" FontWeight="Bold"/>
+            <TextBlock Text="{Binding Version, Mode=OneTime}" d:Text="1.2.3.4" />
+            <TextBlock Text="{Binding Author, Mode=OneTime, StringFormat={}Created by {0}}" />
+            <Button Command="{Binding OpenWebsiteCommand}" Classes="hyperlink">View on Github</Button>
+        </StackPanel>
+    </Grid>  
+</UserControl>

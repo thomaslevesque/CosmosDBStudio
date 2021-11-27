@@ -56,4 +56,15 @@
     <Setter Property="Margin" Value="7,5,3,5" />
   </Style>
 
+  <Style Selector="Button.hyperlink">
+    <Setter Property="Template">
+      <ControlTemplate TargetType="Button">
+          <TextBlock Text="{TemplateBinding Content}"
+                     Foreground="Blue"
+                     TextDecorations="Underline" 
+                     Cursor="Hand" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  
 </Styles>

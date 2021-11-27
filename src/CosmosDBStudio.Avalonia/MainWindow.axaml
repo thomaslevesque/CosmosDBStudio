@@ -9,11 +9,41 @@
         x:Class="CosmosDBStudio.Avalonia.MainWindow"
         Title="Cosmos DB Studio"
         Height="800" Width="1200">
+    
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenQuerySheetCommand}" />
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveCommand}" />
+    </Window.KeyBindings>
+    
     <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="200,*">
         
         <Menu Grid.ColumnSpan="2">
-            <MenuItem Header="_File"></MenuItem>
-            <MenuItem Header="_Help"></MenuItem>
+            <MenuItem Header="_File">
+                <MenuItem Header="Add Cosmos DB account"
+                          Command="{Binding AddAccountCommand}" />
+                <Separator />
+                <MenuItem Header="_Open query sheet"
+                          Command="{Binding OpenQuerySheetCommand}"
+                          InputGesture="Ctrl+O"/>
+                <MenuItem Header="_Save query sheet"
+                          Command="{Binding SaveCommand}"
+                          InputGesture="Ctrl+S"/>
+                <MenuItem Header="Save query sheet _as&#x2026;" Command="{Binding SaveAsCommand}" />
+                <MenuItem Header="Recent files" Items="{Binding MruList}"
+                          IsEnabled="{Binding HasMru}">
+                    <MenuItem.Styles>
+                        <Style Selector="MenuItem">
+                            <Setter Property="Command" Value="{Binding DataContext.OpenQuerySheetCommand, ElementName=root}" />
+                            <Setter Property="CommandParameter" Value="{Binding}" />
+                        </Style>
+                    </MenuItem.Styles>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="_Quit" Command="{Binding QuitCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Command="{Binding AboutCommand}" />
+            </MenuItem>
         </Menu>
         
         <v:AccountsView Grid.Row="1" Grid.Column="0" DataContext="{Binding Accounts}" />
