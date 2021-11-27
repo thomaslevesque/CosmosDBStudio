@@ -44,7 +44,7 @@
     <Setter Property="Height" Value="20" />
   </Style>
   
-  <Style Selector="TextBox.formField:readonly">
+  <Style Selector="TextBox[IsReadOnly=True].formField">
     <Setter Property="Background" Value="#E6E6E6" />
   </Style>
   

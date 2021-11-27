@@ -12,28 +12,28 @@
     <Label Grid.Row="1" Grid.Column="0" Content="Endpoint" Classes="formFieldLabel" />
     <Label Grid.Row="2" Grid.Column="0" Content="Key" Classes="formFieldLabel" />
     <Label Grid.Row="4" Grid.Column="0" Content="Folder" Classes="formFieldLabel" />
-    <controls:TextBoxEx Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Classes="formField">
+    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Classes="formField">
         <Interaction.Behaviors>
             <bhv:ErrorBehavior Error="{Binding Validator[Name]}" />
         </Interaction.Behaviors>
-    </controls:TextBoxEx>
-    <controls:TextBoxEx Grid.Row="1" Grid.Column="1" Text="{Binding Endpoint}" Classes="formField">
+    </TextBox>
+    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Endpoint}" Classes="formField">
         <Interaction.Behaviors>
             <bhv:ErrorBehavior Error="{Binding Validator[Endpoint]}" />
         </Interaction.Behaviors>
-    </controls:TextBoxEx>
-    <controls:TextBoxEx Grid.Row="2" Grid.Column="1" Text="{Binding Key}" Classes="formField">
+    </TextBox>
+    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Key}" Classes="formField">
         <Interaction.Behaviors>
             <bhv:ErrorBehavior Error="{Binding Validator[Key]}" />
         </Interaction.Behaviors>
-    </controls:TextBoxEx>
+    </TextBox>
     <CheckBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Serverless"
               IsChecked="{Binding IsServerless}"
               Classes="formField" />
-    <controls:TextBoxEx Grid.Row="4" Grid.Column="1" Text="{Binding Folder}" Classes="formField">
+    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Folder}" Classes="formField">
         <Interaction.Behaviors>
             <bhv:ErrorBehavior Error="{Binding Validator[Folder]}" />
         </Interaction.Behaviors>
-    </controls:TextBoxEx>
+    </TextBox>
   </Grid>
 </UserControl>

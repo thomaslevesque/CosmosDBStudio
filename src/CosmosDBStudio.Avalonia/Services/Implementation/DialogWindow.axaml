@@ -28,7 +28,7 @@
                             Content="{Binding Text}"
                             IsDefault="{Binding IsDefault}"
                             IsCancel="{Binding IsCancel}"
-                            Command="{Binding Command}" 
+                            Command="{Binding Command, FallbackValue={x:Null}}" 
                             CommandParameter="{Binding CommandParameter}"
                             Click="DialogButton_Click"/>
                 </DataTemplate>

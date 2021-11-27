@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reflection;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using CosmosDBStudio.Avalonia.Extensions;
 using CosmosDBStudio.ViewModel.Dialogs;
 
 namespace CosmosDBStudio.Avalonia.Services.Implementation;
@@ -20,6 +22,10 @@ public partial class DialogWindow : Window
     public DialogWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        
+#if DEBUG
+        this.AttachDevTools();
+#endif
     }
 
     private void DialogButton_Click(object? sender, RoutedEventArgs e)
@@ -30,7 +36,7 @@ public partial class DialogWindow : Window
                 return;
 
             if (button.DialogResult is bool dialogResult)
-                this.Close(dialogResult);            
+                Close(dialogResult);            
         }
     }
 
