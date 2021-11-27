@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:treeNodes="clr-namespace:CosmosDBStudio.ViewModel.TreeNodes;assembly=CosmosDBStudio.ViewModel"
+             xmlns:controls="clr-namespace:CosmosDBStudio.Avalonia.View.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CosmosDBStudio.Avalonia.View.ContainerPickerView"
+             Width="300"
+             Height="300">
+  <Grid>
+      <TreeView Grid.Row="0" Items="{Binding RootNodes}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+            <TreeView.DataTemplates>
+                <TreeDataTemplate DataType="{x:Type treeNodes:AccountFolderNodeViewModel}" ItemsSource="{Binding Children}">
+                    <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
+                </TreeDataTemplate>
+                <TreeDataTemplate DataType="{x:Type treeNodes:AccountNodeViewModel}" ItemsSource="{Binding Children}">
+                    <controls:TreeNodeControl Icon="/Images/account.png" Content="{Binding Text}" />
+                </TreeDataTemplate>
+                <TreeDataTemplate DataType="{x:Type treeNodes:DatabaseNodeViewModel}" ItemsSource="{Binding Children}">
+                    <controls:TreeNodeControl Icon="/Images/database.png" Content="{Binding Text}" />
+                </TreeDataTemplate>
+                <DataTemplate DataType="{x:Type treeNodes:ContainerNodeViewModel}">
+                    <controls:TreeNodeControl Icon="/Images/container.png" Content="{Binding Text}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type treeNodes:PlaceholderTreeNodeViewModel}">
+                    <TextBlock Text="{Binding Text}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type treeNodes:ErrorTreeNodeViewModel}">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Text}" Foreground="Red" />
+                        <Button Command="{Binding RetryCommand}">Retry</Button>
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.DataTemplates>
+          <TreeView.Styles>
+              <Style Selector="TreeViewItem">
+                  <Setter Property="ContextMenu">
+                      <Setter.Value>
+                          <controls:BindableContextMenu Items="{Binding Commands}">
+                              <ContextMenu.Styles>
+                                  <Style Selector="MenuItem">
+                                      <Setter Property="Header" Value="{Binding Text}" />
+                                      <Setter Property="Command" Value="{Binding Command}" />
+                                      <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
+                                  </Style>
+                              </ContextMenu.Styles>
+                          </controls:BindableContextMenu>
+                      </Setter.Value>
+                  </Setter>
+              </Style>
+          </TreeView.Styles>
+        </TreeView>
+  </Grid>
+</UserControl>

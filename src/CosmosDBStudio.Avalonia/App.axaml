@@ -1,7 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:dialogs="clr-namespace:CosmosDBStudio.ViewModel.Dialogs;assembly=CosmosDBStudio.ViewModel"
-             xmlns:view="clr-namespace:CosmosDBStudio.Avalonia.View"
+             xmlns:v="clr-namespace:CosmosDBStudio.Avalonia.View"
              x:Class="CosmosDBStudio.Avalonia.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -16,7 +16,19 @@
     </Application.Styles>
     <Application.DataTemplates>
         <DataTemplate DataType="dialogs:AccountEditorViewModel">
-            <view:AccountEditorView />
+            <v:AccountEditorView />
+        </DataTemplate>
+        <!-- <DataTemplate DataType="{x:Type dialogs:DocumentEditorViewModel}"> -->
+        <!--     <v:DocumentEditorView /> -->
+        <!-- </DataTemplate> -->
+        <DataTemplate DataType="{x:Type dialogs:ContainerPickerViewModel}">
+            <v:ContainerPickerView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type dialogs:DatabaseEditorViewModel}">
+            <v:DatabaseEditorView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type dialogs:ContainerEditorViewModel}">
+            <v:ContainerEditorView />
         </DataTemplate>
     </Application.DataTemplates>
 </Application>

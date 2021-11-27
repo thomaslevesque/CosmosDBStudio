@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:bhv="clr-namespace:CosmosDBStudio.Avalonia.Behaviors"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="450"
+             x:Class="CosmosDBStudio.Avalonia.View.DatabaseEditorView"
+             Width="450">
+    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*">
+        <Label Grid.Row="0" Grid.Column="0" Content="Id" Classes="formFieldLabel" />
+        <CheckBox Grid.Row="1" Grid.Column="0" Content="Provision throughput" IsChecked="{Binding ProvisionThroughput}"
+                  IsEnabled="{Binding CanProvisionThroughput}"
+                  Classes="formField" />
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Id}"
+                 HorizontalAlignment="Left" Width="200"
+                 IsReadOnly="{Binding IsEditing}"
+                 Classes="formField">
+            <Interaction.Behaviors>
+                <bhv:ErrorBehavior Error="{Binding Validator[Id]}" />
+            </Interaction.Behaviors>
+        </TextBox>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+            <NumericUpDown HorizontalAlignment="Left" VerticalAlignment="Center" Width="150"
+                           IsEnabled="{Binding ProvisionThroughput}"
+                           Value="{Binding Throughput}"
+                           Classes="formField"
+                           Minimum="400" Maximum="10000" AllowSpin="True" Increment="100" ParsingNumberStyle="Integer">
+                <Interaction.Behaviors>
+                    <bhv:ErrorBehavior Error="{Binding Validator[Throughput]}" />
+                </Interaction.Behaviors>
+            </NumericUpDown>
+            <Label Content="(serverless)" Classes="formFieldLabel"
+                   IsVisible="{Binding IsServerlessAccount}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -4,7 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Width="420" d:DesignHeight="150"
         x:Class="CosmosDBStudio.Avalonia.Services.Implementation.MessageBox"
-        SizeToContent="Height" CanResize="False">
+        SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner">
     <Grid RowDefinitions="*,50">
         <TextBlock x:Name="txtContent" Margin="10,30" />
         <Border Grid.Row="1" Background="#E0E0E0">

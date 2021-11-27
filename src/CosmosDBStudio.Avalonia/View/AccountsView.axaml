@@ -11,7 +11,7 @@
         <StyleInclude Source="/View/Controls/TreeNodeControl.axaml" />
     </UserControl.Styles>
     <Grid>
-        <controls:AccountExplorerTreeView Items="{Binding RootNodes}">
+        <controls:AccountExplorerTreeView Items="{Binding RootNodes}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
             <controls:AccountExplorerTreeView.DataTemplates>
                 <TreeDataTemplate DataType="{x:Type treeNodes:AccountFolderNodeViewModel}" ItemsSource="{Binding Children}">
                     <controls:TreeNodeControl Icon="/Images/folder.png" Content="{Binding Text}" />
