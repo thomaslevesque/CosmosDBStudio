@@ -1,0 +1,43 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dlg="clr-namespace:CosmosDBStudio.ViewModel.Dialogs;assembly=CosmosDBStudio.ViewModel"
+        mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800"
+        x:Class="CosmosDBStudio.Avalonia.Services.Implementation.DialogWindow"
+        Title="{Binding Title}">
+    <Window.Styles>
+        <Style Selector="Button.dialogButton">
+            <Setter Property="Margin" Value="0,5,5,5" />
+            <Setter Property="MinWidth" Value="60" />
+        </Style>
+    </Window.Styles>
+    <Grid RowDefinitions="*,Auto">
+        <ContentControl Grid.Row="0" Content="{Binding}"
+                        Margin="10,10,10,10"/>
+        <ItemsControl Grid.Row="1"
+                      BorderThickness="0,1,0,0"
+                      BorderBrush="#CCCCCC"
+                      Background="#EEE"
+                      Padding="5"
+                      IsVisible="{Binding HasButtons}"
+                      Items="{Binding Buttons}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type dlg:DialogButton}">
+                    <Button Classes="dialogButton"
+                            Content="{Binding Text}"
+                            IsDefault="{Binding IsDefault}"
+                            IsCancel="{Binding IsCancel}"
+                            Command="{Binding Command}" 
+                            CommandParameter="{Binding CommandParameter}"
+                            Click="DialogButton_Click"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </Grid>
+</Window>

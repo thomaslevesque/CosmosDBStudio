@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
+using Avalonia.Layout;
 using Avalonia.Threading;
 using CosmosDBStudio.ViewModel.Dialogs;
 using CosmosDBStudio.ViewModel.Services;
@@ -16,20 +19,52 @@ public class DialogService : IDialogService
 {
     public bool? ShowDialog(IDialogViewModel dialog)
     {
-        throw new NotImplementedException();
+        var window = CreateWindow(dialog);
+        window.Closing += OnWindowClosing;
+        bool? result = null;
+        try
+        {
+            dialog.CloseRequested += OnCloseRequested;
+            result = ShowDialogSync(window.ShowDialog<bool?>(GetDialogOwner()));
+            return result;
+        }
+        finally
+        {
+            dialog.OnClosed(result);
+            dialog.CloseRequested -= OnCloseRequested;
+            window.Closing -= OnWindowClosing;
+        }
+
+        void OnWindowClosing(object? sender, CancelEventArgs e)
+        {
+            e.Cancel = !ConfirmClose((bool?)window.DialogResult);
+        }
+
+        void OnCloseRequested(object? sender, bool? dialogResult)
+        {
+            if (dialogResult is bool value)
+                window.Close(value);
+            else
+                window.Close();
+        }
+
+        bool ConfirmClose(bool? dialogResult)
+        {
+            var closingEventArgs = new DialogClosingEventArgs(dialogResult);
+            dialog.OnClosing(closingEventArgs);
+            return !closingEventArgs.Cancel;
+        }
     }
 
     public bool Confirm(string text)
     {
-        // TODO: not always MainWindow...
-        var result = ShowDialogSync(MessageBox.Show(text, "Confirm", MessageBoxButton.YesNo, GetMainWindow()));
+        var result = ShowDialogSync(MessageBox.Show(text, "Confirm", MessageBoxButton.YesNo, GetDialogOwner()));
         return result == MessageBoxResult.Yes;
     }
 
     public Option<bool> YesNoCancel(string text)
     {
-        // TODO: not always MainWindow...
-        var result = ShowDialogSync(MessageBox.Show(text, "Confirm", MessageBoxButton.YesNoCancel, GetMainWindow()));
+        var result = ShowDialogSync(MessageBox.Show(text, "Confirm", MessageBoxButton.YesNoCancel, GetDialogOwner()));
         return result switch
         {
             MessageBoxResult.Yes => Option.Some(true),
@@ -40,8 +75,7 @@ public class DialogService : IDialogService
 
     public void ShowError(string message)
     {
-        // TODO: not always MainWindow...
-        ShowDialogSync(MessageBox.Show(message, "Error", MessageBoxButton.OK, GetMainWindow()));
+        ShowDialogSync(MessageBox.Show(message, "Error", MessageBoxButton.OK, GetDialogOwner()));
     }
 
     public Option<string> PickFileToSave(Option<string> filter = default, Option<int> filterIndex = default, Option<string> fileName = default,
@@ -59,7 +93,7 @@ public class DialogService : IDialogService
         initialDirectory.Do(value => dialog.Directory = value);
 
 
-        var result = ShowDialogSync(dialog.ShowAsync(GetMainWindow()));
+        var result = ShowDialogSync(dialog.ShowAsync(GetDialogOwner()));
         if (result is null)
             return Option.None();
 
@@ -75,7 +109,7 @@ public class DialogService : IDialogService
         fileName.Do(value => dialog.InitialFileName = value);
         initialDirectory.Do(value => dialog.Directory = value);
 
-        var result = ShowDialogSync(dialog.ShowAsync(GetMainWindow()));
+        var result = ShowDialogSync(dialog.ShowAsync(GetDialogOwner()));
         if (result is null || result.Length == 0)
             return Option.None();
 
@@ -102,7 +136,8 @@ public class DialogService : IDialogService
         }
     }
 
-    private Window GetMainWindow() => ((App)Application.Current).MainWindow;
+    // TODO: not always MainWindow...
+    private Window GetDialogOwner() => ((App)Application.Current).MainWindow;
 
     private static IEnumerable<FileDialogFilter> ParseFileDialogFilters(string filter)
     {
@@ -115,5 +150,43 @@ public class DialogService : IDialogService
             var extensions = parts[i + 1].Split(';', StringSplitOptions.RemoveEmptyEntries).ToList();
             yield return new FileDialogFilter { Name = name, Extensions = extensions };
         }
+    }
+    
+    private DialogWindow CreateWindow(IDialogViewModel dialog)
+    {
+        var window = new DialogWindow();
+        window.DataContext = dialog;
+
+        //window.Bind(Window.TitleProperty, new Binding(nameof(IDialogViewModel.Title)));
+
+        if (dialog is ISizableDialog sizable)
+        {
+            if (sizable.IsResizable)
+            {
+                window.Bind(Layoutable.WidthProperty, new Binding(nameof(ISizableDialog.Width))
+                {
+                    Mode = BindingMode.TwoWay
+                });
+                window.Bind(Layoutable.HeightProperty, new Binding(nameof(ISizableDialog.Height))
+                {
+                    Mode = BindingMode.TwoWay
+                });
+                window.CanResize = true;
+            }
+            else
+            {
+                window.Width = sizable.Width;
+                window.Height = sizable.Height;
+                window.CanResize = false;
+            }
+        }
+        else
+        {
+            window.SizeToContent = SizeToContent.WidthAndHeight;
+            window.CanResize = false;
+        }
+
+        window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        return window;
     }
 }

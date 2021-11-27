@@ -22,11 +22,6 @@
       <ProjectReference Include="..\CosmosDBStudio.ViewModel\CosmosDBStudio.ViewModel.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Update="View\AccountsView.axaml.cs">
-        <DependentUpon>View.axaml</DependentUpon>
-      </Compile>
-    </ItemGroup>
-    <ItemGroup>
       <EmbeddedResource Include="Resources\fa-solid-900.ttf" />
     </ItemGroup>
     <ItemGroup>

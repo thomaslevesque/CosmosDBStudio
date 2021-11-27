@@ -35,5 +35,25 @@
   <Style Selector="Button.closeTab:pressed">
     <Setter Property="Background" Value="#CCCCCC" />
   </Style>
+  
+  <Style Selector="Label.formFieldLabel">
+    <Setter Property="Margin" Value="3" />
+  </Style>
+
+  <Style Selector="TextBox.formField">
+    <Setter Property="Height" Value="20" />
+  </Style>
+  
+  <Style Selector="TextBox.formField:readonly">
+    <Setter Property="Background" Value="#E6E6E6" />
+  </Style>
+  
+  <Style Selector="CheckBox.formField">
+    <Setter Property="Margin" Value="7,5,3,5" />
+  </Style>
+  
+  <Style Selector="RadioButton.formField">
+    <Setter Property="Margin" Value="7,5,3,5" />
+  </Style>
 
 </Styles>
