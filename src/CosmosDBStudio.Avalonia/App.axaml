@@ -3,6 +3,7 @@
              xmlns:dialogs="clr-namespace:CosmosDBStudio.ViewModel.Dialogs;assembly=CosmosDBStudio.ViewModel"
              xmlns:v="clr-namespace:CosmosDBStudio.Avalonia.View"
              xmlns:vm="clr-namespace:CosmosDBStudio.ViewModel;assembly=CosmosDBStudio.ViewModel"
+             xmlns:default="clr-namespace:Avalonia.Themes.Default;assembly=Avalonia.Themes.Default"
              x:Class="CosmosDBStudio.Avalonia.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -30,6 +31,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type dialogs:ContainerEditorViewModel}">
             <v:ContainerEditorView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type dialogs:TextPromptViewModel}">
+            <v:TextPromptView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:AboutViewModel}">
             <v:AboutView />

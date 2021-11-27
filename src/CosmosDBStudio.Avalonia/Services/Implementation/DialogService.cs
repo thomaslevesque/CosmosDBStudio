@@ -118,7 +118,13 @@ public class DialogService : IDialogService
     
     public Option<string> TextPrompt(string prompt, Option<string> initialText = default)
     {
-        throw new NotImplementedException();
+        var vm = new TextPromptViewModel(prompt, initialText.ValueOrNull());
+        if (ShowDialog(vm) is true)
+        {
+            return vm.Text;
+        }
+
+        return Option.None();
     }
     
     private T ShowDialogSync<T>(Task<T> dialogTask)
