@@ -4,6 +4,9 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+    <PropertyGroup>
+        <ApplicationIcon>Images\app.ico</ApplicationIcon>
+    </PropertyGroup>
     <ItemGroup>
         <None Remove=".gitignore" />
     </ItemGroup>

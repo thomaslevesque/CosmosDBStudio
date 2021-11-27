@@ -5,7 +5,8 @@
         mc:Ignorable="d" Width="420" d:DesignHeight="150"
         x:Class="CosmosDBStudio.Avalonia.Services.Implementation.MessageBox"
         SizeToContent="Height" CanResize="False"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        Icon="/Images/app.ico">
     <Grid RowDefinitions="*,50">
         <TextBlock x:Name="txtContent" Margin="10,30" />
         <Border Grid.Row="1" Background="#E0E0E0">
