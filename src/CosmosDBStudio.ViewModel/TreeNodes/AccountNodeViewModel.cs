@@ -64,6 +64,7 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
             var databases = await Context.Databases.GetDatabasesAsync(default);
             return databases
                 .Select(database => _viewModelFactory.CreateDatabaseNode(this, database, Context.GetDatabaseContext(database)))
+                .OrderBy(d => d.Id)
                 .ToList();
         }
 
