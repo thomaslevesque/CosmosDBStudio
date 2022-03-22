@@ -15,14 +15,16 @@ using CosmosDBStudio.ViewModel.Services;
 using CosmosDBStudio.ViewModel.TreeNodes;
 using EssentialMVVM;
 using Hamlet;
+using Linq.Extras;
 using Newtonsoft.Json.Linq;
 
 namespace CosmosDBStudio.ViewModel.EditorTabs
 {
     public class QuerySheetViewModel : TabViewModelBase, ISaveable
     {
-        public static int UntitledCounter { get; set; }
         private const string DefaultQuery = "select * from c";
+
+        public static int UntitledCounter { get; set; }
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
         private readonly IMessenger _messenger;
@@ -48,7 +50,7 @@ namespace CosmosDBStudio.ViewModel.EditorTabs
             _title = string.IsNullOrEmpty(path)
                 ? "Untitled " + (++UntitledCounter)
                 : Path.GetFileNameWithoutExtension(path);
-            _text = querySheet.Text == string.Empty ? DefaultQuery : querySheet.Text;
+            _text = querySheet.Text.IsNullOrEmpty() ? DefaultQuery : querySheet.Text;
             _result = _viewModelFactory.CreateNotRunQueryResult();
 
             _partitionKey = querySheet.PartitionKey;
