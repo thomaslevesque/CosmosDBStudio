@@ -22,7 +22,7 @@ namespace CosmosDBStudio.ViewModel.EditorTabs
     public class QuerySheetViewModel : TabViewModelBase, ISaveable
     {
         public static int UntitledCounter { get; set; }
-
+        private const string DefaultQuery = "select * from c";
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
         private readonly IMessenger _messenger;
@@ -48,7 +48,7 @@ namespace CosmosDBStudio.ViewModel.EditorTabs
             _title = string.IsNullOrEmpty(path)
                 ? "Untitled " + (++UntitledCounter)
                 : Path.GetFileNameWithoutExtension(path);
-            _text = querySheet.Text;
+            _text = querySheet.Text == string.Empty ? DefaultQuery : querySheet.Text;
             _result = _viewModelFactory.CreateNotRunQueryResult();
 
             _partitionKey = querySheet.PartitionKey;
