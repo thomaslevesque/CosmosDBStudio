@@ -22,6 +22,7 @@ namespace CosmosDBStudio.ViewModel.EditorTabs
     public class QuerySheetViewModel : TabViewModelBase, ISaveable
     {
         public static int UntitledCounter { get; set; }
+
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
         private readonly IMessenger _messenger;
