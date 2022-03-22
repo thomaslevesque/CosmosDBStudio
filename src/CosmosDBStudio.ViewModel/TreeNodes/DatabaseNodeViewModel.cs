@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Model.Services;
@@ -54,7 +55,7 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
         {
             var containers = await Context.Containers.GetContainersAsync(default);
             var vms = new List<ContainerNodeViewModel>();
-            foreach (var container in containers)
+            foreach (var container in containers.OrderBy(c => c.Id))
             {
                 var context = Context.GetContainerContext(container, default);
                 vms.Add(_viewModelFactory.CreateContainerNode(this, container, context));
