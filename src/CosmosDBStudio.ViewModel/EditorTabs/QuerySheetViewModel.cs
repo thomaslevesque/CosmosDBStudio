@@ -21,8 +21,6 @@ namespace CosmosDBStudio.ViewModel.EditorTabs
 {
     public class QuerySheetViewModel : TabViewModelBase, ISaveable
     {
-        private const string DefaultQuery = "select * from c";
-
         public static int UntitledCounter { get; set; }
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IDialogService _dialogService;
