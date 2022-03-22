@@ -27,7 +27,7 @@ namespace CosmosDBStudio.Model.Services.Implementation
             var accounts = new List<CosmosAccount>();
             var prefix = folderPrefix.TrimStart('/');
 
-            foreach (var (_, account) in _accounts)
+            foreach (var (_, account) in _accounts.OrderBy(a => a.Value.Id))
             {
                 if (!account.Folder.StartsWith(prefix))
                     continue;
