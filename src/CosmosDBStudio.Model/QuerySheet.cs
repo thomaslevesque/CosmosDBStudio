@@ -4,9 +4,10 @@ namespace CosmosDBStudio.Model
 {
     public class QuerySheet
     {
+        private const string DefaultQuery = "select * from c";
         public const string FileFilter = "Cosmos DB Studio query sheet|*.cdbsqs";
 
-        public string Text { get; set; } = string.Empty;
+        public string Text { get; set; } = DefaultQuery;
         public string? PartitionKey { get; set; }
         public IList<string> PartitionKeyMRU { get; set; } = new List<string>();
         public IList<QuerySheetParameter> Parameters { get; set; } = new List<QuerySheetParameter>();
