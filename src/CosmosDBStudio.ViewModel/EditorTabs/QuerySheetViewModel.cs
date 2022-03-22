@@ -15,7 +15,6 @@ using CosmosDBStudio.ViewModel.Services;
 using CosmosDBStudio.ViewModel.TreeNodes;
 using EssentialMVVM;
 using Hamlet;
-using Linq.Extras;
 using Newtonsoft.Json.Linq;
 
 namespace CosmosDBStudio.ViewModel.EditorTabs
