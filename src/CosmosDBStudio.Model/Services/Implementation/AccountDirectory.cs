@@ -18,16 +18,16 @@ namespace CosmosDBStudio.Model.Services.Implementation
 
         public IEnumerable<CosmosAccount> Accounts => _accounts.Values.Select(c => c.Clone());
 
-        public IEnumerable<object> GetRootNodes() => GetChildNodes(string.Empty);
+        public IEnumerable<ITreeNode> GetRootNodes() => GetChildNodes(string.Empty);
 
-        public IEnumerable<object> GetChildNodes(string folderPrefix)
+        public IEnumerable<ITreeNode> GetChildNodes(string folderPrefix)
         {
             var folderNames = new HashSet<string>();
             var folders = new List<CosmosAccountFolder>();
             var accounts = new List<CosmosAccount>();
             var prefix = folderPrefix.TrimStart('/');
 
-            foreach (var (_, account) in _accounts.OrderBy(a => a.Value.Id))
+            foreach (var (_, account) in _accounts)
             {
                 if (!account.Folder.StartsWith(prefix))
                     continue;
@@ -42,7 +42,7 @@ namespace CosmosDBStudio.Model.Services.Implementation
 
                 if (string.IsNullOrEmpty(subFolder))
                 {
-                    accounts.Add(account);
+                    yield return account;
                 }
                 else
                 {
@@ -53,12 +53,10 @@ namespace CosmosDBStudio.Model.Services.Implementation
                             string.IsNullOrEmpty(prefix)
                             ? name
                             : prefix + "/" + name;
-                        folders.Add(new CosmosAccountFolder(fullPath));
+                        yield return new CosmosAccountFolder(fullPath);
                     }
                 }
             }
-
-            return folders.Concat<object>(accounts);
         }
 
         public bool TryGetById(string id, [NotNullWhen(true)] out CosmosAccount? account)

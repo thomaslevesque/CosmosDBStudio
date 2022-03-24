@@ -1,6 +1,8 @@
-﻿namespace CosmosDBStudio.Model
+﻿using CosmosDBStudio.Model.Services.Implementation;
+
+namespace CosmosDBStudio.Model
 {
-    public class CosmosAccount
+    public class CosmosAccount : ITreeNode
     {
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;

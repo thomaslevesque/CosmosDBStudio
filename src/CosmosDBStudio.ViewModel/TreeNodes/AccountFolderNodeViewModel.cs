@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Model.Services;
@@ -47,7 +48,7 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
         {
             var childNodes = _accountDirectory.GetChildNodes(_folder.FullPath);
             var result = new List<TreeNodeViewModel>();
-            foreach (var node in childNodes)
+            foreach (var node in childNodes.OrderBy(n => n.Name))
             {
                 var childVM = node switch
                 {

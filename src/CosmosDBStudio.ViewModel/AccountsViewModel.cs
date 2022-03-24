@@ -49,7 +49,7 @@ namespace CosmosDBStudio.ViewModel
         private void LoadAccounts()
         {
             var nodes = _accountDirectory.GetRootNodes();
-            foreach (var node in nodes)
+            foreach (var node in nodes.OrderBy(n => n.Name))
             {
                 var vm = node switch
                 {

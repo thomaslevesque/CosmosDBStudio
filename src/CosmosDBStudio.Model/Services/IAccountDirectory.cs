@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CosmosDBStudio.Model.Services.Implementation;
 
 namespace CosmosDBStudio.Model.Services
 {
@@ -11,7 +12,7 @@ namespace CosmosDBStudio.Model.Services
         void Load();
         void Save();
         bool TryGetById(string id, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out CosmosAccount? account);
-        IEnumerable<object> GetRootNodes();
-        IEnumerable<object> GetChildNodes(string folderPrefix);
+        IEnumerable<ITreeNode> GetRootNodes();
+        IEnumerable<ITreeNode> GetChildNodes(string folderPrefix);
     }
 }
