@@ -10,6 +10,8 @@ namespace CosmosDBStudio.Model
         public string Key { get; set; } = string.Empty;
         public bool IsServerless { get; set; }
         public string Folder { get; set; } = string.Empty;
+        
+        string ITreeNode.Name => Id;
 
         public CosmosAccount Clone()
         {

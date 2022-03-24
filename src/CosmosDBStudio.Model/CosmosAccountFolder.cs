@@ -12,5 +12,7 @@ namespace CosmosDBStudio.Model
 
         public string Name => Path.GetFileName(FullPath);
         public string FullPath { get; set; }
+
+        string ITreeNode.Name => Name;
     }
 }

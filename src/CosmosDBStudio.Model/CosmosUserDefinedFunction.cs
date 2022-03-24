@@ -6,7 +6,7 @@
         public string Body { get; set; } = string.Empty;
         public string? ETag { get; set; } = string.Empty;
 
-        public string Name => Id;
+        string ITreeNode.Name => Id;
 
         public ICosmosScript Clone() => (ICosmosScript)MemberwiseClone();
     }
