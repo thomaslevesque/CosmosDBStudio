@@ -10,7 +10,7 @@ namespace CosmosDBStudio.Model
         public TriggerOperation Operation { get; set; }
         public TriggerType Type { get; set; }
 
-        string ITreeNode.Name => Id;
+        string ITreeNode.DisplayName => Id;
 
         public ICosmosScript Clone() => (ICosmosScript)MemberwiseClone();
     }

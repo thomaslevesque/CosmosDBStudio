@@ -29,7 +29,7 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
             var functions = await Context.Scripts.GetUserDefinedFunctionsAsync(default);
-            return functions.OrderBy(f => f.Name).Select(udf => ViewModelFactory.CreateUserDefinedFunctionNode(udf, Context, this));
+            return functions.OrderBy(f => f.DisplayName).Select(udf => ViewModelFactory.CreateUserDefinedFunctionNode(udf, Context, this));
         }
     }
 }

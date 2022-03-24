@@ -55,7 +55,7 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
         {
             var containers = await Context.Containers.GetContainersAsync(default);
             var vms = new List<ContainerNodeViewModel>();
-            foreach (var container in containers.OrderBy(c => c.Name))
+            foreach (var container in containers.OrderBy(c => c.DisplayName))
             {
                 var context = Context.GetContainerContext(container, default);
                 vms.Add(_viewModelFactory.CreateContainerNode(this, container, context));

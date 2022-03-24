@@ -9,5 +9,5 @@ public interface ITreeNode
     /// <summary>
     ///     The name to be displayed on the tree for the tree node
     /// </summary>
-    public string Name { get; }
+    public string DisplayName { get; }
 }

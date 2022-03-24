@@ -48,7 +48,7 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
         {
             var childNodes = _accountDirectory.GetChildNodes(_folder.FullPath);
             var result = new List<TreeNodeViewModel>();
-            foreach (var node in childNodes.OrderBy(n => n.Name))
+            foreach (var node in childNodes.OrderBy(n => n.DisplayName))
             {
                 var childVM = node switch
                 {

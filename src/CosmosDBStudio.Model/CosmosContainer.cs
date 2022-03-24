@@ -7,7 +7,7 @@
         public string PartitionKeyPath { get; set; } = string.Empty;
         public bool LargePartitionKey { get; set; }
         public int? DefaultTTL { get; set; }
-        
-        public string Name => Id;
+
+        string ITreeNode.DisplayName => Id;
     }
 }
