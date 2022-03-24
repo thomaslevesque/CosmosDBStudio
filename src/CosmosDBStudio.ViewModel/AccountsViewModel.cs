@@ -49,6 +49,7 @@ namespace CosmosDBStudio.ViewModel
         private void LoadAccounts()
         {
             var nodes = _accountDirectory.GetRootNodes();
+            var root = new List<TreeNodeViewModel>();
             foreach (var node in nodes)
             {
                 var vm = node switch
@@ -61,9 +62,9 @@ namespace CosmosDBStudio.ViewModel
                     CosmosAccountFolder folder => (TreeNodeViewModel)_viewModelFactory.CreateAccountFolderNode(folder, null),
                     _ => throw new Exception("Invalid node type")
                 };
-
-                RootNodes.Add(vm);
+                root.Add(vm);
             }
+            root.OrderByDescending(n => n is AccountFolderNodeViewModel).ThenBy(c => c.Text).ToList().ForEach(c => RootNodes.Add(c));
         }
 
         public ObservableCollection<TreeNodeViewModel> RootNodes { get; }

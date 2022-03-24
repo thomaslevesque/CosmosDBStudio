@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CosmosDBStudio.Model;
 using CosmosDBStudio.Model.Services;
@@ -59,11 +60,9 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
                     CosmosAccountFolder folder => (TreeNodeViewModel)_viewModelFactory.CreateAccountFolderNode(folder, this),
                     _ => throw new Exception("Invalid node type")
                 };
-
                 result.Add(childVM);
             }
-
-            return Task.FromResult<IEnumerable<TreeNodeViewModel>>(result);
+            return Task.FromResult<IEnumerable<TreeNodeViewModel>>(result.OrderBy(c => c.Text));
         }
 
         public override IEnumerable<CommandViewModel> Commands { get; }
