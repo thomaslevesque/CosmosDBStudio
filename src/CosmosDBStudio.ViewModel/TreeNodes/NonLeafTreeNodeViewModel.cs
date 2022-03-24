@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using EssentialMVVM;
@@ -56,7 +57,7 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
             try
             {
                 Error = null;
-                _children = await Task.Run(LoadChildrenAsync);
+                _children = (await Task.Run(LoadChildrenAsync)).OrderBy(c => c.Text);
             }
             catch (Exception ex)
             {
