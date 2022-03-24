@@ -29,7 +29,7 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
             var triggers = await Context.Scripts.GetTriggersAsync(default);
-            return triggers.OrderBy(t => t.DisplayName).Select(t => ViewModelFactory.CreateTriggerNode(t, Context, this));
+            return triggers.OrderBy(t => ((ITreeNode)t).DisplayName).Select(t => ViewModelFactory.CreateTriggerNode(t, Context, this));
         }
     }
 }

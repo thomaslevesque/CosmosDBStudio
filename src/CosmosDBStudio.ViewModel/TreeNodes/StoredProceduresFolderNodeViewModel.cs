@@ -29,7 +29,7 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
         protected override async Task<IEnumerable<TreeNodeViewModel>> LoadChildrenAsync()
         {
             var storedProcedures = await Context.Scripts.GetStoredProceduresAsync(default);
-            return storedProcedures.OrderBy(s => s.DisplayName).Select(sp => ViewModelFactory.CreateStoredProcedureNode(sp, Context, this));
+            return storedProcedures.OrderBy(s => ((ITreeNode)s).DisplayName).Select(sp => ViewModelFactory.CreateStoredProcedureNode(sp, Context, this));
         }
     }
 }
