@@ -11,7 +11,7 @@ namespace CosmosDBStudio.Model
         public bool IsServerless { get; set; }
         public string Folder { get; set; } = string.Empty;
         
-        string ITreeNode.DisplayName => Id;
+        string ITreeNode.DisplayName => Name;
 
         public CosmosAccount Clone()
         {
