@@ -64,7 +64,11 @@ namespace CosmosDBStudio.ViewModel
                 };
                 root.Add(vm);
             }
-            root.OrderByDescending(n => n is AccountFolderNodeViewModel).ThenBy(c => c.Text).ToList().ForEach(c => RootNodes.Add(c));
+            foreach (var c in root.OrderByDescending(n => n is AccountFolderNodeViewModel)
+                                  .ThenBy(c => c.Text))
+            {
+                RootNodes.Add(c);
+            }
         }
 
         public ObservableCollection<TreeNodeViewModel> RootNodes { get; }

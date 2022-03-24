@@ -62,7 +62,7 @@ namespace CosmosDBStudio.ViewModel.TreeNodes
                 };
                 result.Add(childVM);
             }
-            return Task.FromResult<IEnumerable<TreeNodeViewModel>>(result.OrderBy(c => c.Text));
+            return Task.FromResult<IEnumerable<TreeNodeViewModel>>(result);
         }
 
         public override IEnumerable<CommandViewModel> Commands { get; }
