@@ -28,7 +28,7 @@ namespace CosmosDBStudio.ViewModel.Dialogs
             AddCancelButton();
 
             Validator = new ViewModelValidator<DatabaseEditorViewModel>(this);
-            Validator.AddValidator(vm => vm.Id, id => CosmosHelper.ValidateId(id, "container id"));
+            Validator.AddValidator(vm => vm.Id, id => CosmosHelper.ValidateId(id, "database id"));
             Validator.AddValidator(vm => vm.Throughput, throughput => CosmosHelper.ValidateThroughput(throughput, ProvisionThroughput));
         }
 

@@ -1,0 +1,107 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="CosmosSQL" extensions=".sql" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="Green" exampleText="-- comment" />
+  <Color name="Char" foreground="Red" exampleText="name = 'abc'"/>
+  <Color name="Keywords" fontWeight="bold" foreground="Blue" exampleText="SELECT FROM"/>
+
+  <RuleSet name="CommentMarkerSet">
+    <Keywords fontWeight="bold" foreground="Red">
+      <Word>TODO</Word>
+      <Word>FIXME</Word>
+    </Keywords>
+    <Keywords fontWeight="bold" foreground="#E0E000">
+      <Word>HACK</Word>
+      <Word>UNDONE</Word>
+    </Keywords>
+  </RuleSet>
+
+  <RuleSet ignoreCase="true">
+    <Span color="Comment" ruleSet="CommentMarkerSet">
+      <Begin>--</Begin>
+    </Span>
+
+    <Span color="Comment" ruleSet="CommentMarkerSet" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+
+    <Span color="Char">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+
+    <Keywords color="Keywords">
+      <Word>select</Word>
+      <Word>from</Word>
+      <Word>where</Word>
+      <Word>order</Word>
+      <Word>group</Word>
+      <Word>by</Word>
+      <Word>and</Word>
+      <Word>or</Word>
+      <Word>not</Word>
+      <Word>offset</Word>
+      <Word>limit</Word>
+      <Word>value</Word>
+      <Word>distinct</Word>
+      <Word>as</Word>
+      <Word>join</Word>
+      <Word>in</Word>
+      <Word>between</Word>
+      <Word>top</Word>
+      <Word>asc</Word>
+      <Word>desc</Word>
+      <Word>count</Word>
+      <Word>sum</Word>
+      <Word>min</Word>
+      <Word>max</Word>
+      <Word>avg</Word>
+      <Word>udf</Word>
+      <Word>sum</Word>
+      <Word>array_concat</Word>
+      <Word>array_contains</Word>
+      <Word>array_length</Word>
+      <Word>array_slice</Word>
+      <Word>array_concat</Word>
+      <Word>GetCurrentDateTime</Word>
+      <Word>GetCurrentTimestamp</Word>
+      <Word>GetCurrentTicks</Word>
+      <Word>DateTimeAdd</Word>
+      <Word>DateTimeDiff</Word>
+      <Word>DateTimeFromParts</Word>
+      <Word>DateTimePart</Word>
+      <Word>DateTimeToTicks</Word>
+      <Word>DateTimeToTimestamp</Word>
+      <Word>TicksToDateTime</Word>
+      <Word>TimestampToDateTime</Word>
+      <Word>abs</Word>
+      <Word>acos</Word>
+      <Word>asin</Word>
+      <Word>atan</Word>
+      <Word>atn2</Word>
+      <Word>ceiling</Word>
+      <Word>cos</Word>
+      <Word>cot</Word>
+      <Word>degrees</Word>
+      <Word>exp</Word>
+      <Word>floor</Word>
+      <Word>log</Word>
+      <Word>log10</Word>
+      <Word>pi</Word>
+      <Word>power</Word>
+      <Word>radians</Word>
+      <Word>rand</Word>
+      <Word>round</Word>
+      <Word>sign</Word>
+      <Word>sin</Word>
+      <Word>sqrt</Word>
+      <Word>square</Word>
+      <Word>tan</Word>
+      <Word>trunc</Word>
+
+    </Keywords>
+  </RuleSet>
+</SyntaxDefinition>

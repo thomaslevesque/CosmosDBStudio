@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using CosmosDBStudio.Avalonia.SyntaxHighlighting;
 using CosmosDBStudio.Model.Services;
 using CosmosDBStudio.ViewModel;
 
@@ -22,6 +23,7 @@ namespace CosmosDBStudio.Avalonia
         
         public override void Initialize()
         {
+            CosmosSyntax.Init();
             AvaloniaXamlLoader.Load(this);
         }
 

@@ -26,6 +26,9 @@
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="Resources\fa-solid-900.ttf" />
+      <EmbeddedResource Include="SyntaxHighlighting\CosmosJS.xshd" />
+      <EmbeddedResource Include="SyntaxHighlighting\CosmosSQL.xshd" />
+      <EmbeddedResource Include="SyntaxHighlighting\JSON.xshd" />
     </ItemGroup>
     <ItemGroup>
         <AvaloniaResource Include="Images\*" />

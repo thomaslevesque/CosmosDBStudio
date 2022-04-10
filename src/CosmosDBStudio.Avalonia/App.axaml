@@ -15,6 +15,7 @@
     <Application.Styles>
         <FluentTheme Mode="Light"/>
         <StyleInclude Source="/Styles.axaml" />
+        <StyleInclude Source="avares://AvaloniaEdit/AvaloniaEdit.xaml" />
     </Application.Styles>
     <Application.DataTemplates>
         <DataTemplate DataType="dialogs:AccountEditorViewModel">

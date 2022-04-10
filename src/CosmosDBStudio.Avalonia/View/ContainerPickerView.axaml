@@ -8,7 +8,10 @@
              x:Class="CosmosDBStudio.Avalonia.View.ContainerPickerView"
              Width="300"
              Height="300">
-  <Grid>
+    <UserControl.Styles>
+        <StyleInclude Source="/View/Controls/TreeNodeControl.axaml" />
+    </UserControl.Styles>
+    <Grid>
       <TreeView Grid.Row="0" Items="{Binding RootNodes}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
             <TreeView.DataTemplates>
                 <TreeDataTemplate DataType="{x:Type treeNodes:AccountFolderNodeViewModel}" ItemsSource="{Binding Children}">
@@ -48,6 +51,7 @@
                           </controls:BindableContextMenu>
                       </Setter.Value>
                   </Setter>
+                  <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
               </Style>
           </TreeView.Styles>
         </TreeView>

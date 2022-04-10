@@ -2,7 +2,90 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:bhv="clr-namespace:CosmosDBStudio.Avalonia.Behaviors"
+             xmlns:local="clr-namespace:CosmosDBStudio.Avalonia.View"
+             xmlns:fa="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="CosmosDBStudio.Avalonia.View.QuerySheetView">
-  <TextBox AcceptsReturn="True" IsReadOnly="True" Text="{Binding Text}" />
+             x:Class="CosmosDBStudio.Avalonia.View.QuerySheetView"
+             x:Name="self">
+    <Grid IsEnabled="{Binding IsUIEnabled}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    ToolTip.Tip="Container - click to change"
+                    Command="{Binding ChangeContainerCommand}">
+                <Image Source="/Images/container.png" Width="16" Height="16" />
+            </Button>
+            <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding ContainerPath, Mode=OneWay}" />
+            <Button Grid.Column="2" Classes="hyperlink"
+                    Content="{Binding ExplorerSelectedContainer.Path, Mode=OneWay, StringFormat={}Use {0}}"
+                    Command="{Binding SwitchToExplorerSelectedContainerCommand}"
+                    IsVisible="{Binding CanSwitchToExplorerSelectedContainer}"
+                    Margin="5,0" />
+        </Grid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label VerticalAlignment="Center">Partition key</Label>
+            <AutoCompleteBox Width="400" Margin="0,0,3,0" VerticalAlignment="Center"
+                             Items="{Binding PartitionKeyMRU}"
+                             SelectedItem="{Binding PartitionKey, Mode=TwoWay}">
+                <Interaction.Behaviors>
+                    <bhv:ErrorBehavior Error="{Binding Errors[PartitionKey]}" />
+                </Interaction.Behaviors>
+            </AutoCompleteBox>
+        </StackPanel>
+        <StackPanel Grid.Row="2" IsTabStop="False" Orientation="Horizontal">
+            <Button ToolTip.Tip="Execute (Ctrl+Enter, F5)"
+                    Command="{Binding ExecuteCommand}">
+                <fa:Icon Value="fa-play" />
+            </Button>
+
+            <ToggleButton ToolTip.Tip="Parameters"
+                          IsChecked="{Binding ShowParameters, Mode=TwoWay}">
+                <fa:Icon Value="fa-at" />
+            </ToggleButton>
+
+            <Button ToolTip.Tip="New document"
+                    Command="{Binding NewDocumentCommand}">
+                <fa:Icon Value="fa-plus" />
+            </Button>
+        </StackPanel>
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto">
+            <avaloniaEdit:TextEditor Grid.Column="0" SyntaxHighlighting="CosmosSQL" FontFamily="{StaticResource CodeFont}">
+                <Interaction.Behaviors>
+                    <bhv:AvalonTextEditorBehavior UseSearch="True" />
+                    <bhv:AvalonTextEditorBindingBehavior
+                        Text="{Binding Text}"
+                        SelectedText="{Binding SelectedText}"
+                        CursorPosition="{Binding CursorPosition}"
+                        Selection="{Binding Selection}" />
+                    <bhv:FocusOnLoadBehavior />
+                </Interaction.Behaviors>
+                <avaloniaEdit:TextEditor.KeyBindings>
+                    <KeyBinding Gesture="Ctrl+Enter" Command="{Binding ExecuteCommand}" />
+                    <KeyBinding Gesture="F5" Command="{Binding ExecuteCommand}" />
+                </avaloniaEdit:TextEditor.KeyBindings>
+            </avaloniaEdit:TextEditor>
+            <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="5" VerticalAlignment="Stretch"
+                          IsVisible="{Binding ShowParameters}" />
+            <local:QueryParametersView Grid.Column="1"
+                                       DataContext="{Binding Parameters}"
+                                       IsVisible="{Binding DataContext.ShowParameters, ElementName=self}">
+                
+            </local:QueryParametersView>
+        </Grid>
+        <GridSplitter Grid.Row="3" VerticalAlignment="Bottom" Height="5" HorizontalAlignment="Stretch" />
+        <local:QueryResultsView Grid.Row="4" DataContext="{Binding Result}" />
+    </Grid>
 </UserControl>
