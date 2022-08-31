@@ -76,6 +76,24 @@ namespace CosmosDBStudio.Model.Services.Implementation
             {
                 return OperationResult.NotFound;
             }
+            catch (CosmosException ex) when (IsTransient(ex.StatusCode))
+            {
+                try 
+                {
+                    await db.DeleteAsync(new RequestOptions { IfMatchEtag = database.ETag }, cancellationToken);
+                    return OperationResult.Success;
+                }
+                catch (CosmosException excp) when (excp.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return OperationResult.Success;
+                }
+            }
         }
+
+        static bool IsTransient(HttpStatusCode statusCode)
+            => statusCode == HttpStatusCode.ServiceUnavailable
+                || statusCode == HttpStatusCode.TooManyRequests
+                || statusCode == HttpStatusCode.RequestTimeout
+                || statusCode == HttpStatusCode.Gone;
     }
 }
