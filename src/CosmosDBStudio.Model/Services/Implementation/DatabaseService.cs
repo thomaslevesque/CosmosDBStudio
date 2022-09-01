@@ -95,6 +95,7 @@ namespace CosmosDBStudio.Model.Services.Implementation
             => statusCode == HttpStatusCode.ServiceUnavailable
                 || statusCode == HttpStatusCode.TooManyRequests
                 || statusCode == HttpStatusCode.RequestTimeout
-                || statusCode == HttpStatusCode.Gone;
+                || statusCode == HttpStatusCode.Gone
+                || statusCode == (HttpStatusCode) 449;
     }
 }
