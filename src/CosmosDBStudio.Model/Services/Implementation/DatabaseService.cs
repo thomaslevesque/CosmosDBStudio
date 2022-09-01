@@ -83,8 +83,7 @@ namespace CosmosDBStudio.Model.Services.Implementation
                     await db.DeleteAsync(new RequestOptions { IfMatchEtag = database.ETag }, cancellationToken);
                     return OperationResult.Success;
                 }
-                catch (CosmosException excp) when (excp.StatusCode == HttpStatusCode.NotFound
-                    || excp.StatusCode == HttpStatusCode.Gone)
+                catch (CosmosException excp) when (excp.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Gone)
                 {
                     return OperationResult.Success;
                 }
