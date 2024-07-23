@@ -1,3 +1,6 @@
+> [!warning]  
+> This project is not currently under active development. I have very little spare time to work on this, and since I don't currently use Cosmos DB, I have little incentive to continue improving this app. You've been warned! Feel free to use it anyway if it works for you.
+
 # Cosmos DB Studio
 
 ![Application icon](assets/cosmosdb-small.png)
